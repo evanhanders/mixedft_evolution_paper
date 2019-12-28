@@ -93,10 +93,10 @@ axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 plt.sca(axs[0])
 ax = axs[0]
 #plt.grid(which='both')
-plt.axhline(np.mean(mixed_trace['ra_flux'])/1e9, color='black', lw=1)
-plt.axhline(np.mean(fixed_trace['ra_temp'])/1e9, color='orange', lw=1, ls='-.')
-plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/1e9, color='black', lw=2, ls='-.')
-plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/1e9, color='orange', lw=2)
+plt.axhline(np.mean(mixed_trace['ra_flux'])/1e9, color='olivedrab', lw=1)
+plt.axhline(np.mean(fixed_trace['ra_temp'])/1e9, color='darkorange', lw=1, ls='-.')
+plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/1e9, color='olivedrab', lw=2, ls='-.')
+plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/1e9, color='darkorange', lw=2)
 ax.set_ylabel(r'Ra/$10^9$')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 plt.yscale('log')
@@ -111,9 +111,9 @@ ax = axs[1]
 
 Nu_final_temp = np.mean(fixed_trace['Nu'][-5000:])
 
-plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Nu']/Nu_final_temp, color='black', lw=2)
-plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Nu']/Nu_final_temp, color='orange', lw=2)
-plt.axhline(1, c='r', lw=0.5)
+plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Nu']/Nu_final_temp, color='olivedrab', lw=2)
+plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Nu']/Nu_final_temp, color='darkorange', lw=2)
+plt.axhline(1, c='darkorange', lw=1)
 plt.yscale('log')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 ax.set_ylabel(r'Nu/Nu$_{\Delta T}$')
@@ -124,14 +124,14 @@ ax = axs[2]
 
 
 Pe_final_temp = np.mean(fixed_trace['Pe'][-5000:])
-plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color='black', lw=2)
-plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color='orange', lw=2)
-plt.axhline(1, c='r', lw=0.5)
+plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color='olivedrab', lw=2)
+plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color='darkorange', lw=2)
+plt.axhline(1, c='darkorange', lw=1)
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 ax.set_ylabel(r'Pe/Pe$_{\Delta T}$')
 #plt.yscale('log')
 ax.set_yticks((1, 2, 3, 4))
-ax.set_xlabel(r'$t - t_{\mathrm{final, mixed}}$')
+ax.set_xlabel(r'$t - t_{\mathrm{final}}$')
 plt.ylim(0.5, 5)
 
 
@@ -145,24 +145,24 @@ zhu_nu = [26.1, 31.2,   38.9,   48.3, 61.1,   76.3,   95.1, 120.1,   152.2]
 ra_trace = np.logspace(8, 11, 100)
 nu_func = lambda ra: 0.138*np.array(ra)**(0.285) #Johnston & Doering 2009
 nu_guess = nu_func(ra_trace) 
+plt.axhline(1, c='k', lw=0.5)#plt.plot(ra_trace, nu_guess/nu_guess, color='k')#, label='J&D09')
 for k, data in mixed_data.items():
     df = pd.DataFrame(data=data)
     rolled = df.rolling(window=1000, min_periods=1000).mean()
     label='Dedalus-mixedFT'
     plt.arrow(0.835, 0.85, -0.003, -0.16,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='grey', facecolor='grey', rasterized='True')
+                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
     plt.arrow(0.838, 0.95, -0.003, -0.1,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='grey', facecolor='grey', rasterized='True')
-    plt.plot(rolled['ra_temp'], rolled['Nu']/nu_func(rolled['ra_temp']), color='grey', zorder=0, alpha=0.8, label=label)
-plt.plot(ra_trace, nu_guess/nu_guess, color='k')#, label='J&D09')
-plt.scatter(zhu_ra, zhu_nu/nu_func(zhu_ra), marker='x', s=80, c='red', label='Zhu+18')
+                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
+    plt.plot(rolled['ra_temp'], rolled['Nu']/nu_func(rolled['ra_temp']), color='olivedrab', zorder=0, label=label)
+plt.scatter(zhu_ra, zhu_nu/nu_func(zhu_ra), marker='x', s=80, c='black', label='Zhu+18')
 my_ra = []
 my_nu = []
 for ra, data in fixed_data.items():
     nu = np.mean(data['Nu'][-5000:])
     my_ra.append(float(ra))
     my_nu.append(nu)
-plt.scatter(my_ra, my_nu/nu_func(my_ra), s=15, c='k', marker='o', label='Dedalus-fixedT')
+plt.scatter(my_ra, my_nu/nu_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
 plt.legend(loc='best', fontsize=7)
 plt.xscale('log')
 plt.xlabel(r'Ra$_{\Delta T}$')
@@ -178,23 +178,24 @@ ax = axs[4]
 pe_func = lambda ra: 0.45*np.array(ra)**(0.5) #Ahlers&all 2009 (prefactor mine)
 #nu_guess = 0.16*ra_trace**(0.284) #Julien 2016
 pe_guess = pe_func(ra_trace) 
-plt.plot(ra_trace, pe_guess/pe_guess, color='k')#, label=r'Ra$^{1/2}$')
+plt.axhline(1, c='k', lw=0.5)#plt.plot(ra_trace, pe_guess/pe_guess, color='k')#, label=r'Ra$^{1/2}$')
 for k, data in mixed_data.items():
     df = pd.DataFrame(data=data)
     rolled = df.rolling(window=1000, min_periods=1000).mean()
     label='Dedalus-mixedFT'
     plt.arrow(0.925, 0.2, -0.04, 0.16,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='grey', facecolor='grey', rasterized='True')
+                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
     plt.arrow(0.937, 0.15, -0.013, 0.05,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='grey', facecolor='grey', rasterized='True')
-    plt.plot(rolled['ra_temp'], rolled['Pe']/pe_func(rolled['ra_temp']), color='grey', zorder=0, alpha=0.8, label=label)
+                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
+    plt.plot(rolled['ra_temp'], rolled['Pe']/pe_func(rolled['ra_temp']), color='olivedrab', zorder=0, label=label)
 my_ra = []
 my_pe = []
 for ra, data in fixed_data.items():
     pe = np.mean(data['Pe'][-5000:])
     my_ra.append(float(ra))
     my_pe.append(pe)
-plt.scatter(my_ra, my_pe/pe_func(my_ra), s=15, c='k', marker='o', label='Dedalus-fixedT')
+#Need to make the ones that aren't a comparison case a different color
+plt.scatter(my_ra, my_pe/pe_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
 plt.xscale('log')
 plt.xlabel(r'Ra$_{\Delta T}$')
 plt.ylabel(r'Pe/(0.45 Ra$_{\Delta T}^{0.5}$)')
@@ -214,7 +215,3 @@ for i in [0, 1, 3]:
 
 fig.savefig('rbc_scalar_comparisons.png', dpi=300, bbox_inches='tight')
 fig.savefig('rbc_scalar_comparisons.pdf', dpi=300, bbox_inches='tight')
-
-
-
-
