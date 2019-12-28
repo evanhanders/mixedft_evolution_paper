@@ -171,6 +171,86 @@ where $|\bm{A}|$ represents the magnitude of the vector $\bm{A}$.
 \subsection{Classical \RB Convection}
 \label{sec:2d_results}
 
+\begin{figure}
+\includegraphics[width=\textwidth]{./figs/rbc_scalar_comparisons.pdf}
+\caption{ 
+\label{fig:rbc_scalar_comparisons} }
+\end{figure}
+
+In the left panels of Fig.~\ref{fig:rbc_scalar_comparisons}, we compare the time evolution of a mixed-FT (green) case to a fixed-T (orange) simulation.
+In the top-left panel, we show the evolution of both the temperature and flux Rayleigh numbers of both simulations.
+We show the input (flux) Ra of the mixed-FT case and the input (temp) Ra of the fixed-T case as horizontal lines, and overplot the evolution of the Ra$_{\Delta T}$ for the mixed-FT case and the evolution of Ra$_{\partial_z T}$ for the fixed-T case.
+While the fixed-T case's flux Ra rapidly latches onto its final value, the mixed-FT case's temp Ra takes thousands of freefall times to equilibrate to its final value.
+This fast evolution (fixed-T) and slow evolution (mixed-FT) is also seen in the equilibration of the Nusselt number (middle panel) and Peclet number (bottom panel).
+
+A naive estimate of the thermal evolution timescale of these system is $t_{\text{therm}} = \sqrt{\Peff} = \sqrt{\text{Ra Pr}}$ \cite{anders&all2018}.
+For the mixed-FT simulation presented here with Ra = 2.61 $\times 10^9$, this prediction returns $t_{\text{therm}} \approx 5\times 10^{4}$.
+**I need to do a derivation and think about this more.
+
+In the upper right panel of Fig.~\ref{fig:rbc_scalar_comparisons}, we show a plot of Nu vs Ra.
+The green line shows the path through this space that our mixed-FT simulation traces out.
+For reference, we show values of Nu reported for various fixed-T runs from previous work and from our own simulations conducted here.
+Remarkably, the mixed-FT case seems to reliably perform a sweep through this parameter space.
+However, despite seemingly tracing out the ``proper'' values of Nu(t) vs. Ra(t), the same is not true of the Reynolds number.
+In the lower right panel, we plot the trace of Re vs Ra, and see that the mixed-FT case achieves a high value of Re compared to fixed-T cases as it sweeps toward lower values of Ra.
+This makes sense; the mixed-FT simulation experiences a vigorous injection of kinetic energy during the convective transient and must slowly wind down from this energized state over time.
+These traces through parameter space demonstrate that, unless measurements are taken after convergence is achieved, the dynamics sampled in a mixed-FT case may be misleading.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{./figs/rbc_1D_profiles.pdf}
+\caption{ 
+\label{fig:rbc_1D_profiles} }
+\end{figure}
+
+In Fig.~\ref{fig:rbc_1D_profiles}, we compare the horizontally averaged, vertical profiles of our fixed-T and mixed-FT cases.
+In the upper left panel, we show the mean temperature profiles achieved in the evolved state of both simulations.
+Throughout the full depth, these profiles differ by less than 2\%, as shown in the lower left panel.
+In the upper middle panel, we show the mean temperature profile in downflow areas compared to the mean temperature profile achieved in upflow areas.
+Surprisingly, despite symmetrical boundary conditiosn in fixed-T simulations and asymmetrical boundary conditions in mixed-FT cases, we find precisely the same asymmetries in upflows/downflows for both sets of boundary conditions.
+In general, we find that the boundary layer in upflows is more gradual in hot plumes, and the same is true for downflows and cold plumes.
+Once again, these profiles agree to within < 2\%.
+
+In the upper right panel of Fig.~\ref{fig:rbc_1D_profiles}, we plot the system fluxes for both cases.
+the fluxes show very good agreement just like the temperature profile.
+Throughout the bulk of the domain, the convective enthalpy fluxes agree to within a few \% or less (solid line in bottom right panel).
+Due to the conductive fluxes approaching zero in the interior, we cannot measure a \% difference for this flux in the bulk, but we find that it is again within a few percent in the boudnary layers.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{./figs/rbc_dynamics_asymmetries.pdf}
+\caption{ 
+\label{fig:rbc_dynamics_asymmetries} }
+\end{figure}
+
+In Fig.~\ref{fig:rbc_dynamics_asymmetries}, we examine the dynamical nature of the asymmetries which mixed-FT boundaries introduce into the simulation.
+In the left panel, we plot the probability distribution functions of temperature measurements taken throughout the full domain.
+These PDFs agree remarkably well for cold temperature (near the shared fixed-T boundary) and through the mean, but diverge for hot temperatures (where the boundary conditions differ).
+We find that the mixed-FT pdf has a much longer tail and is capable of achieving much hotter instantaneous temperature values than a fixed-T boundary can.
+In order to understand how this is possible, we examine a snapshot of the full temperature field.
+In the middle panel, we plot the temperature anomaly -- the temperature field with the mean vertical profile subtracted from it.
+We have outlined a portion of a cold plume near the upper (fixed-T) boundary and a portion of a hot plume near the lower (fixed-flux) boundary, and these regions are magnified in the lower right panels.
+The fixed-T upper boundary suppresses temperature anomaly at the upper boundary and regulates the temperature minima which can be achieved.
+The fixed-flux lower boundary does no such suppression and allows for extreme temperature values to be achieved in the plume-launching area.
+
+\subsection{Fixed-Temp simulations can be used to skip thermal relaxation}
+
+This evidence all suggests that, in a time-averaged, horizontally-averaged, or volume-averaged sense, fixed-T and mixed-FT simulations are 1-to-1 comparable.
+However, their dynamics have subtle differences, and it is possible that these differences could be interesting in studies of astrophysical convection (for example, more extreme plume values like those achieved at the fixed-flux plate may interact with a stable layer differently than the more regulated values achieved by a fixed-T plate).
+The evolutionary time of mixed-FT cases unfortunately makes running down such simulations in the highly-turbulent, large Rayleigh number regime nearly impossible.
+Fortunately, the similarities between these different boundary conditions suggests that the final state of a fixed-temperature simulation, which is rapidly achieved, could serve as an ideal set of initial conditions for a mixed-FT case.
+
+Here's a description of how you scale fixed T  to mixed FT.
+
+In Fig. \ref{fig:Whatever}, we show that indeed this stuff works.
+
+This suggests that thermal relaxation takes place in two parts:
+\begin{enumerate}
+\item Changes to the experimental energy reservoir,
+\item Restratification of the experiment.
+\end{enumerate}
+The former of these can be skipped through the choice of ``smart'' boundary conditions.
+The latter seems to be unimportant in a simple system like the \RB convection studied here.
+Takeaway: don't choose boudnary conditiosn where the initial and final energy reservoir are really different.
+
 
 
 \subsection{Rotating \RB Convection}
