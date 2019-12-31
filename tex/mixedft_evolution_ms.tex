@@ -59,6 +59,25 @@ Finally, we note that the relaxation of these systems effectively amount to a sw
 %%%%%%%%%%%%
 
 \section{Introduction}
+\label{sec:introduction}
+Convection is a crucial heat transport mechanism in the atmospheres of stars and planets.
+Numerical simulations are the basis for most modern studies into the nature of astrophysical convection.
+These studies examine models which range from simplified, two-dimensional Boussinesq \RB convection (sources, sources) to fully three-dimensional, magnetohydrodynamical, global dynamo simulations (sources, sources).
+Regardless of the degree of apparent realism included in these models, convective processes in these numerical simulations are fundamentally driven by some combination of internal heating profiles and imposed boundary conditions.
+It is common in astrophysical studies to impose ``mixed'' thermal boundary conditions (hereafter ``mixedFT'') in which the flux is fixed at one end of the domain whereas a thermodynamic quantitiy (e.g., temperature) is fixed at the other end (sources, sources).
+In this work, we will hereafter focus on \RB convection under the Boussinesq approximation, such that the only thermodynamic quantity of interest in the temperature.
+
+Despite mixedFT boundary conditions being a common choice of numericists, we are unaware of any work which compares the dynamics produced by mixed thermal boundaries to the most traditional choice of boundary conditions in the \RB literature: fixed temperature at the top and bottom (hereafter fixedT).
+While there is some work \cite{johnston&doering2009} comparing simulations in which the flux is fixed at \emph{both} boundaries (hereafer fixedF), the central result of this work is that fixedF and fixedT boundary conditions exhibit the same mean heat transport as quantified by the Nusselt number.
+This result suggests that mixedFT boundaries should transport heat in the same manner as fixedT boundaries, but the choice of mixedFT boundaries introduces complexities into the convective system which neither set of fixed boundaries is exposed to.
+First, the evolved mean temperature of a simulation with mixedFT boundaries differs from the initial mean temperature, and therefore the thermal reservoir of the convective system must evolve over time.
+Second, mixedFT boundary conditions break the symmetry of the system, which may have important consequences on the convective dynamics.
+
+In this letter, we investigate the time evolution and nature of asymmetries in \RB covection when mixedFT boundary conditions are imposed.
+We find that the thermal evolution and relaxation of mixedFT systems is very long compared to fixedT systems, where it is nearly instantaneous.
+We also find that as the temperature jump across the domain evolves over the course of this relaxation, the convective system effectively performs a sweep through Ra parameter space.
+We have reported in the past on clever mechanisms which have been devised to skip past this thermal relaxation \cite{anders&all2018}, and here we show that changing the boundary conditions of an evolved fixedT simulation to mixedFT boundaries is likely the simplest mechanism for fast-forwarding through this long rundown.
+We furthermore find that the choice of mixedFT boundaries imposes some asymmetries on the convective flows, but that these asymmetries do not seem to appreciably change the mean convective state when compared to fixedT boundaries.
 
 %%%%%%%%%%%%
 %%%%%%%%%%%
@@ -197,6 +216,87 @@ This makes sense; the mixed-FT simulation experiences a vigorous injection of ki
 These traces through parameter space demonstrate that, unless measurements are taken after convergence is achieved, the dynamics sampled in a mixed-FT case may be misleading.
 
 \begin{figure}
+\includegraphics[width=\textwidth]{./figs/rbc_restart_description.pdf}
+\caption{ 
+\label{fig:rbc_restart_description} }
+\end{figure}
+
+The evidence displayed in Fig.~\ref{fig:rbc_scalar_comparisons} suggests that, in a volume-averaged sense, there is a comparable fixedT experiment for each mixedFT experiment.
+This suggests that one can take advantage of the fast evolution on display in fixedT simulations to achieve rapidly equilibrated mixedFT simulations.
+This is fortunate, as the rundown in mixedFT simulations is very costly:  not only do the turbulent dynamics at the large initial Rayleigh number need to be resolved (requiring more spectral modes to run the simulation), but thousands of freefall times must pass before convergence.
+For a sense of scale, the first thousand freefall time units of the mixedFT case displayed in Fig.~\ref{fig:rbc_scalar_comparisons} took $1.43\times10^6$ iterations, or roughly $3.3 \times 10^4$ cpu-hours.
+For comparison, the same time evolution (essentially the whole simulation) for fixedT boundary conditions took  $8.4\times10^5$ iterations, or roughly $5.4\times 10^3$ cpu-hours.
+After these thousand freefall time units, the fixedT simulation has spent hundreds of freefall times in a statistically stationary state, whereas the mixedFT system continues to evolve towards its equilibrium state for an additional few thousands of time units.
+This means that at these modest Rayleigh numbers (Ra$_{\Delta T} = 10^8$), the cost of equilibration of a mixedFT simulation is more than an order of magnitude larger than a fixedT simulation.
+
+We take advantage of the fast evolution of fixedT simulations to achieve equilibrated mixedFT simulations by switching the boundary conditions on an equilibrated fixedT run.
+Our procedure for achieving converged mixedFT dynamics using fixedT simulations is simple and takes place over these steps:
+\begin{enumerate}
+\item Run a fixedT simulation from convective transient to its statistically stationary state. 
+Measure $\angles{\text{Nu}}$ in that state.
+\item Re-nondimensionalize from a fixed temperature at the boundaries to a fixed flux.
+This will involve setting the input Rayleigh number to a flux Ra, or $\text{Ra}_{\text{in}} = \angles{\text{Nu}}\text{Ra}_{\Delta T}$.
+In our freefall nondimensionalization, this means setting the velocities in the mixedFT simulation to $\bm{u}_{\text{FT}} = \bm{u}_{\text{T}} / \sqrt{\angles{\text{Nu}}}$, and setting the temperature field to $T_{\text{FT}} = T_{\text{T}} / \angles{\text{Nu}}$.
+\item Restart the simulation with mixedFT boundaries and continue timestepping.
+\end{enumerate}
+
+In the left panels of Fig. \ref{fig:rbc_restart_description}, we show that this procedure indeed seems to work.
+We ran a simulation at Ra$_{\Delta T} = 10^8$, which has been reported to have $\text{Nu} \approx 26.1$ \cite{zhu&all2018}.
+We restarted this simulation using mixedFT boundaries after roughly one thousand time units at an input value of Ra$_{\partial_z T} = 2.61 \times 10^9$.
+Rolling averages of Ra$_{\Delta T} / 10^8$ and Ra$_{\partial_z T} / (2.61 \times 10^9)$ are shown through the full simulation.
+As can been seen in the lower and bottom left panels, at the beginning of the simulation when fixedT boundary conditions are used, the flux at the lower boundary fluctuates but the temperature is precisely constant.
+When these boundaries are switched for mixedFT boundaries, the left flux holds steady but the temperature is able to fluctuate.
+Unlike in the mixedFT case displayed in Fig.~\ref{fig:rbc_scalar_comparisons}, there is no long thermal rundown in the mixedFT state, as the thermal profile has been equilibrated by the early fixedT portion of the run.
+
+In order to verify if this restarting procedure achieves the same dynamics as a long rundown, we compare probability distribution functions of various quantities in our convective domains.
+We display these PDFs in the right four panels of Fig.~\ref{fig:rbc_restart_description}.
+We show the probability distributions of the temperature field (upper left), the enstrophy (upper right), the convective enthalpy flux (lower left), and the vertical velocity (lower right).
+Visually, these PDFs are essentially identical, with perhaps small variations in their tails due to random extreme events which occur in one simulation but not the other.
+The means, standard deviations, skewness, and kurtosis of each PDF is displayed in Table~\ref{table:pdf_values}, and the agreement is quite good.
+
+\begin{table}[ht]
+\caption{
+}
+\setlength{\tabcolsep}{12pt}
+\label{table:speed}
+\begin{center}
+\begin{tabularx}{\textwidth}{c c c c c c}
+\hline																	
+Quantity &	Case	&	$\mu$	&	$\sigma$	&	Skewness	&	Kurtosis \\
+%\hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
+%\multicolumn{6}{c}{\vspace{0.1cm}2D Runs} \\
+\hline
+$T$				&	mixedFT		&		$1.9 \times 10^{-2}$	&	$4.3 \times 10^{-3}$	&	1.1		&	15 \\
+				&	mixedFT,r	&		$1.9 \times 10^{-2}$	&	$4.3 \times 10^{-3}$	&	1.3		&	17 \\
+\hline
+$\omega^2$		&	mixedFT		&		$1.3$					&	$6.4$					&	19		&	$5.2 \times 10^2$ \\
+				&	mixedFT,r	&		$1.5$					&	$6.9$					&	18		&	$5.0 \times 10^2$ \\
+\hline
+$wT$			&	mixedFT		&		$1.9 \times 10^{-5}$	&	$9.4 \times 10^{-4}$	&	0.16	&	$3.1$ \\
+				&	mixedFT,r	&		$1.9 \times 10^{-5}$	&	$9.3 \times 10^{-4}$	&	0.18	&	$3.2$ \\
+\hline
+$wT$			&	mixedFT		&		$7.9 \times 10^{-7}$	&	$4.9 \times 10^{-2}$	&	0.016	&	$2.7$ \\
+				&	mixedFT,r	&		$-1.0 \times 10^{-6}$	&	$4.8 \times 10^{-2}$	&	0.02	&	$2.8$ \\
+\hline																	
+\end{tabularx}
+\end{center}
+\end{table}
+
+The successful degree with which this mechanism reproduces the evolved dynamics suggests that thermal relaxation occurs in two parts:
+\begin{enumerate}
+\item Changes to the experimental energy reservoir, and
+\item Restratification of the experiment.
+\end{enumerate}
+Through the use of complicated clever techniques \cite{anders&all2018} or simply through the choice of ``smart'' boundary conditions, the first of these pieces of thermal relaxation can be skipped.
+For \RB convection with no-slip boundaries at the top and bottom plate, the latter part of thermal relaxation seems to be unimportant.
+When complications such as stable layers are included in the model, we do not generally expect the latter piece of restratification to be completely insignificant, but for the simple case studied here it seems to be.
+
+\subsection{Asymmetries induced by mixed boundaries}
+\label{sec:asymmetries}
+Now that we have verified a mechanism for rapidly and self-consistently achieving thermally equilibrated mixed-FT simulations, we study highly turbulent convection with mixedFT boundaries in an effort to understand the nature of asymmetries introduced to the problem by these boundary conditions.
+
+
+\begin{figure}
 \includegraphics[width=\textwidth]{./figs/rbc_1D_profiles.pdf}
 \caption{ 
 \label{fig:rbc_1D_profiles} }
@@ -233,66 +333,9 @@ The fixed-flux lower boundary does no such suppression and allows for extreme te
 
 \subsection{Fixed-Temp simulations can be used to skip thermal relaxation}
 
-This evidence all suggests that, in a time-averaged, horizontally-averaged, or volume-averaged sense, fixed-T and mixed-FT simulations are 1-to-1 comparable.
-However, their dynamics have subtle differences, and it is possible that these differences could be interesting in studies of astrophysical convection (for example, more extreme plume values like those achieved at the fixed-flux plate may interact with a stable layer differently than the more regulated values achieved by a fixed-T plate).
-The evolutionary time of mixed-FT cases unfortunately makes running down such simulations in the highly-turbulent, large Rayleigh number regime nearly impossible.
-Fortunately, the similarities between these different boundary conditions suggests that the final state of a fixed-temperature simulation, which is rapidly achieved, could serve as an ideal set of initial conditions for a mixed-FT case.
-
-Here's a description of how you scale fixed T  to mixed FT.
-
-In Fig. \ref{fig:Whatever}, we show that indeed this stuff works.
-
-This suggests that thermal relaxation takes place in two parts:
-\begin{enumerate}
-\item Changes to the experimental energy reservoir,
-\item Restratification of the experiment.
-\end{enumerate}
-The former of these can be skipped through the choice of ``smart'' boundary conditions.
-The latter seems to be unimportant in a simple system like the \RB convection studied here.
-Takeaway: don't choose boudnary conditiosn where the initial and final energy reservoir are really different.
-
-
 
 \subsection{Rotating \RB Convection}
 \label{sec:rotating_results}
-
-
-%\begin{figure}[b]
-%\includegraphics[width=\textwidth]{./figs/nu_v_time.png}
-%\caption{ \ref{fig:oscillating_plumes}.
-%\label{fig:nu_v_time} }
-%\end{figure}
-
-%\begin{table}[b!]
-%\caption{
-%}
-%\setlength{\tabcolsep}{12pt}
-%\label{table:speed}
-%\begin{center}
-%\begin{tabularx}{0.72\textwidth}{ c r r c c c }
-%\hline																	
-%$S$	&	nz$\times$nx$\times$ny	&	$N_{\text{CPU}}$	&	
-%$t_{\text{CPU, SE}}$ & $t_{\text{CPU, AE}}$ &$t_{\text{CPU,AE}}/t_{\text{CPU,SE}}$\\
-%\hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
-%\multicolumn{6}{c}{\vspace{0.1cm}2D Runs} \\
-%\hline
-%%2 sig figs, scientific notation, swap SE and AE, right justify Ncpu, 2 sig figs ratio, right justify communicates biggerness. 
-%$10^2$	&	64$\times$128	&	32    &  2.2              & 4.4               &     2.0  \\
-%$10^3$	&	128$\times$256	&	64    &  53               & 21                &     0.39 \\
-%$10^4$	&	256$\times$512	&	128   &  1.2$\times 10^3$ & 1.8$\times 10^2$  &     0.15  \\
-%$10^5$	&	512$\times$1024&	256   &  2.4$\times 10^4$ & 2.8$\times 10^3$  &     0.12 \\
-%\hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
-%\multicolumn{6}{c}{\vspace{0.1cm}3D Runs} \\
-%\hline
-%$10^1$	&	32$\times$64$\times$64	    & 512       &   62                 &        1.1$\times 10^2$   & 1.7\\
-%$10^2$	&	64$\times$128$\times$128	& 512       &   1.9$\times 10^2$   &        1.1$\times 10^2$   & 0.60 \\
-%$10^3$	&	128$\times$256$\times$256	& 2048      &   7.0$\times 10^3$   &        1.4$\times 10^3$   & 0.20 \\
-%$10^4$	&	256$\times$512$\times$512	& 8192      &   3.3$\times 10^5$   &        2.3$\times 10^4$   & 0.070\\
-%\hline																	
-%\end{tabularx}
-%\end{center}
-%\end{table}
-
 
 
 %%%%%%%%%%%%
@@ -312,4 +355,34 @@ Computations were conducted with support by the NASA High End Computing (HEC) Pr
 
 
 \bibliography{biblio.bib}
+
+\appendix
+\section{Table of Simulations}
+
+
+\begin{table}[ht]
+\caption{
+}
+\setlength{\tabcolsep}{12pt}
+\label{table:speed}
+\begin{center}
+\begin{tabularx}{\textwidth}{c c c c c c c c c}
+\hline																	
+BCs	&	Ra	&	Pr	&	Ek	&	nz$\times$nx$\times$ny	&	cpu-hours &	Nu	&	Nu comp	&	Re \\
+%\hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
+%\multicolumn{6}{c}{\vspace{0.1cm}2D Runs} \\
+\hline
+fixedT	&	$1.00 \times 10^8$	&	1	&	$\infty$	&	512x1024	&	$5.57 \times 10^3$	&	$25.4 \pm 0.1$	&	26.1	&	$3.18 \times 10^3$ \\
+mixedFT	&	$2.61 \times 10^9$	&	1	&	$\infty$	&	1024x2048	&	$1.21 \times 10^5$	&	$25.3 \pm 0.2$	&	26.1	&	$3.31 \times 10^3$ \\
+fixedT	&	$2.15 \times 10^8$	&	1	&	$\infty$	&	512x1024	&	$5.73 \times 10^3$	&	$31.3 \pm 0.2$	&	31.2	&	$5.17 \times 10^3$ \\
+fixedT	&	$4.64 \times 10^8$	&	1	&	$\infty$	&	1024x2048	&	$4.66 \times 10^4$	&	$38.4 \pm 0.3$	&	38.9	&	$8.60 \times 10^3$ \\
+fixedT	&	$1.00 \times 10^9$	&	1	&	$\infty$	&	1024x2048	&	$5.58 \times 10^4$	&	$48.0 \pm 0.4$	&	48.3	&	$1.33 \times 10^4$ \\
+fixedT	&	$2.15 \times 10^9$	&	1	&	$\infty$	&	1024x2048	&	$6.38 \times 10^4$	&	$60.4 \pm 0.5$	&	61.1	&	$1.99 \times 10^4$ \\
+\hline																	
+\end{tabularx}
+\end{center}
+\end{table}
+
+
+
 \end{document}

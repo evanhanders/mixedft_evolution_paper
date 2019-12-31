@@ -78,7 +78,6 @@ fixed_data = read_pdfs(fixed_ras, fixed_dirs)
 mixed_scalars = read_data(mixed_ras, mixed_dirs)
 fixed_scalars = read_data(fixed_ras, fixed_dirs)
 
-
 mk = '{:.4e}'.format(2.61e9)
 fk = '{:.4e}'.format(1.00e8)
 

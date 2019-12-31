@@ -93,16 +93,26 @@ axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 plt.sca(axs[0])
 ax = axs[0]
 #plt.grid(which='both')
-plt.axhline(np.mean(mixed_trace['ra_flux'])/1e9, color='olivedrab', lw=1)
-plt.axhline(np.mean(fixed_trace['ra_temp'])/1e9, color='darkorange', lw=1, ls='-.')
-plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/1e9, color='olivedrab', lw=2, ls='-.')
-plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/1e9, color='darkorange', lw=2)
-ax.set_ylabel(r'Ra/$10^9$')
+plt.axhline(np.mean(mixed_trace['ra_flux'])/2.61e9, color='olivedrab', lw=1)
+plt.axhline(np.mean(fixed_trace['ra_temp'])/2.61e9, color='darkorange', lw=1, ls='-.')
+plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/2.61e9, color='olivedrab', lw=2, ls='-.')
+plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/2.61e9, color='darkorange', lw=2)
+ax.set_ylabel(r'Ra/$2.61\times 10^9$')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 plt.yscale('log')
 
-plt.text(-1500, 0.13, r'Ra$_{\Delta T}$')
-plt.text(-2500, 1.5, r'Ra$_{\partial_z T}$')
+
+##Approx function for evolution of Ra
+#Nu_final_temp = np.mean(fixed_trace['Nu'][-5000:])
+#t_S = np.sqrt(2.61e9 / 1298)
+#t_best = t_S / 2
+#t_kappa = 5e4 / (Nu_final_temp/2)**2
+##plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], (1/26.1)+(1/2-1/26.1)*np.exp(-mixed_trace['sim_time']/t_kappa), c='k', lw=0.5) #1418
+##plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], (1/26.1)+(1/2-1/26.1)*np.exp(-mixed_trace['sim_time']/t_S)    , c='k', lw=0.5) #1418
+#plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], (1/26.1)+(1/2-1/26.1)*np.exp(-mixed_trace['sim_time']/t_best) , c='k', lw=0.5)
+
+plt.text(-1500, 0.05, r'Ra$_{\Delta T}$')
+plt.text(-2500, 0.58, r'Ra$_{\partial_z T}$')
 
 
 #Panel 2, Nu evolution
@@ -158,11 +168,18 @@ for k, data in mixed_data.items():
 plt.scatter(zhu_ra, zhu_nu/nu_func(zhu_ra), marker='x', s=80, c='black', label='Zhu+18')
 my_ra = []
 my_nu = []
+my_nu_sampleMean = []
+N = 5000
 for ra, data in fixed_data.items():
-    nu = np.mean(data['Nu'][-5000:])
+    nu = np.mean(data['Nu'][-N:])
+    stdev = np.std(data['Nu'][-N:])
     my_ra.append(float(ra))
     my_nu.append(nu)
-plt.scatter(my_ra, my_nu/nu_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
+    my_nu_sampleMean.append(stdev/np.sqrt(N))
+print(my_nu, my_nu_sampleMean)
+plt.errorbar(my_ra[1:], (my_nu/nu_func(my_ra))[1:], yerr=(my_nu_sampleMean/nu_func(my_ra))[1:], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=5, marker='o', label='Dedalus-fixedT')
+plt.errorbar(my_ra[0], (my_nu/nu_func(my_ra))[0], yerr=(my_nu_sampleMean/nu_func(my_ra))[0], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=7, marker='*')
+#plt.scatter(my_ra, my_nu/nu_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
 plt.legend(loc='best', fontsize=7)
 plt.xscale('log')
 plt.xlabel(r'Ra$_{\Delta T}$')
@@ -190,17 +207,36 @@ for k, data in mixed_data.items():
     plt.plot(rolled['ra_temp'], rolled['Pe']/pe_func(rolled['ra_temp']), color='olivedrab', zorder=0, label=label)
 my_ra = []
 my_pe = []
+my_pe_sampleMean = []
+N = 5000
 for ra, data in fixed_data.items():
-    pe = np.mean(data['Pe'][-5000:])
+    pe = np.mean(data['Pe'][-N:])
+    stdev = np.std(data['Pe'][-N:])
     my_ra.append(float(ra))
     my_pe.append(pe)
+    my_pe_sampleMean.append(stdev/np.sqrt(N))
+
 #Need to make the ones that aren't a comparison case a different color
-plt.scatter(my_ra, my_pe/pe_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
+plt.errorbar(my_ra[1:], (my_pe/pe_func(my_ra))[1:], yerr=(my_pe_sampleMean/pe_func(my_ra))[1:], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=5, marker='o', label='Dedalus-fixedT')
+plt.errorbar(my_ra[0], (my_pe/pe_func(my_ra))[0], yerr=(my_pe_sampleMean/pe_func(my_ra))[0], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=7, marker='*', label='Dedalus-fixedT')
+#plt.scatter(my_ra, my_pe/pe_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
 plt.xscale('log')
 plt.xlabel(r'Ra$_{\Delta T}$')
 plt.ylabel(r'Pe/(0.45 Ra$_{\Delta T}^{0.5}$)')
 plt.xlim(9e7, 2e9)#3e10)
 plt.ylim(0.5, 1.5)
+
+for i, ra in enumerate(my_ra):
+    print('{:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}'.format(ra, my_nu[i], my_nu_sampleMean[i], my_pe[i], my_pe_sampleMean[i]))
+print('-----------------------------------------')
+for ra, data in mixed_data.items():
+    nu = np.mean(data['Nu'][-N:])
+    nu_stdev = np.std(data['Nu'][-N:])
+    pe = np.mean(data['Pe'][-N:])
+    pe_stdev = np.std(data['Pe'][-N:])
+    print('{:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}'.format(float(ra), nu, nu_stdev/np.sqrt(N), pe, pe_stdev/np.sqrt(N)))
+    
+
 
 
 #Get rid of bad tick labels, etc.
