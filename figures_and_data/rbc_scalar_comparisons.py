@@ -66,7 +66,7 @@ mixed_data = read_data(mixed_ras, mixed_dirs)
 fixed_data = read_data(fixed_ras, fixed_dirs)
 
 # Get rolling averages of all data; Output is every 0.1 time units
-avg_window = 100 #time units
+avg_window = 50 #time units
 fixed_trace = fixed_data['{:.4e}'.format(1.00e8)]
 mixed_trace = mixed_data['{:.4e}'.format(2.61e9)]
 dff = pd.DataFrame(data=fixed_trace)
@@ -126,7 +126,9 @@ plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Nu']/Nu_final
 plt.axhline(1, c='darkorange', lw=1)
 plt.yscale('log')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
+plt.ylim(0.7, 3)
 ax.set_ylabel(r'Nu/Nu$_{\Delta T}$')
+
 
 #Panel 3, Pe evolution
 plt.sca(axs[2])

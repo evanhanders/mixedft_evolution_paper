@@ -93,20 +93,23 @@ mk = '{:.4e}'.format(2.61e9)
 rk = '{:.4e}'.format(2.61e9)
 
 # Get rolling averages of all data; Output is every 0.1 time units
-avg_window = 100 #time units
+avg_window = 25 #time units
 mixed_trace = mixed_data[mk]
 fixed_trace = fixed_data[fk]
 partial_restarted_trace = restarted_data[rk]
 
 restarted_trace = OrderedDict()
 
+good_fixed_times = fixed_trace['sim_time'] <= partial_restarted_trace['sim_time'][0]
+
 for k in fixed_trace.keys():
+    fixed = fixed_trace[k][good_fixed_times]
     if k == 'left_flux' or k == 'right_flux':
-        restarted_trace[k] = np.concatenate((fixed_trace[k]/26.1**(3./2), partial_restarted_trace[k][1:])) 
+        restarted_trace[k] = np.concatenate((fixed/26.1**(3./2), partial_restarted_trace[k][1:])) 
     elif 'T' in k:
-        restarted_trace[k] = np.concatenate((fixed_trace[k], partial_restarted_trace[k][1:]*26.1)) 
+        restarted_trace[k] = np.concatenate((fixed, partial_restarted_trace[k][1:]*26.1)) 
     else:
-        restarted_trace[k] = np.concatenate((fixed_trace[k], partial_restarted_trace[k][1:])) 
+        restarted_trace[k] = np.concatenate((fixed, partial_restarted_trace[k][1:])) 
 
 dff = pd.DataFrame(data=fixed_trace)
 rolledf = dff.rolling(window=avg_window*10, min_periods=avg_window*10).mean()
@@ -130,10 +133,9 @@ subplots = [( (50 , 0  ),       300,    330),
             ( (500 , 700),       450,    300),
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
-
 for i in [0, 1, 2]:
-    axs[i].fill_between([1500, 2000], 1e-2, 10, alpha=0.2, color='grey')
-    axs[i].axvline(fixed_trace['sim_time'][-1], c='k', lw=0.5)
+    axs[i].fill_between([restarted_trace['sim_time'][-1]-500, restarted_trace['sim_time'][-1]], 1e-2, 10, alpha=0.2, color='grey')
+    axs[i].axvline(partial_restarted_trace['sim_time'][0], c='k', lw=0.5)
 
 
 #Panel 1, Ra evolution
@@ -142,9 +144,8 @@ ax = axs[0]
 #plt.grid(which='both')
 plt.plot(rolledr['sim_time'], rolledr['ra_flux']/2.61e9, color='black', lw=1, label=r'Ra$_{\partial_z T}$')
 plt.plot(rolledr['sim_time'], rolledr['ra_temp']/1.00e8, color='black', lw=1, label=r'Ra$_{\Delta T}$', ls='--')
-ax.legend(loc='upper left', frameon=False, borderpad=0, fontsize=7)
+ax.legend(loc='lower right', frameon=False, borderpad=0, fontsize=7)
 ax.set_ylabel(r'Ra/Ra$_{\mathrm{in}}$')
-plt.xlim(0, 2000)
 plt.ylim(0.925, 1.075)
 ax.set_yticks((0.95, 1, 1.05))
 plt.yscale('log')
@@ -159,7 +160,6 @@ Nu_final_temp = np.mean(fixed_trace['Nu'][-5000:])
 plt.plot(rolledr['sim_time'], rolledr['left_flux']*np.sqrt(2.61e9), color='black', lw=1)
 print(rolledr['left_flux'])
 #plt.axhline(1, c='black', lw=1)
-plt.xlim(0, 2000)
 ax.set_ylabel(r'left $|\partial_z T|$')
 ax.set_ylim(0.925, 1.075)
 ax.set_yticks((0.95, 1, 1.05))
@@ -171,7 +171,6 @@ ax = axs[2]
 
 plt.plot(rolledr['sim_time'], rolledr['left_T'], color='black', lw=1)
 #plt.axhline(1, c='black', lw=1)
-plt.xlim(0, 2000)
 ax.set_ylabel(r'left $T$')
 #plt.yscale('log')
 ax.set_xlabel(r'$t$')
@@ -214,6 +213,9 @@ for i in [0, 1]:
     axs[i].tick_params(labelbottom=False)
     axs[i].get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
     axs[i].get_yaxis().set_minor_formatter(matplotlib.ticker.NullFormatter())
+
+for i in [0, 1, 2]:
+    axs[i].set_xlim(0, restarted_trace['sim_time'][-1])
 
 
 
