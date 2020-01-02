@@ -346,6 +346,10 @@ Now that we have verified a mechanism for rapidly and self-consistently achievin
 \begin{figure}
 \includegraphics[width=\textwidth]{./figs/rbc_1D_profiles.pdf}
 \caption{ 
+	(upper left) The horizontally- and time-averaged temperature profile is shown for a mixedFT (green) and fixedT (orange) simulation.
+	(upper middle) The horizontally- and time-averaged temperature profile is shown for upflow regions (solid lines) and downflow regions (dashed lines) respectively.
+	(upper right) The horizontally- and time-averaged fluxes in the system are shown.
+	(bottom panels) The percentage difference between the corresponding quantities in the top panels are displayed, and in most cases measurements agree to within a few percent through the full depth of the domain.
 \label{fig:rbc_1D_profiles} }
 \end{figure}
 
@@ -365,6 +369,11 @@ Due to the conductive fluxes approaching zero in the interior, we cannot measure
 \begin{figure}
 \includegraphics[width=\textwidth]{./figs/rbc_dynamics_asymmetries.pdf}
 \caption{ 
+	(left panel) PDFs of temperature measurements of a mixedFT (green) and fixedT (orange) case are displayed.
+	The right tail of the distribution (near the cold fixed-flux boundary for the mixedFT case) shows that fixed flux boundaries achieve more extreme temperature events than fixed temperature boundaries.
+	(middle panel) A snapshot of the temperature anomaly in a mixedFT simulation.
+	The black outline boxes around the roots of the plumes are expanded in the bottom right panels.
+	Near the top (fixed temperature) boundary, the temperature anomaly at the root of the plume vanishes near the boundary, but this does not happen near the bottom (fixed flux) boundary, allowing for more extreme instantaneous values.
 \label{fig:rbc_dynamics_asymmetries} }
 \end{figure}
 
@@ -378,7 +387,7 @@ We have outlined a portion of a cold plume near the upper (fixed-temperature) bo
 The fixed-T upper boundary suppresses temperature anomaly at the upper boundary and regulates the temperature minima which can be achieved.
 The fixed-flux lower boundary does no such suppression and allows for extreme temperature values to be achieved in the plume-launching area, thus allowing for the asymmetry in the tails of the temperature PDF.
 
-We note briefly that these asymmetries do not seem to affect mean or volume-averaged quantities in these simulations appreciably (see the agreement between mixedFT and fixedT in Figs.~\ref{fig:rbc_scalar_comparisons}\&\ref{rbc_1D_profiles}).
+We note briefly that these asymmetries do not seem to affect mean or volume-averaged quantities in these simulations appreciably (see the agreement between mixedFT and fixedT in Figs.~\ref{fig:rbc_scalar_comparisons}\&\ref{fig:rbc_1D_profiles}).
 However, the fact that fixed-flux boundaries produce a wider temperature distribution with more extreme values may be important in some astrophysical studies.
 For example, some authors have aimed to quantify the statistical distribution of penetrative plumes from a convective region into a stable region \cite{pratt&all2017}, with impliciation for the solar dynamo.
 These results suggest that the choice of imposed boundary conditions can affect the extreme events that a simulation is capable of achieving.
@@ -425,6 +434,9 @@ Computations were conducted with support by the NASA High End Computing (HEC) Pr
 
 \begin{table}[ht]
 \caption{
+	Input and output values from the simulations in this work are shown.
+	The ``Nu comp'' values are comparison Nusselt number values reported in \cite{zhu&all2018}.
+	Values of Nu and Re are the sample mean; the standard deviation of the sample mean is shown for Nu measurements, and is smaller than the number of significant figures reported for Re measurements.
 }
 \setlength{\tabcolsep}{12pt}
 \label{table:speed}
