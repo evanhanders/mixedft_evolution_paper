@@ -113,14 +113,14 @@ The equations of motion are
 &= \frac{1}{\Peff}\grad^2 T_1,
 	\label{eqn:bouss_energy}
 \end{align}
-where $\bm{u} = (u, v, w)$ is the velocity, $T = T_0(z) + T_1(x, y, z, t)$ is the temperature (where $T_0$ is the initial profile and $T_1$ is the fluctuations around that profile), $\varpi = [defn]$ is the reduced pressure which enforces the incompressible constraint, and $\bm{\omega} = \grad \times \bm{u}$ is the vorticity.
+where $\bm{u} = (u, v, w)$ is the velocity, $T = T_0(z) + T_1(x, y, z, t)$ is the temperature (where $T_0$ is the initial profile and $T_1$ is the fluctuations around that profile), $\varpi$ is the reduced kinematic pressure \cite{anders&all2018} which enforces the incompressible constraint, and $\bm{\omega} = \grad \times \bm{u}$ is the vorticity.
 The dimensionless control parameters are the Rayleigh, Prandtl, and Ekman numbers,
 \begin{equation}
 \text{Ra} = \frac{g \alpha L_z^3 \Delta}{\nu\kappa} = \frac{(L_z\,v_{\text{ff}})^2}{\nu\kappa}, \qquad \text{Pr} = \frac{\nu}{\kappa}, \qquad \text{Ek} = \sqrt{\frac{\nu}{2\Omega L_z^2}},
 \end{equation}
-where $g$ is the gravity, $\alpha$ is the coefficient of thermal expansion, $L_z$ is the domain depth, $\nu$ and $\kappa$ are respectively the viscous and thermal diffusivity, and $\Omega$ is the global rotation frequency \cite{anders&all2018}.
+where $g$ is the gravity, $\alpha$ is the coefficient of thermal expansion, $L_z$ is the domain depth, $\nu$ and $\kappa$ are respectively the viscous and thermal diffusivity, and $\Omega$ is the global rotation frequency.
 These parameters set the freefall Reynolds and Peclet numbers, $\Reff = \sqrt{\text{Ra}/\text{Pr}}$ and $\Peff = \text{Pr }\Reff$, and throughout this work we hold Pr = 1 so that $\Reff = \Peff$.
-In our cases where rotation is not included, we set Ek$\,= \infty$.
+In standard RBC without rotation (section \ref{sec:2d_results}), we set Ek$\,= \infty$.
 The extent of our numerical domain is $z = [-0.5, 0.5]$ vertically and $x, y = [-\Gamma/2, \Gamma/2]$, where $\Gamma$ is the aspect ratio.
 The initial temperature profile, $T_0(z) = 0.5 - z$, is unstable and linearly decreases from a value of 1 to 0 across the domain. 
 $\Delta$ is the dimensionless temperature jump across the domain; depending on our choice of boundary condition, $\Delta$ defines either a temperature or flux Rayleigh number,
@@ -128,6 +128,14 @@ $\Delta$ is the dimensionless temperature jump across the domain; depending on o
 \text{Ra}_{\Delta T} = \frac{g \alpha L_z^3 \Delta T_0}{\nu\kappa}, \qquad 
 \text{Ra}_{\partial_z T} = \frac{g \alpha L_z^4 \partial_z T_0}{\nu\kappa}.
 \end{equation}
+We study both mixedFT and fixedT thermal boundary conditions,
+\begin{equation}
+(\text{mixedFT}): T_1 = 0 \text{ at $z$ = 0.5} \,\&\, \partial_z T_1 = 0 \text{ at $z$ = -0.5};\qquad\qquad
+(\text{fixedT}): T_1 = 0 \text{ at $z$ = -0.5, 0.5}.
+\end{equation}
+In the case of mixedFT boundaries, the temperature is nondimensionalized on the initial temperature gradient, $\Delta = L_z \partial_z T_0$, and the input Rayleigh number is a flux Rayleigh number, Ra$_{\partial_z T}$.
+In the case of fixedT boundaries, the temperature is nondimensionalized on the initial temperature jump across the domain: $\Delta = \Delta T_0 =  T_0(z=0.5)-T_0(z=-0.5)$, and the input Rayleigh number is a temperature Rayleigh number, Ra$_{\Delta T}$.
+
 
 
 Throughout the bulk of this work, we study two-dimensional (2D) convection where $\partial_y = v = 0$.
@@ -142,13 +150,6 @@ These rotating simulations employ stress-free, impenetrable boundaries,
 \partial_z u = \partial_z v = w = 0 \, \, \text{at}\,\,z = -0.5, 0.5.
 \label{eqn:vel_bcs}
 \end{equation}
-We study both mixedFT and fixedT thermal boundary conditions,
-\begin{equation}
-(\text{mixedFT}): T_1 = 0 \text{ at $z$ = 0.5} \,\&\, \partial_z T_1 = 0 \text{ at $z$ = -0.5};\qquad\qquad
-(\text{fixedT}): T_1 = 0 \text{ at $z$ = -0.5, 0.5}.
-\end{equation}
-In the case of mixedFT boundaries, the temperature is nondimensionalized on the initial temperature gradient, $\Delta = L_z \partial_z T_0$, and the input Rayleigh number is a flux Rayleigh number, Ra$_{\partial_z T}$.
-In the case of fixedT boundaries, the temperature is nondimensionalized on the initial temperature jump across the domain: $\Delta = \Delta T_0 =  T_0(z=0.5)-T_0(z=-0.5)$, and the input Rayleigh number is a temperature Rayleigh number, Ra$_{\Delta T}$.
 
 We utilize the Dedalus\footnote{\url{http://dedalus-project.org/}} pseudospectral framework \cite{burns&all2016, burns&all2019} to evolve Eqs.~(\ref{eqn:incompressible}-\ref{eqn:bouss_energy}) forward in time.
 Our 2D simulations use an implicit-explicit (IMEX), third-order, four-stage Runge-Kutta timestepping scheme RK443; our 3D simulations use the second-order, two-stage Runge-Kutta scheme RK222 \cite{ascher&all1997}. 
@@ -172,7 +173,7 @@ We define and measure the Nusselt number instantaneously as
 = 1 + \Peff\frac{\angles{w T}}{-\Delta T},
 \end{equation}
 where $\angles{}$ represent a volume average ($\angles{A} \equiv \iint A\,dx\,dz / \Gamma$ in 2D and $\angles{A} \equiv \iiint A\,dx\,dy\,dz / \Gamma^2$ in 3D for some quantity $A$), and $\Delta T = \angles{\partial_z T}$ is the temperature difference between the top and bottom plate.
-In the evolved, statistically stationary state, when fixedT boundaries are employed, $\text{Nu} = 1 + \Peff\angles{wT} = \text{(Evolved Flux)}$, and when mixedFT boundaries and a flux nondimensionalization are employed, $\text{Nu} = (\Delta T)^{-1}$.
+In the evolved, statistically stationary state, when fixedT boundaries are employed, $\text{Nu} = 1 + \Peff\angles{wT} = \text{(Evolved Flux)\Peff}$, and when mixedFT boundaries and a flux nondimensionalization are employed, $\text{Nu} = (\Delta T)^{-1}$.
 This suggests that the equilibrated state of a given convective solution is characterized by both a flux and temperature Rayleigh number whose relationship is
 \begin{equation}
 \text{Ra}_{\partial_z T} = \text{Ra}_{\Delta T} \text{Nu}.
@@ -198,10 +199,9 @@ where $|\bm{A}|$ represents the magnitude of the vector $\bm{A}$.
 %%%%%%%%%%%
 %%%%%%%%%%%%
 \section{Results}
-\label{sec:results}
+\label{sec:2d_results}
 
 \subsection{Time Evolution}
-\label{sec:2d_results}
 
 \begin{figure}
 \includegraphics[width=\textwidth]{./figs/rbc_scalar_comparisons.pdf}
@@ -340,12 +340,11 @@ The successful degree with which this mechanism reproduces the evolved dynamics 
 \end{enumerate}
 The rapid evolution of fixedT runs, whose experimental energy reservoir does not change between the initial and final state, suggests that experimental restratification occurs rapidly in \RB convection.
 The long rundown of mixedFT experiments on display in Fig.~\ref{fig:rbc_scalar_comparisons} is entirely due to the energy reservoir, and the mean temperature of the simulation, drifting over time.
-The coupling of fixedT and mixedFT experiments essentially bypasses this first step of relaxation, and because the \RB system being studied here restratifies instantaneously, mixedFT dynamics can be sampled shortly after changing boundary conditions.
-It is plausible that the inclusion of stable layers within the domain where convective motions cannot rapidly mix the thermodynamic state would require the use of more complicated accelerated evolution techniques, such as those we previously described \cite{anders&all2018}, due to the non-negligible restratification timescales of those systems.
+Put differently, the classic \RB setup for $T_0(z)$ is a bad choice of initial conditions for mixedFT boundaries, and our procedure uses fixedT dynamics to choose a more ideal set of initial conditions.
 
 \subsection{Asymmetries induced by mixed boundaries}
 \label{sec:asymmetries}
-Now that we have verified a mechanism for rapidly and self-consistently achieving thermally equilibrated mixed-FT simulations, we study highly turbulent convection with mixedFT boundaries in an effort to understand the nature of asymmetries introduced to the problem by these boundary conditions.
+Now that we have verified a mechanism for rapidly and self-consistently achieving thermally equilibrated mixedFT simulations, we study highly turbulent convection with mixedFT boundaries in an effort to understand the nature of asymmetries introduced to the problem by these boundary conditions.
 [NOTE: in the version of the paper we will later submit, we will hopefully study Ra$_{\Delta T} = 10^{10}$ / Ra$_{\partial_z T} \sim 10^{12}$. For now, we'll carry on with the same values as in the previous section.]
 
 \begin{figure}
@@ -358,11 +357,11 @@ Now that we have verified a mechanism for rapidly and self-consistently achievin
 \label{fig:rbc_1D_profiles} }
 \end{figure}
 
-In Fig.~\ref{fig:rbc_1D_profiles}, we compare the horizontally averaged, vertical profiles of our fixed-T and mixed-FT cases.
+In Fig.~\ref{fig:rbc_1D_profiles}, we compare the horizontally averaged, vertical profiles of our fixedT and mixedFT cases.
 In the upper left panel, we show the mean temperature profiles achieved in the evolved state of both simulations.
 Throughout the full depth, these profiles differ by less than 2\%, as shown in the lower left panel.
 In the upper middle panel, we show the mean temperature profile in downflow areas compared to the mean temperature profile achieved in upflow areas.
-Surprisingly, despite symmetrical boundary conditions in fixed-T simulations and asymmetrical boundary conditions in mixed-FT cases, we find precisely the same asymmetries in upflows/downflows for both sets of boundary conditions.
+Surprisingly, despite symmetrical boundary conditions in fixedT simulations and asymmetrical boundary conditions in mixedFT cases, we find precisely the same asymmetries in upflows/downflows for both sets of boundary conditions.
 In general, we find that the boundary layer in upflows is more gradual in hot plumes, and the same is true for downflows and cold plumes.
 Once again, these profiles agree to within $< 2\%$.
 
@@ -375,7 +374,7 @@ Due to the conductive fluxes approaching zero in the interior, we cannot measure
 \includegraphics[width=\textwidth]{./figs/rbc_dynamics_asymmetries.pdf}
 \caption{ 
 	(left panel) PDFs of temperature measurements of a mixedFT (green) and fixedT (orange) case are displayed.
-	The right tail of the distribution (near the cold fixed-flux boundary for the mixedFT case) shows that fixed flux boundaries achieve more extreme temperature events than fixed temperature boundaries.
+	The right tail of the distribution (near the cold fixedflux boundary for the mixedFT case) shows that fixed flux boundaries achieve more extreme temperature events than fixed temperature boundaries.
 	(middle panel) A snapshot of the temperature anomaly in a mixedFT simulation.
 	The black outline boxes around the roots of the plumes are expanded in the bottom right panels.
 	Near the top (fixed temperature) boundary, the temperature anomaly at the root of the plume vanishes near the boundary, but this does not happen near the bottom (fixed flux) boundary, allowing for more extreme instantaneous values.
@@ -384,18 +383,17 @@ Due to the conductive fluxes approaching zero in the interior, we cannot measure
 
 In Fig.~\ref{fig:rbc_dynamics_asymmetries}, we examine the dynamical nature of the asymmetries which mixedFT boundaries introduce into the simulation.
 In the left panel, we plot PDFs of the temperature fields in comparable fixedT and mixedFT simulations.
-These PDFs agree remarkably well for cold temperatures (near the shared fixed-T boundary) and through the mean, but diverge in the tail of the PDF for hot temperatures (where the boundary conditions differ).
+These PDFs agree remarkably well for cold temperatures (near the shared fixedT boundary) and through the mean, but diverge in the tail of the PDF for hot temperatures (where the boundary conditions differ).
 We find that the mixedFT pdf has a much longer tail and is capable of achieving much hotter instantaneous temperature values than a fixedT simulation.
 In order to understand how this is possible, we examine a snapshot of the full temperature field.
 In the middle panel, we plot the temperature anomaly -- the temperature field with the mean vertical profile subtracted from it.
-We have outlined a portion of a cold plume near the upper (fixed-temperature) boundary and a portion of a hot plume near the lower (fixed-flux) boundary, and these regions are magnified in the lower right panels.
-The fixed-T upper boundary suppresses temperature anomaly at the upper boundary and regulates the temperature minima which can be achieved.
+We have outlined a portion of a cold plume near the upper (fixed-temperature) boundary and a portion of a hot plume near the lower (fixed-flux) boundary, and these regions are magnified in the rightmost panels.
+The fixedT upper boundary suppresses temperature anomaly at the upper boundary and regulates the temperature minima which can be achieved.
 The fixed-flux lower boundary does no such suppression and allows for extreme temperature values to be achieved in the plume-launching area, thus allowing for the asymmetry in the tails of the temperature PDF.
 
 We note briefly that these asymmetries do not seem to affect mean or volume-averaged quantities in these simulations appreciably (see the agreement between mixedFT and fixedT in Figs.~\ref{fig:rbc_scalar_comparisons}\&\ref{fig:rbc_1D_profiles}).
 However, the fact that fixed-flux boundaries produce a wider temperature distribution with more extreme values may be important in some astrophysical studies.
-For example, some authors have aimed to quantify the statistical distribution of penetrative plumes from a convective region into a stable region \cite{pratt&all2017}, with implications for the solar dynamo.
-These results suggest that the choice of imposed boundary conditions can affect the extreme events that a simulation is capable of achieving.
+We explore this further in the discussion in section \ref{sec:discussion}.
 
 
 
@@ -403,32 +401,50 @@ These results suggest that the choice of imposed boundary conditions can affect 
 
 \section{Rotating \RB Convection}
 \label{sec:rotating_results}
-We now extend our study of 2D RBC to a more complicated experiment.
-Here, we examine rotating RBC with an Ekman number of $10^{-6}$.
-We study a fixedT case whose supercriticality is $\sim 3$ with Ra$_{\Delta T} = 2.75\times 10^9$, and a corresponding mixedFT case with $\text{Ra}_{\partial_z T} = 2.1 \times 10^{10}$.
-We furthermore employ stress free boundary conditions which allow for the generation of mean flows such as large scale vortices \cite{couston&all2019}.
+\begin{figure}
+\includegraphics[width=\textwidth]{./figs/rotating_panels.pdf}
+\caption{ 
+	(left three panels) Time traces of rolling averages over 50 freefall times of a rotating mixedFT simulation (green) and a fixedT (orange) simulation.
+	(top left panel) The Rayleigh number, normalized by the input Ra$_{\Delta T}$ = 2.75$\,\times 10^9$ of the fixedT simulation.
+	(middle left panel) The Rossby number evolution of both simulation; the bulk flow of the mixedFT simulation transitions from a marginally rotationally constrained state to a heavily constrained state, while the fixedT simulation is in this latter state through its full evolution.
+	(bottom left panel) The Peclet number evolution of the simulations is shown, normalized by the mean value measured over the last 500 freefall times of the fixedT simulation.
+	(right upper panel) Parameter space plots of Nusselt vs. Ra$_{\Delta T}$.
+	Circlular and diamond data points are respectively simulations and experimental data points from \cite{cheng&all2015}.
+	The color of the data points signifies the Ekman number of the points, and black points are nonrotating.
+	Data from our mixedFT experiment are shown as a thick green trace, and the fixedT experiment's average is shown as a large orange star.
+	(Bottom right panels) Snapshots of the vertically integrated z-component of the vorticity from the mixedFT simulation.
+	At early times (left panel), a powerful large scale vortex with positive vorticity develops.
+	This vortex slowly decays and becomes a vortex pair (middle panel), as seen in \cite{stellmach&all2014}.
+	In the converged state, we see oscillatory behavior between this vortex pair behavior and jets (right panel).
+	The fixedT case exhibits the oscillatory behavior between vortex pairs and jets throughout its whole evolution.
+	The three vertical black lines in the left panels signify the times at which this snapshots are taken.
+\label{fig:rotating_panels} }
+\end{figure}
 
-In the left three panels of Fig.~\ref{fig:rotating_panels}, we once compare the time evolution of the mixedFT and fixedT cases.
+
+
+We now extend our study of 2D RBC to a more complicated experiment.
+Here, we examine 3D rotating RBC with an Ekman number of $10^{-6}$.
+We study a fixedT case whose supercriticality is $\sim 3$ with Ra$_{\Delta T} = 2.75\times 10^9$, and a corresponding mixedFT case with $\text{Ra}_{\partial_z T} = 2.1 \times 10^{10}$.
+Both simulations have an aspect ratio $\Gamma = 0.481$, which is roughly ten times larger than the critical wavelength of fixedT convection at Ek = $10^{-6}$.
+These simulations employ stress free boundary conditions which allow for the generation of mean flows such as large scale vortices \cite{couston&all2019}.
+
+In the left three panels of Fig.~\ref{fig:rotating_panels}, we compare the time evolution of the mixedFT and fixedT cases.
 The top left panel shows the evolution of Ra$_{\partial_z T}$ and Ra$_{\Delta T}$.
 Even in the presence of strong rotation, the fixedT case's fluxes immediately equilibrate, but the mixedFT case takes thousands of freefall times to achieve thermal relaxation.
 In the middle left panel, we show the evolution of the Rossby number.
-While the evolved states of both simulations exhibit rotationally constrained dynamics with Ro$\sim 0.1$, the initial state of the mixedFT simulation is only weakly rotationally constrained (Ro$\sim 1$).
+While the evolved states of both simulations exhibit rotationally constrained dynamics with Ro $\,\sim 0.1$, the initial state of the mixedFT simulation is only weakly rotationally constrained (Ro $\,\sim 1$).
 The degree of rotational constraint felt by the flows decreases slowly toward its final state over thousands of freefall times.
 In the bottom left panel, we display the evolution of the Peclet number over time.
 Somewhat surprisingly, the peak value of Pe is found not during the convective transient but rather a few hundreds of freefall times later.
 After achieving this peak value, the mean Pe monotonically decreases toward its final state.
-We suspect that initially large value of Ra$_{\Delta T}$ in the mixedFT case drives high velocity flow associated with a developed large scale vortex (LSV).
+We suspect that the initially large value of Ra$_{\Delta T}$ in the mixedFT case drives high velocity flow associated with a developed large scale vortex (LSV).
 As Ra$_{\Delta T}$ and convective driving decrease over time, the driving of the kinetic energy in this LSV eventually reaches an equilibrium value before decreasing, leading to the ``bump'' in the Pe trace.
 
 In the upper right panel of Fig.~\ref{fig:rotating_panels}, we plot the evolution of Nu(t) vs. Ra(t) for our mixedFT case (thick green line) and the evolved value of Nu in the fixedT case (orange star).
 We have additionally plotted data from numerical simulations (circles) and experiments (diamonds) as reported in the appendix tables of \cite{cheng&all2015}.
-We note that these comparison values are in cylindrical domains with Pr=7, whereas we are in Cartesian geometry with Pr=1, some some differences are expected.
-The evolution of Nu vs Ra is very steep compared to the nonrotating RBC cases in Fig.~\ref{fig:rbc_scalar_comparisons}.
-Although the simulation details of mixedFT simulations are not, on average, useful, this case of rotating convection is one case where they could be.
-The scaling of Nu vs Ra in the rotationally constrained regime is poorly understood [cite, cite], but a single mixedFT simulation can trace through a large portion of this rotationally constrained parameter space.
-The evolution of these simulation could therefore perhaps be used to understand how the nature of convection changes as it develops into an increasingly rotationally constrained regime.
-However, we once again caution the reader that if they are primarily intersted in the evolved simulation dynamics, then the transient dynamics can be very misleading.
-Not only does the mixedFT transient state exhibit more turbulence and heat transport than an evolved state, but the degree of rotational constraint -- and therefore the dominant scale of convection -- also changes appreciably over time.
+We note that these comparison values are in cylindrical domains with Pr=7, whereas we are in Cartesian geometry with Pr=1, so some differences are expected.
+As has been seen previously, the evolution of Nu vs Ra in the rotationally constrained regime is very steep compared to the nonrotating RBC cases in Fig.~\ref{fig:rbc_scalar_comparisons}.
 
 In the bottom right panels of Fig.~\ref{fig:rotating_panels}, we examine the evolution of dominant flow structures over the course of thermal relaxation.
 Shown is the vertically integrated vertical component of the vorticity.
@@ -437,35 +453,27 @@ Over thousands of freefall times, this LSV evolves into a long-lived vortex pair
 Finally, in the evolved state, this vortex pair solution begins to oscillate with domain-wide jets, such as those displayed in the right panel.
 We find that the the fixedT solution shows this oscillatory behavior between vortex pairs and jets immediately and throughout the full 5000 frefall timescales of evolution that we simulated.
 
-Importantly, the convective transient of the mixedFT simulation studied here requires significantly higher spectral resolution to resolve than the evolved state.
-The fixedT simulation shown in this section was computed stably at $128^3$.
-On the other hand, the convective transient of the mixedFT simulation was computed at $512\times384^2$.
-In order to reduce the computational cost of this simulation, we reduced the vertical resolution twice as the simulation became more rotationally constrained.
-One hundred freefall times after transient, we reduced the resolution to $256\times384^2$.
-About $3.3 \times 10^3$ freefall times into the simulation, we further reduced the vertical resolution to $128\times384^2$.
-At each of these times, we found that the simulation solution could not be reproduced with fidelity upon lowering the horizontal resolution.
+We note briefly that the transition from the unconstrained to rotationally constrained regime may be one area where the time evolution of mixedFT simulations could be useful.
+The scaling of Nu vs Ra in the rotationally constrained regime is much less well understood than it is in classical RBC [cite, cite].
+A single mixedFT simulation can trace through a large portion of this rotationally constrained parameter space, as shown in the upper right panel of Fig.~\ref{fig:rotating_panels}.
+In the nonrotating case, Nu(t) vs.~Ra(t) produced the expected result (Fig.~\ref{fig:rbc_scalar_comparison}), so this approach may be one way to cleverly fill in this parameter space.
+However, it is probable that the best course of action is simply to run a large suite of fixedT simulations that cover the same track for two reasons:
+\begin{enumerate}
+\item The long thermal rundown has some short-lived memory of the higher-Ra$_{\Delta T}$ state that it was recently in.
+This is seen both in the post-transient bump of Pe in Fig.~\ref{fig:rotating_panels}, and also was found from a practical computing standpoint.
+In order to reduce the computational cost of this mixedFT simulation, we reduced the vertical resolution from $512\times384^2$ to $256\times384^2$ (after about 100 freefall times) and then later to $128\times384^2$ (after about $3.3 \times 10^3$ freefall times).
+At each of these times, we found that lowering the \emph{horizontal} coefficient resolution of the simulation did not reproduced the simulation solution with fidelity.
+For comparison, the fixedT simulation whose dynamics are identical to the evolved mixedFT simulation was well resolved at a coefficient resolution of $128^3$.
 This suggests that small scale turbulent velocity structure injected by the vigorous transient is long lived throughout the thermal evolution of the simulation.
-
-We also note that the difference in computational cost required to reach the equilibrated solution is staggering.
-The number of iteration per cpu-hour was 4.25 at $512\times384^2$, 10.6 at $256\times384^2$, and 38 at $128\times384^2$.
-The first resolution was run for $1.59 \times 10^5$ iterations, the second for $2.22 \times 10^6$ iterations, and the third for $3.30 \times 10^6$ iterations.
-
-On the other hand, the fixedT simulation got 56.4 iterations per cpu-hour, and ran for $1.46 \times 10^6$ iterations, for $\sim 2.6 \times 10^4$ cpu-hours.
-
-
+\item The cost of running a turbulent mixedFT simulation, compared to running its comparison fixedT simulation, is astounding.
+The mixedFT case ran for roughly $1.4 \times 10^4$ freefall time units total, and the number of iterations achieved per cpu-hour was $\sim$0.733 at $512\times384^2$, $\sim$2.03 at $256\times384^2$, and $\sim$6.79 at $128\times384^2$.
+The simulation stepped through $1.59 \times 10^5$, $2.22 \times 10^6$, and $3.30 \times 10^6$ iterations at these resolutions, respectively, for a combined total of 2.32 million cpu-hours.
+For comparison, the fixedT simulation ran for $5 \times 10^3$ freefall units at $128^3$, took 56.4 iterations per cpu-hour, and ran for $1.46 \times 10^6$ iterations, for $\sim 2.6 \times 10^4$ cpu-hours.
+In other words, the computational cost of the mixedFT simulation was \emph{two orders of magnitude} larger than its comparison fixedT case; even though it sampled many different values of Ra$_{\Delta T}$ momentarily, its cost makes this hardly worth it.
+\end{enumerate}
 
 
 
-\begin{figure}
-\includegraphics[width=\textwidth]{./figs/rotating_panels.pdf}
-\caption{ 
-	(left panel) PDFs of temperature measurements of a mixedFT (green) and fixedT (orange) case are displayed.
-	The right tail of the distribution (near the cold fixed-flux boundary for the mixedFT case) shows that fixed flux boundaries achieve more extreme temperature events than fixed temperature boundaries.
-	(middle panel) A snapshot of the temperature anomaly in a mixedFT simulation.
-	The black outline boxes around the roots of the plumes are expanded in the bottom right panels.
-	Near the top (fixed temperature) boundary, the temperature anomaly at the root of the plume vanishes near the boundary, but this does not happen near the bottom (fixed flux) boundary, allowing for more extreme instantaneous values.
-\label{fig:rotating_panels} }
-\end{figure}
 
 
 %%%%%%%%%%%%
@@ -476,10 +484,49 @@ On the other hand, the fixedT simulation got 56.4 iterations per cpu-hour, and r
 
 \section{Discussion \& Conclusions}
 \label{sec:discussion}
+In summary, we have studied the time evolution of \RB convection under two different formulations of the thermal boundary conditions: ``mixedFT'' boundaries, where the flux is fixed at the bottom and temperature is fixed at the top, and ``fixedT'' boundaries, where temperature is fixed at the top and bottom.
+We find that mixedFT experiments experience a long thermal relaxation which is not experienced by fixedT simulations.
+Through studying this relaxation and the relaxed states of both simulations, we come to the following conclusions:
+\begin{enumerate}
+\item Thermal relaxation has two components: (a) changes in the energy reservoir and (b) changes in the experimental stratification.
+We find that the long relaxation of mixedFT simulations is due to changes in the experimental energy reservoir; this reservoir is roughly constant in fixedT simulations.
+On the other hand, RBC seems to restratify itself nearly instantaneously, as suggested by the rapid equilibration of our fixedT simulations.
+\item The thermal relaxation process of a mixedFT simulation essentially performs a sweep through Ra$_{\Delta T}$ parameter space.
+We find that the heat transport (the Nusselt number) follows classical scaling laws through this parameter space sweep, but does so in the presence of increased turbulent velocities (quantified by the Reynolds number).
+\item Despite minor asymmetries in the instantaneously measured flows, the mean state of a mixedFT simulation appears equally symmetrical to fixedT simulations.
+\item The great computational expense of achieving thermal relaxation in a mixedFT simulation can be avoided by using the evolved state of a fixedT simulation as a ``better'' set of initial conditions for a mixedFT simulation.
+In other words, the proper choice of initial conditions can ensure that the evolved experimental energy reservoir is close to the initial state.
+\item If dynamical measurements are taken during the thermal relaxation of a mixedFT simulation, they may be misleading.
+Dynamics during the relaxation are in a more turbulent state than in the evolved state, and can even feel different flow balances in the equation of motion (as quantified by e.g., the Rossby number).
+\end{enumerate}
 
-Here we basically say everything we said again, but in short form, and then we perhaps talk about the implications for astrophysics.
-Doesn't hurt to repeat all of the imprtant points we made all over again.
+In this work, we have studied the simplest possible case of convection: \RB convection; we will now comment on open avenues of research that should be investigated and some lessons to be learned for astrophysical convection.
+Throughout this work, we have made the assumption that convection is only ``interesting'' in its final, fully equilibrated state.
+This is not always true --- for example, in the late stages of the lifetimes of stars, some burning regions have sufficiently short lifetimes that they likely do not come into thermal relaxation [cite, cite].
+The use of mixedFT boundaries or initial conditions that we consider to be ``poor'' may help in understanding these transient lifetime stages.
+However, for stages in the lifetimes of stellar or planetary atmospheres or interiors that survive for much longer than their respective Kelvin-Helmholtz timescale, it is essential to study relaxed convection, as in the fixedT or evolved mixedFT cases here.
 
+One question which our study of RBC is not able to study is: how long does it take for a given convective system to restratify?
+Our fully convective domains restratified instantaneously, but it is likely that mixed convective-and-stably-stratified domains should have regions that are not turbulently mixed by convection which could also have long relaxation timescales.
+It is, however, probable that clever techniques could be used to rapidly restratify atmospheres \cite{anders&all2018}, and this should be examined in more detail for a given thermal stratification.
+
+RBC is fundamentally symmetrical, but many processes in astrophysics occuring in density-stratified domains in which the symmetries of the problem are fundamentally broken.
+In the present study, we observed that flux boundaries achieve more extreme values than temperature boundaries.
+In studies of overshooting or penetrating convection, these more extreme values could launch further into a stable layer, and so the choice of boundary condition on the plate that launches plumes into an adjacent radiative zone could change experimental outcomes.
+Some authors have aimed to quantify the statistical distribution of penetrative plumes from a convective region into a stable region \cite{pratt&all2017, korre&all2019}, and it is unclear if different choices of boundary conditions could change the observed distribution of overshooting plumes observed there.
+
+Some of the most complex astrophysical experiments are dynamo simulations which aim to understand self-consistently evolving magnetic dynamos in rotating, spherical, magnetohydrodynamical domains.
+These dynamo simulations involve large numbers of timesteps through many freefall timescales in order to study the generation and evolution of magnetic fields and mean flows.
+We found here in our mixedFT rotating simulation that the early unrelaxed state generated a mean flow that was much more intense and large-scale than the eventual flows that developed in the relaxed state.
+If we had terminated our mixedFT rotating simulation too early, we would not have seen this feature evolve as the simulation relaxed and progressed into a more rotationally constrained, lower Rossby number state.
+Many dynamo simulations are performed in highly turbulent regimes at the cutting-edge of what is achievable using modern computational resources.
+As a result, timestepping through thousands of freefall timescales is not possible in these simulations.
+It is therefore crucial that dynamo simulations be set up in such a manner as to avoid large changes to the system's energy reservoir such as those that we observed and studied here.
+Some authors [cite, cite] employ fixed-flux boundary conditions at \emph{both} boundaries in these simulations, and our results here suggest that such a choice is wise in these simulations.
+
+In conclusion, we note that our results here should provide astrophysical convection simulations with reason for caution and optimism.
+As a community of convection modellers, it is crucial that we understand the consequences that our choices of boundary conditions have on our experiments so that we do not misinterpret the evolved dynamics.
+However, through the proper setup of experiments (here, fixedT instead of mixedFT boundary conditions), some of the problems that we face in numerics (thermal relaxation) can simply disappear.
 
 \begin{acknowledgments}
 We'd like to thank Daniel Lecoanet, who first pointed out to us the importance of examining Ra$_{\Delta T}$ in mixedFT simulations. 
@@ -498,29 +545,40 @@ Computations were conducted with support by the NASA High End Computing (HEC) Pr
 
 \begin{table}[ht]
 \caption{
-	Input and output values from the simulations in this work are shown.
+	Input and output values from the simulations in this work are shown; all simulations have a Prandtl number of 1.
 	The ``Nu comp'' values are comparison Nusselt number values reported in \cite{zhu&all2018}.
 	Values of Nu and Re are the sample mean; the standard deviation of the sample mean is shown for Nu measurements, and is smaller than the number of significant figures reported for Re measurements.
+	Resolutions marked by a $*$ show the initial, highest resolution utilized in the simulation.
+	The 2D mixedFT Ra = $4.83 \times 10^{10}$ simulation's resolution was changed to $1024\times2048$ about 500 freefall time units after transient.
+	The rotating mixedFT case's resolution was reduced to $256\times384^2$ about one hundred freefall time units after transient, and was further reduced to $128\times384^2$ about $3.3\times 10^3$ freefall times after transient.
+	``f-to-m'' simulations are mixedFT simulations which use an evolved fixedT simulation as initial conditions, and their cpu-hour cost does not include the cost of the fixedT transient.
 }
 \setlength{\tabcolsep}{12pt}
 \label{table:speed}
 \begin{center}
-\begin{tabularx}{\textwidth}{c c c c c c c c c}
+\begin{tabularx}{\textwidth}{c c c c c c c}
 \hline																	
-BCs	&	Ra	&	Pr	&	Ek	&	nz$\times$nx$\times$ny	&	cpu-hours &	Nu	&	Nu comp	&	Re \\
-%\hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
-%\multicolumn{6}{c}{\vspace{0.1cm}2D Runs} \\
+BCs	&	Ra	&	nz$\times$nx$\times$ny	&	cpu-hours &	Nu	&	Nu comp	&	Re \\
+\hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
+\multicolumn{7}{c}{\vspace{0.1cm}2D Runs ($\Gamma = 2$, no-slip)} \\
 \hline
-fixedT	&	$1.00 \times 10^8$	&	1	&	$\infty$	&	512x1024	&	$5.57 \times 10^3$	&	$25.4 \pm 0.1$	&	26.1	&	$3.18 \times 10^3$ \\
-mixedFT	&	$2.61 \times 10^9$	&	1	&	$\infty$	&	1024x2048	&	$1.21 \times 10^5$	&	$25.3 \pm 0.2$	&	26.1	&	$3.31 \times 10^3$ \\
-fixedT	&	$2.15 \times 10^8$	&	1	&	$\infty$	&	512x1024	&	$5.73 \times 10^3$	&	$31.3 \pm 0.2$	&	31.2	&	$5.17 \times 10^3$ \\
-fixedT	&	$4.64 \times 10^8$	&	1	&	$\infty$	&	1024x2048	&	$4.66 \times 10^4$	&	$38.4 \pm 0.3$	&	38.9	&	$8.60 \times 10^3$ \\
-fixedT	&	$1.00 \times 10^9$	&	1	&	$\infty$	&	1024x2048	&	$5.58 \times 10^4$	&	$48.0 \pm 0.4$	&	48.3	&	$1.33 \times 10^4$ \\
-fixedT	&	$2.15 \times 10^9$	&	1	&	$\infty$	&	1024x2048	&	$6.38 \times 10^4$	&	$60.4 \pm 0.5$	&	61.1	&	$1.99 \times 10^4$ \\
+fixedT	&	$1.00 \times 10^8$		&	512x1024	&	$5.57 \times 10^3$	&	$25.4 \pm 0.1$	&	26.1	&	$3.18 \times 10^3$ \\
+mixedFT	&	$2.61 \times 10^9$		&	1024x2048	&	$1.21 \times 10^5$	&	$25.3 \pm 0.2$	&	26.1	&	$3.31 \times 10^3$ \\
+f-to-m	&	$2.61 \times 10^9$		&	512x1024	&	$1.88 \times 10^3$	&	$26.1 \pm 0.1$	&	26.1	&	$3.22 \times 10^3$ \\
+fixedT	&	$2.15 \times 10^8$		&	512x1024	&	$5.73 \times 10^3$	&	$31.3 \pm 0.2$	&	31.2	&	$5.17 \times 10^3$ \\
+fixedT	&	$4.64 \times 10^8$		&	1024x2048	&	$4.66 \times 10^4$	&	$38.4 \pm 0.3$	&	38.9	&	$8.60 \times 10^3$ \\
+fixedT	&	$1.00 \times 10^9$		&	1024x2048	&	$5.58 \times 10^4$	&	$48.0 \pm 0.4$	&	48.3	&	$1.33 \times 10^4$ \\
+mixedFT	&	$4.83 \times 10^{10}$	&	2048x4096*	&	---					&	---				&	48.3	&	--- \\
+f-to-m	&	$4.83 \times 10^{10}$	&	1024x2048	&	$1.11 \times 10^4$	&	$48.7 \pm 0.3$	&	48.3	&	$1.36 \times 10^4$ \\
+fixedT	&	$2.15 \times 10^9$		&	1024x2048	&	$6.38 \times 10^4$	&	$60.4 \pm 0.5$	&	61.1	&	$1.99 \times 10^4$ \\
+fixedT	&	$4.64 \times 10^9$		&	1536x3072	&	---					&	---				&	76.3	&	--- \\
+fixedT	&	$1.00 \times 10^{10}$	&	2048x4096	&	---					&	---				&	95.1	&	--- \\
+f-to-m	&	$9.51 \times 10^{11}$	&	2048x4096	&	---					&	---				&	95.1	&	--- \\
 \hline																	
+\multicolumn{7}{c}{\vspace{0.1cm}3D Rotating Runs (Ek = $10^{-6}$, $\Gamma = 0.481$, stress-free)} \\
 \hline																	
-fixedT	&	$2.75 \times 10^9$		&	1	&	$10^{-6}$	&	128$^3$				&	?					&	$8.04 \pm 0.01$	&	---		&	$1.71 \times 10^3$ \\
-mixedFT	&	$2.1 \times 10^{10}$	&	1	&	$10^{-6}$	&	nz$\times$384$^2$	&	?					&	$7.86 \pm 0.01$	&	---		&	$1.76 \times 10^3$ \\
+fixedT	&	$2.75 \times 10^9$		&	128$^3$				&	$2.6 \times 10^4$	&	$8.04 \pm 0.01$	&	---		&	$1.71 \times 10^3$ \\
+mixedFT	&	$2.1 \times 10^{10}$	&	512$\times$384$^2$*	&	$2.3 \times 10^6$	&	$7.86 \pm 0.01$	&	---		&	$1.76 \times 10^3$ \\
 \hline																	
 \end{tabularx}
 \end{center}

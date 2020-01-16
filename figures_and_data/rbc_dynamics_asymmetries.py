@@ -85,14 +85,14 @@ fk = '{:.4e}'.format(1.00e8)
 fig = plt.figure(figsize=(7.5, 2))
 gs = gridspec.GridSpec(1000, 1000)
 
-subplots = [( (50 , 0),         900,    300),
-            ( (50 , 400),       900,    400),
-            ( (350, 800),       300,    150),
-            ( (650, 800),       300,    150)
+subplots = [( (0 , 0),          900,    300),
+            ( (0 , 400),        900,    400),
+            ( (0, 800),         425,    150),
+            ( (425, 800),       425,    150)
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 
-cax = plt.subplot(gs.new_subplotspec((100, 800), 125, 150))
+cax = plt.subplot(gs.new_subplotspec((950, 825), 50, 125))
 
 # Panel 1, PDF comparison
 plt.sca(axs[0])
@@ -148,8 +148,8 @@ zz_b, xx_b = np.meshgrid(z_big.flatten(), x_big.flatten())
 T_field.set_scales(big_scale, keep_data=True)
 c = ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin=-dT/2, vmax=dT/2)
 
-top_plume_bounds = [(-0.75, -0.5, -0.5, -0.75, -0.75),  (0.5, 0.5, 0.4, 0.4, 0.5)]
-bot_plume_bounds = [(0.65, 0.9, 0.9, 0.65, 0.65), (-0.4, -0.4, -0.5, -0.5, -0.4)]
+top_plume_bounds = [(-0.75, -0.6, -0.6, -0.75, -0.75),  (0.5, 0.5, 0.4, 0.4, 0.5)]
+bot_plume_bounds = [(0.25, 0.4, 0.4, 0.25, 0.25), (-0.4, -0.4, -0.5, -0.5, -0.4)]
 for i in range(4):
     plt.plot(top_plume_bounds[0][i:i+2], top_plume_bounds[1][i:i+2], c='k')
     plt.plot(bot_plume_bounds[0][i:i+2], bot_plume_bounds[1][i:i+2], c='k')
@@ -183,11 +183,11 @@ for i in [2, 3]:
     axs[i].set_yticks(())
 
 #Colorbar
-bar = plt.colorbar(c, cax=cax, orientation='horizontal')
+bar = plt.colorbar(c, cax=cax, orientation='horizontal')#, rasterized=True)
 cax.set_xticklabels(())
 bar.set_ticks(())
-cax.text(0.28, 2.1, r'$\pm\Delta T / 2$', transform=ax.transAxes)
-cax.text(0.32, 2.9, r'$T - \bar{T}$', transform=ax.transAxes)
+cax.text(0.25, -0.55, r'$\pm\Delta T / 2$', transform=ax.transAxes)
+cax.text(0.3, -0.2, r'$T - \bar{T}$', transform=ax.transAxes)
 #cax.annotate(r'$-|S| \times 10^{-5}$', fontsize=8,  xy=(-0.37, 0.5), va='center', annotation_clip=False)
 #cax.annotate(r'$|S| \times 10^{-5}$', fontsize=8,  xy=(1.02, 0.5),  va='center',  annotation_clip=False)
 
