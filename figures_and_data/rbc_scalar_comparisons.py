@@ -16,6 +16,9 @@ import h5py
 
 import pandas as pd
 
+mColor = 'darkorange'#olivedrab'
+fColor = 'indigo'
+
 def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 'left_flux', 'right_flux']):
     """
     Reads scalar data in from a folder containing a series of subfolders of different Ra values.
@@ -97,11 +100,11 @@ axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 plt.sca(axs[0])
 ax = axs[0]
 #plt.grid(which='both')
-ax.plot([1, 1], [1,1], color='olivedrab', lw=2, label='mixedFT')
-plt.axhline(np.mean(mixed_trace['ra_flux'])/1e8, color='olivedrab', lw=1)
-plt.axhline(np.mean(fixed_trace['ra_temp'])/1e8, color='darkorange', lw=1, ls='-.')
-ax.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/1e8, color='olivedrab', lw=2, ls='-.', label='')
-ax.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/1e8, color='darkorange', lw=2, label='fixedT')
+ax.plot([1, 1], [1,1], color=mColor, lw=2, label='mixedFT')
+plt.axhline(np.mean(mixed_trace['ra_flux'])/1e8, color=mColor, lw=1, ls='-.')
+plt.axhline(np.mean(fixed_trace['ra_temp'])/1e8, color=fColor, lw=1)
+ax.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/1e8, color=mColor, lw=2, label='')
+ax.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/1e8, color=fColor, lw=1, ls='-.', label='fixedT')
 ax.legend(loc='center', frameon=True, fontsize=7)
 ax.set_ylabel(r'Ra/$10^8$')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
@@ -117,8 +120,8 @@ plt.yscale('log')
 ##plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], (1/26.1)+(1/2-1/26.1)*np.exp(-mixed_trace['sim_time']/t_S)    , c='k', lw=0.5) #1418
 #plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], (1/26.1)+(1/2-1/26.1)*np.exp(-mixed_trace['sim_time']/t_best) , c='k', lw=0.5)
 
-plt.text(-1500, 0.05, r'Ra$_{\Delta T}$')
-plt.text(-2500, 0.58, r'Ra$_{\partial_z T}$')
+plt.text(-1500, 1.3, r'Ra$_{\Delta T}$')
+plt.text(-2500, 15, r'Ra$_{\partial_z T}$')
 
 
 #Panel 2, Nu evolution
@@ -127,9 +130,9 @@ ax = axs[1]
 
 Nu_final_temp = np.mean(fixed_trace['Nu'][-5000:])
 
-plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Nu']/Nu_final_temp, color='olivedrab', lw=2, label='mixedFT')
-plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Nu']/Nu_final_temp, color='darkorange', lw=2, label='fixedT')
-plt.axhline(1, c='darkorange', lw=1)
+plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Nu']/Nu_final_temp, color=mColor, lw=2, label='mixedFT')
+plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Nu']/Nu_final_temp, color=fColor, lw=2, label='fixedT')
+plt.axhline(1, c=fColor, lw=1)
 plt.yscale('log')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 plt.ylim(0.7, 3)
@@ -143,9 +146,9 @@ ax = axs[2]
 
 
 Pe_final_temp = np.mean(fixed_trace['Pe'][-5000:])
-plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color='olivedrab', lw=2, label='mixedFT')
-plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color='darkorange', lw=2, label='fixedT')
-plt.axhline(1, c='darkorange', lw=1)
+plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color=mColor, lw=2, label='mixedFT')
+plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color=fColor, lw=2, label='fixedT')
+plt.axhline(1, c=fColor, lw=1)
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 ax.set_ylabel(r'Pe/Pe$_{\Delta T}$')
 #plt.yscale('log')
@@ -171,10 +174,10 @@ for k, data in mixed_data.items():
     rolled = df.rolling(window=1000, min_periods=1000).mean()
     label='Dedalus-mixedFT'
     plt.arrow(0.835, 0.85, -0.003, -0.16,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
+                 head_width=0.025, head_length=0.05, color=mColor, facecolor=mColor, rasterized='True')
     plt.arrow(0.838, 0.95, -0.003, -0.1,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
-    plt.plot(rolled['ra_temp'], rolled['Nu']/nu_func(rolled['ra_temp']), color='olivedrab', zorder=0, label=label)
+                 head_width=0.025, head_length=0.05, color=mColor, facecolor=mColor, rasterized='True')
+    plt.plot(rolled['ra_temp'], rolled['Nu']/nu_func(rolled['ra_temp']), color=mColor, zorder=0, label=label)
 plt.scatter(zhu_ra, zhu_nu/nu_func(zhu_ra), marker='x', s=80, c='black', label='Zhu+18', zorder=1)
 my_ra = []
 my_nu = []
@@ -186,13 +189,11 @@ for ra, data in fixed_data.items():
     my_ra.append(float(ra))
     my_nu.append(nu)
     my_nu_sampleMean.append(stdev/np.sqrt(N))
-print(my_nu, my_nu_sampleMean)
-plt.errorbar(my_ra[1:], (my_nu/nu_func(my_ra))[1:], yerr=(my_nu_sampleMean/nu_func(my_ra))[1:], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=5, marker='o', label='Dedalus-fixedT', zorder=2)
-plt.errorbar(my_ra[0], (my_nu/nu_func(my_ra))[0], yerr=(my_nu_sampleMean/nu_func(my_ra))[0], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=7, marker='*', zorder=2)
-#plt.scatter(my_ra, my_nu/nu_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
+plt.errorbar(my_ra[1:], (my_nu/nu_func(my_ra))[1:], yerr=(my_nu_sampleMean/nu_func(my_ra))[1:], lw=0, elinewidth=1, capsize=1.5, c=fColor, ms=5, marker='o', label='Dedalus-fixedT', zorder=2)
+plt.errorbar(my_ra[0], (my_nu/nu_func(my_ra))[0], yerr=(my_nu_sampleMean/nu_func(my_ra))[0], lw=0, elinewidth=1, capsize=1.5, c=fColor, ms=10, marker='*', zorder=2)
 
 handles, labels = ax.get_legend_handles_labels()
-order = [0, 2, 1]
+order = [0, len(mixed_data.keys())+1, len(mixed_data.keys())]
 plt.legend([handles[i] for i in order], [labels[i] for i in order], loc='best', fontsize=7)
 plt.xscale('log')
 plt.xlabel(r'Ra$_{\Delta T}$')
@@ -214,10 +215,10 @@ for k, data in mixed_data.items():
     rolled = df.rolling(window=1000, min_periods=1000).mean()
     label='Dedalus-mixedFT'
     plt.arrow(0.925, 0.2, -0.04, 0.16,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
+                 head_width=0.025, head_length=0.05, color=mColor, facecolor=mColor, rasterized='True')
     plt.arrow(0.937, 0.15, -0.013, 0.05,transform=ax.transAxes,\
-                 head_width=0.025, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True')
-    plt.plot(rolled['ra_temp'], rolled['Pe']/pe_func(rolled['ra_temp']), color='olivedrab', zorder=0, label=label)
+                 head_width=0.025, head_length=0.05, color=mColor, facecolor=mColor, rasterized='True')
+    plt.plot(rolled['ra_temp'], rolled['Pe']/pe_func(rolled['ra_temp']), color=mColor, zorder=0, label=label)
 my_ra = []
 my_pe = []
 my_pe_sampleMean = []
@@ -230,9 +231,9 @@ for ra, data in fixed_data.items():
     my_pe_sampleMean.append(stdev/np.sqrt(N))
 
 #Need to make the ones that aren't a comparison case a different color
-plt.errorbar(my_ra[1:], (my_pe/pe_func(my_ra))[1:], yerr=(my_pe_sampleMean/pe_func(my_ra))[1:], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=5, marker='o', label='Dedalus-fixedT')
-plt.errorbar(my_ra[0], (my_pe/pe_func(my_ra))[0], yerr=(my_pe_sampleMean/pe_func(my_ra))[0], lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=7, marker='*', label='Dedalus-fixedT')
-#plt.scatter(my_ra, my_pe/pe_func(my_ra), s=15, c='darkorange', marker='o', label='Dedalus-fixedT')
+plt.errorbar(my_ra[1:], (my_pe/pe_func(my_ra))[1:], yerr=(my_pe_sampleMean/pe_func(my_ra))[1:], lw=0, elinewidth=1, capsize=1.5, c=fColor, ms=5, marker='o', label='Dedalus-fixedT')
+plt.errorbar(my_ra[0], (my_pe/pe_func(my_ra))[0], yerr=(my_pe_sampleMean/pe_func(my_ra))[0], lw=0, elinewidth=1, capsize=1.5, c=fColor, ms=10, marker='*')
+#plt.scatter(my_ra, my_pe/pe_func(my_ra), s=15, c=fColor, marker='o', label='Dedalus-fixedT')
 plt.xscale('log')
 plt.xlabel(r'Ra$_{\Delta T}$')
 plt.ylabel(r'Pe/(0.45 Ra$_{\Delta T}^{0.5}$)')

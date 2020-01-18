@@ -17,6 +17,8 @@ import h5py
 import pandas as pd
 import dedalus.public as de
 
+mColor = 'darkorange'
+fColor = 'indigo'
 
 def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 'left_flux', 'right_flux']):
     full_data = OrderedDict()
@@ -92,7 +94,7 @@ subplots = [( (0 , 0),          900,    300),
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 
-cax = plt.subplot(gs.new_subplotspec((950, 825), 50, 125))
+cax = plt.subplot(gs.new_subplotspec((950, 825), 50, 100))
 
 # Panel 1, PDF comparison
 plt.sca(axs[0])
@@ -102,15 +104,15 @@ fx, fp, fdx = [fixed_data[fk]['T'][k] for k in ['xs', 'pdf', 'dx']]
 
 delta_T_mixed = mixed_scalars[mk]['delta_T']
 dT = np.mean(delta_T_mixed[-5000:])
-plt.plot(mx/dT, mp*dT, label='mixed-FT', c='olivedrab')
-plt.plot(fx, fp, label='fixed-T', c='darkorange')
+plt.plot(mx/dT, mp*dT, label='mixedFT', c=mColor)
+plt.plot(fx, fp, label='fixedT', c=fColor)
 plt.yscale('log')
-ax.set_ylabel(r'$P(T/\Delta T)$')
-ax.set_xlabel(r'$T/\Delta T$')
+ax.set_ylabel(r'$P(T/\Delta T)$', labelpad=-1)
+ax.set_xlabel(r'$T/\Delta T$', labelpad=-1)
 ax.legend(loc='upper right', frameon=False, fontsize=7, markerfirst=False, borderpad=0.1)
 
-ax.fill_between(mx/dT, 1e-16, mp*dT, color='olivedrab', alpha=0.5)
-ax.fill_between(fx, 1e-16, fp, color='darkorange', alpha=0.5)
+ax.fill_between(mx/dT, 1e-16, mp*dT, color=mColor, alpha=0.5)
+ax.fill_between(fx, 1e-16, fp, color=fColor, alpha=0.5)
 
 minv = np.min((np.min(mp[mp > 0]*dT), np.min(fp[fp > 0])))
 maxv = np.max((np.max(mp[mp > 0]*dT), np.max(fp[fp > 0])))
@@ -156,8 +158,8 @@ for i in range(4):
 
 ax.set_xlim(-1, 1)
 ax.set_ylim(-0.5, 0.5)
-ax.set_ylabel('z')
-ax.set_xlabel('x')
+ax.set_ylabel('z', labelpad=-1)
+ax.set_xlabel('x', labelpad=-1)
 
 ax.text(0.02, 0.02, 'Fixed Flux (bottom)', transform = ax.transAxes)
 ax.text(0.51, 0.92, 'Fixed Temp (top)', transform = ax.transAxes)
@@ -186,8 +188,8 @@ for i in [2, 3]:
 bar = plt.colorbar(c, cax=cax, orientation='horizontal')#, rasterized=True)
 cax.set_xticklabels(())
 bar.set_ticks(())
-cax.text(0.25, -0.55, r'$\pm\Delta T / 2$', transform=ax.transAxes)
-cax.text(0.3, -0.2, r'$T - \bar{T}$', transform=ax.transAxes)
+cax.text(0.5, -0.55, r'$\pm\Delta T / 2$', transform=ax.transAxes, ha='center')
+cax.text(0.5, -0.21, r'$T - \bar{T}$', transform=ax.transAxes, ha='center')
 #cax.annotate(r'$-|S| \times 10^{-5}$', fontsize=8,  xy=(-0.37, 0.5), va='center', annotation_clip=False)
 #cax.annotate(r'$|S| \times 10^{-5}$', fontsize=8,  xy=(1.02, 0.5),  va='center',  annotation_clip=False)
 

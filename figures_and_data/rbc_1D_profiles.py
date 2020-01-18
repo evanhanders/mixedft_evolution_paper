@@ -19,8 +19,8 @@ import pandas as pd
 import dedalus.public as de
 
 
-mColor = 'olivedrab'
-fColor = 'darkorange'
+mColor = 'darkorange'
+fColor = 'indigo'
 
 
 def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 'left_flux', 'right_flux']):

@@ -16,6 +16,10 @@ import h5py
 
 import pandas as pd
 
+
+mColor = 'darkorange'#olivedrab'
+fColor = 'indigo'
+
 def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 'left_flux', 'right_flux', 'Ro']):
     """
     Reads scalar data in from a folder containing a series of subfolders of different Ra values.
@@ -91,13 +95,14 @@ gs = gridspec.GridSpec(1000, 1000)
 subplots = [( (50 , 0  ),       300,    430),
             ( (350, 0  ),       300,    430),
             ( (650, 0  ),       300,    430),
-            ( (50 , 530),       400,    540),
+            ( (100 , 530),      350,    540),
             ( (600, 450),       350,    180),
             ( (600, 630),       350,    180),
             ( (600, 810),       350,    180),
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 cax = plt.subplot(gs.new_subplotspec((950, 580), 50, 280))
+caxEk = plt.subplot(gs.new_subplotspec((70, 560), 30, 510))
 
 
 #Show times of dynamics panels
@@ -111,11 +116,11 @@ for i in range(3):
 plt.sca(axs[0])
 ax = axs[0]
 #plt.grid(which='both')
-ax.plot([1, 1], [1,1], color='olivedrab', lw=2, label='mixedFT')
-plt.axhline(np.mean(mixed_trace['ra_flux'])/2.75e9, color='olivedrab', lw=1)
-plt.axhline(np.mean(fixed_trace['ra_temp'])/2.75e9, color='darkorange', lw=1, ls='-.')
-ax.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/2.75e9, color='olivedrab', lw=2, ls='-.', label='')
-ax.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/2.75e9, color='darkorange', lw=2, label='fixedT')
+ax.plot([1, 1], [1,1], color=mColor, lw=2, label='mixedFT')
+plt.axhline(np.mean(mixed_trace['ra_flux'])/2.75e9, color=mColor, lw=1, ls='-.')
+plt.axhline(np.mean(fixed_trace['ra_temp'])/2.75e9, color=fColor, lw=1)
+ax.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/2.75e9, color=mColor, lw=2, label='')
+ax.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/2.75e9, color=fColor, lw=1, ls='-.', label='fixedT')
 ax.legend(loc='center', frameon=True, fontsize=7)
 ax.set_ylabel(r'Ra/$(2.75 \times 10^9)$')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
@@ -128,9 +133,9 @@ plt.sca(axs[1])
 ax = axs[1]
 
 
-plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Ro'], color='olivedrab', lw=2, label='mixedFT')
-plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Ro'], color='darkorange', lw=2, label='fixedT')
-plt.axhline(1, c='darkorange', lw=1)
+plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Ro'], color=mColor, lw=2, label='mixedFT')
+plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Ro'], color=fColor, lw=2, label='fixedT')
+plt.axhline(1, c=fColor, lw=1)
 plt.yscale('log')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 plt.ylim(0.08, 2)
@@ -144,9 +149,9 @@ ax = axs[2]
 
 
 Pe_final_temp = np.mean(fixed_trace['Pe'][-5000:])
-plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color='olivedrab', lw=2, label='mixedFT')
-plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color='darkorange', lw=2, label='fixedT')
-plt.axhline(1, c='darkorange', lw=1)
+plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color=mColor, lw=2, label='mixedFT')
+plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color=fColor, lw=2, label='fixedT')
+plt.axhline(1, c=fColor, lw=1)
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 ax.set_ylabel(r'Pe/Pe$_{\Delta T}$')
 plt.yscale('log')
@@ -160,26 +165,42 @@ plt.ylim(0.7, 20)
 plt.sca(axs[3])
 ax = axs[3]
 
+norm = matplotlib.colors.Normalize(vmin=4.5, vmax=7.5)
+sm   = plt.cm.ScalarMappable(cmap='viridis_r', norm=norm)
+sm.set_array([])
+
+bar = plt.colorbar(sm, cax=caxEk, orientation='horizontal')
+caxEk.text(-0.01, 0.5, 'Ek', transform=caxEk.transAxes, ha='right', va='center')
+bar.set_ticks((5, 6, 7))
+bar.set_ticklabels((r'$10^{-5}$', r'$10^{-6}$', r'$10^{-7}$'))
+bar.ax.xaxis.set_ticks_position('top')
+
+
+
 #Literature
 cheng_sims = np.genfromtxt('./data/rotation/cheng2015_tableA2.csv', delimiter=',', skip_header=1)
 cheng_data = np.genfromtxt('./data/rotation/cheng2015_tableA1.csv', delimiter=',', skip_header=1)
-plt.plot(cheng_data[:,1][np.isinf(cheng_data[:,0])], cheng_data[:,2][np.isinf(cheng_data[:,0])], c='k', lw=0, marker='d', ms=3, label='Cheng+2015 Experiments')
+plt.plot(cheng_data[:,1][np.isinf(cheng_data[:,0])], cheng_data[:,2][np.isinf(cheng_data[:,0])], c='k', lw=0, marker='d', ms=3, label='Cheng+2015 Experiments', alpha=0.4)
 for Ek, c in [(1e-5, 'yellowgreen'), (1e-6, 'forestgreen'), (1e-7, 'teal')]:
-    plt.plot(cheng_sims[:,1][cheng_sims[:,0] == Ek], cheng_sims[:,2][cheng_sims[:,0] == Ek], c=c, lw=0, marker='o', ms=3)
-plt.plot([1,1], [10,10], c='k', lw=0, marker='o', ms=3, label='Cheng+2015 Sims')
+    c = sm.to_rgba(-np.log10(Ek))
+    plt.plot(cheng_sims[:,1][cheng_sims[:,0] == Ek], cheng_sims[:,2][cheng_sims[:,0] == Ek], c=c, lw=0, marker='o', ms=3, alpha=0.4)
+plt.plot([1,1], [10,10], c='k', lw=0, marker='o', ms=3, label='Cheng+2015 Sims', alpha=0.4)
 
-for Ekmax, Ekmin, c in [(4e-6, 2e-6, 'forestgreen'), (1.5e-7, 6e-8, 'teal'), (3e-8, 1e-8, 'indigo')]:
-    good = (cheng_data[:,0] < Ekmax)*(cheng_data[:,0] > Ekmin)
-    plt.plot(cheng_data[:,1][good], cheng_data[:,2][good], c=c, lw=0, marker='d', ms=3)
-
+for Ra, Nu, Ek in zip(cheng_data[:,1], cheng_data[:,2], cheng_data[:,0]):
+    if np.isinf(Ek): continue
+    c = sm.to_rgba(-np.log10(Ek))
+    plt.plot(Ra, Nu, c=c, lw=0, marker='d', ms=3, alpha=0.4)
 #zhu_ra = [1e8,  2.15e8, 4.64e8, 1e9,  2.15e9, 4.64e9, 1e10, 2.15e10, 4.64e10]
 #zhu_nu = [26.1, 31.2,   38.9,   48.3, 61.1,   76.3,   95.1, 120.1,   152.2]
 #plt.plot(zhu_ra, zhu_nu, marker='x', ms=3, c='black', label='Zhu+18', lw=0)
 
 
 ra_trace = np.logspace(7, 13, 100)
-nu_func = lambda ra: 0.16*ra**(0.284)
-plt.plot(ra_trace, nu_func(ra_trace), c='k')
+#nu_func = lambda ra: 0.16*ra**(0.284)
+nu_func = lambda ra: 0.075*ra**(0.322)
+ax.plot(ra_trace, nu_func(ra_trace), c='k')
+#ax.text(0.02, 0.62, '$0.16 \mathrm{Ra}^{0.284}$', transform=ax.transAxes, ha='left', va='center', rotation=10)
+ax.text(0.02, 0.62, '$0.075 \mathrm{Ra}^{0.322}$', transform=ax.transAxes, ha='left', va='center', rotation=10)
 
 
 #Our data
@@ -189,11 +210,13 @@ for k, data in mixed_data.items():
     df = pd.DataFrame(data=data)
     rolled = df.rolling(window=1000, min_periods=1000).mean()
     label='mixedFT'
-    plt.arrow(0.525, 0.73, -0.001, -0.04,transform=ax.transAxes,\
-                 head_width=0.04, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True', zorder=np.inf)
-    plt.arrow(0.52, 0.635, -0.01, -0.017,transform=ax.transAxes,\
-                 head_width=0.04, head_length=0.05, color='olivedrab', facecolor='olivedrab', rasterized='True', zorder=np.inf)
-    plt.plot(rolled['ra_temp'], rolled['Nu'], color='olivedrab', label=label, lw=3)
+#    mArrowColor='chocolate'
+    plt.arrow(0.62, 0.65, -0.03, -0.06,transform=ax.transAxes,\
+                 head_width=0.04, head_length=0.04, color='k', rasterized='True', zorder=np.inf)
+    plt.arrow(0.656, 0.82, 0, -0.06,transform=ax.transAxes,\
+                 head_width=0.03, head_length=0.04, color='k', rasterized='True', zorder=np.inf)
+    plt.plot(rolled['ra_temp'], rolled['Nu'], color=mColor, label=label, lw=4)
+    plt.plot(rolled['ra_temp'], rolled['Nu'], color=sm.to_rgba(6), lw=2)
 my_ra = []
 my_nu = []
 my_nu_sampleMean = []
@@ -204,7 +227,7 @@ for ra, data in fixed_data.items():
     my_ra.append(float(ra))
     my_nu.append(nu)
     my_nu_sampleMean.append(stdev/np.sqrt(N))
-plt.errorbar(my_ra, my_nu, yerr=(my_nu_sampleMean), lw=0, elinewidth=1, capsize=1.5, c='darkorange', ms=10, marker='*', label='fixedT')
+plt.errorbar(my_ra, my_nu, yerr=(my_nu_sampleMean), lw=0, elinewidth=1, capsize=1.5, markerfacecolor=sm.to_rgba(6), markeredgecolor=fColor, ms=10, marker='*', label='fixedT')
 
 handles, labels = ax.get_legend_handles_labels()
 order = [0, 1, 2, 3]
@@ -213,12 +236,12 @@ plt.xscale('log')
 plt.xlabel(r'Ra$_{\Delta T}$')
 plt.ylabel(r'Nu')
 plt.yscale('log')
-plt.xlim(3e7, 3e12)
+plt.xlim(3e7, 3e11)
 #plt.xlim(9e7, 2e9)#3e10)
-#plt.ylim(0.5, 1.5)
+plt.ylim(1, 7e2)
 
 
-#Panel 5, Colormap 1 
+#Panel 5-7, Colormaps
 
 early_slice_f = 'data/rotation/mixedFT/ra2.1e10/slices/slices_t100_512x384x384_s1.h5'
 mid_slice_f = 'data/rotation/mixedFT/ra2.1e10/slices/slices_t5380_128x384x384_s1.h5'
@@ -231,7 +254,7 @@ for i, filename, t in [(4, early_slice_f, r'100'), (5, mid_slice_f, r'5400'), (6
         x, y = f['scales/x/1.0'], f['scales/y/1.0']
         yy, xx = np.meshgrid(y, x)
         maxv = np.abs(vorticity.max())
-        c = plt.pcolormesh(xx, yy, vorticity, cmap='PuOr_r', vmin=-maxv, vmax=maxv, rasterized=True)
+        c = plt.pcolormesh(xx, yy, vorticity, cmap='PiYG_r', vmin=-maxv, vmax=maxv, rasterized=True)
         plt.text(0.02, 0.05, r'$\omega_{{\mathrm{{max}}}} = {:.2f}$'.format(maxv), transform=ax.transAxes)
         plt.text(0.02, 0.88, r'$t \sim {}$'.format(t), transform=ax.transAxes)
 

@@ -142,10 +142,10 @@ for i in [0, 1, 2]:
 plt.sca(axs[0])
 ax = axs[0]
 #plt.grid(which='both')
-plt.plot(rolledr['sim_time'], rolledr['ra_flux']/2.61e9, color='black', lw=1, label=r'Ra$_{\partial_z T}$')
-plt.plot(rolledr['sim_time'], rolledr['ra_temp']/1.00e8, color='black', lw=1, label=r'Ra$_{\Delta T}$', ls='--')
+plt.plot(rolledr['sim_time'], rolledr['ra_flux']/2.61e9, color='black', lw=1, ls='-.', label=r'Ra$_{\partial_z T}/26.1$')#\langle\mathrm{Nu}\rangle$')
+plt.plot(rolledr['sim_time'], rolledr['ra_temp']/1.00e8, color='black', lw=1, label=r'Ra$_{\Delta T}$')
 ax.legend(loc='lower right', frameon=False, borderpad=0, fontsize=7)
-ax.set_ylabel(r'Ra/Ra$_{\mathrm{in}}$')
+ax.set_ylabel(r'Ra/$10^8$')
 plt.ylim(0.925, 1.075)
 ax.set_yticks((0.95, 1, 1.05))
 plt.yscale('log')
@@ -160,7 +160,7 @@ Nu_final_temp = np.mean(fixed_trace['Nu'][-5000:])
 plt.plot(rolledr['sim_time'], rolledr['left_flux']*np.sqrt(2.61e9), color='black', lw=1)
 print(rolledr['left_flux'])
 #plt.axhline(1, c='black', lw=1)
-ax.set_ylabel(r'left $|\partial_z T|$')
+ax.set_ylabel(r'left $\frac{\mathrm{Pe}_{\mathrm{ff}}^{-1}|\partial_z T|}{\mathrm{Flux}}$')
 ax.set_ylim(0.925, 1.075)
 ax.set_yticks((0.95, 1, 1.05))
 
@@ -171,7 +171,7 @@ ax = axs[2]
 
 plt.plot(rolledr['sim_time'], rolledr['left_T'], color='black', lw=1)
 #plt.axhline(1, c='black', lw=1)
-ax.set_ylabel(r'left $T$')
+ax.set_ylabel(r'left $T/\Delta T$')
 #plt.yscale('log')
 ax.set_xlabel(r'$t$')
 ax.set_ylim(0.925, 1.075)
@@ -187,8 +187,8 @@ for i, field in enumerate(keys):
 
     ax.fill_between(mx, 1e-16, mp, color='olivedrab', alpha=0.5)
     ax.fill_between(rx, 1e-16, rp, color='black', alpha=0.5)
-    ax.plot(mx, mp, label='mixed', color='olivedrab')
-    ax.plot(rx, rp, label='restarted', color='black')
+    ax.plot(mx, mp, label='mixedFT', color='olivedrab')
+    ax.plot(rx, rp, label='t-to-m', color='black')
     ax.set_yscale('log')
     ax.set_xlabel(labels[i])
     ax.set_ylim(np.min((mp[mp>0].min(), rp[rp>0].min())), np.max((mp.max(), rp.max())))
@@ -211,6 +211,8 @@ for i in [4, 6]:
 #Get rid of bad tick labels, etc.
 for i in [0, 1]:
     axs[i].tick_params(labelbottom=False)
+    axs[i].set_yticks((0.95, 1, 1.05))
+    axs[i].minorticks_off()
     axs[i].get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
     axs[i].get_yaxis().set_minor_formatter(matplotlib.ticker.NullFormatter())
 
