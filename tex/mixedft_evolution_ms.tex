@@ -26,6 +26,7 @@
 
 
 \newcommand\mnras{{MNRAS}}%
+\newcommand\apjl{{The Astrophysical Journal Letters}}%
 
 \begin{document}
 \author{Evan H. Anders}
@@ -453,7 +454,7 @@ Finally, in the evolved state, this vortex pair solution begins to oscillate wit
 We find that the the TT solution shows this oscillatory behavior between vortex pairs and jets immediately and throughout the full 5000 frefall timescales of evolution that we simulated.
 
 We note briefly that the transition from the unconstrained to rotationally constrained regime may be one area where the time evolution of FT simulations could be useful.
-The scaling of Nu vs Ra in the rotationally constrained regime is much less well understood than it is in classical RBC [cite, cite].
+The scaling of Nu vs Ra in the rotationally constrained regime is more complex than in unrotational convection due to first order dominance of geostrophy \citep{julien&all2012, plumley&julien2019}.
 A single FT simulation can trace through a large portion of this rotationally constrained parameter space, as shown in the upper right panel of Fig.~\ref{fig:rotating_panels}, so this approach may be one way to cleverly fill in this parameter space.
 However, it is probable that the best course of action is simply to run a large suite of TT simulations that cover the same track for two reasons:
 \begin{enumerate}
@@ -502,28 +503,28 @@ Dynamics during the relaxation are in a more turbulent state than in the evolved
 
 In this work, we have studied the simplest possible case of convection: \RB convection; we will now comment on open avenues of research that should be investigated and some lessons to be learned for astrophysical convection.
 Throughout this work, we have made the assumption that convection is only ``interesting'' in its final, fully equilibrated state.
-This is not always true --- for example, in the late stages of the lifetimes of stars, some burning regions have sufficiently short lifetimes that they likely do not come into thermal relaxation [cite, cite].
+This is not always true --- for example, in the late stages of the lifetimes of stars, some burning regions have sufficiently short lifetimes that they likely do not come into thermal relaxation \citep{clarkson&all2018, andrassy&all2020}.
 The use of FT boundaries or initial conditions that we consider to be ``poor'' may help in understanding these transient lifetime stages.
 However, for most convective studies where the lifetime of the natural convecting system is much larger than its Kelvin-Helmholtz timescale, it is essential to study relaxed convection, as in the TT or evolved FT cases here.
 
 One question which our study of RBC is not able to study is: how long does it take for a complex convective system to restratify?
-Our fully convective domains restratified instantaneously, but it is likely that mixed convective-and-stably-stratified domains [cite, cite] should have regions that are not turbulently mixed by convection which could also have long relaxation timescales.
+Our fully convective domains restratified instantaneously, but it is likely that mixed convective-and-stably-stratified domains \citep{brummell&all2002, kapyla&all2019, pratt&all2017, korre&all2019} should have regions that are not turbulently mixed by convection which could also have long relaxation timescales.
 It is, however, probable that clever techniques could be used to rapidly restratify atmospheres \cite{anders&all2018}, and these techniques should be studied separately from cases where the thermal reservoir and stratification evolve simultaneously.
 
 RBC is fundamentally symmetrical, but many natural convective processes occur in density-stratified domains in which the symmetries of the problem are fundamentally broken.
 In the present study, we observed that flux boundaries achieve more extreme values than temperature boundaries.
-In studies of overshooting or penetrative convection [cite, cite], these more extreme values could launch further into a stable layer, and so the choice of boundary condition on the plate that launches plumes into an adjacent radiative zone could change experimental outcomes.
+In studies of overshooting or penetrative convection, these more extreme values could launch further into a stable layer, and so the choice of boundary condition on the plate that launches plumes into an adjacent radiative zone could change experimental outcomes.
 Some authors have aimed to quantify the statistical distribution of penetrative plumes from a convective region into a stable region \cite{pratt&all2017, korre&all2019}, and it is unclear if different choices of boundary conditions could change the observed distribution of overshooting plumes observed there.
 This should be investigated in more detail.
 
-Some of the most complex astrophysical experiments are dynamo simulations which aim to understand self-consistently evolving magnetic dynamos in rotating, spherical, magnetohydrodynamical domains [cite, cite].
+Some of the most complex astrophysical experiments are dynamo simulations which aim to understand self-consistently evolving magnetic dynamos in rotating, spherical, magnetohydrodynamical domains \cite{brown&all2010, yadav&all2016, strugarek&all2017, strugarek&all2018}.
 These dynamo simulations involve large numbers of timesteps through many freefall timescales in order to study the generation and evolution of magnetic fields and mean flows.
 We found here in our FT rotating simulation that the early unrelaxed state generated a mean flow (large scale vortex, Fig.~\ref{fig:rotating_panels}) that was much more intense and large-scale than the eventual flows that developed in the relaxed state.
 If we had terminated our FT rotating simulation too early, we would not have seen this feature evolve as the simulation relaxed and progressed into a more rotationally constrained, lower Rossby number state.
 Many dynamo simulations are performed in highly turbulent regimes at the cutting-edge of what is achievable using modern computational resources.
 As a result, timestepping through thousands of freefall timescales is not possible in these simulations.
 It is therefore crucial that dynamo simulations be set up in such a manner as to avoid large changes to the system's energy reservoir such as those that we observed and studied here.
-Some authors [cite, cite] employ fixed-flux boundary conditions at \emph{both} boundaries in these simulations, and our results here suggest that such a choice may be ideal.
+Some authors \citep{featherstone&hindman2016a, strugarek&all2018, bordwell&all2018, matilsky&all2019} employ FF boundary conditions, and our results here suggest that such a choice may be ideal.
 
 In conclusion, we note that our results here should provide astrophysical convection simulations with reason for caution and optimism.
 As a community of convection modellers, it is crucial that we understand the consequences that our choices of boundary conditions have on our experiments so that we do not misinterpret the evolved dynamics.

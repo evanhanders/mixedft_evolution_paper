@@ -70,18 +70,26 @@ def read_pdfs(ra_list, dir_list):
 
 mixed_dirs = glob.glob("./data/rbc/mixedFT_2d/ra*/")
 fixed_dirs = glob.glob("./data/rbc/fixedT_2d/ra*/")
+restarted_dirs = glob.glob("./data/rbc/restarted_mixed_T2m/ra*/")
 numbered_dirs  = [(f, float(f.split("./data/rbc/mixedFT_2d/ra")[-1].split("/")[0])) for f in mixed_dirs]
 mixed_dirs, mixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 numbered_dirs  = [(f, float(f.split("./data/rbc/fixedT_2d/ra")[-1].split("/")[0])) for f in fixed_dirs]
 fixed_dirs, fixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
+numbered_dirs  = [(f, float(f.split("./data/rbc/restarted_mixed_T2m/ra")[-1].split("/")[0])) for f in restarted_dirs]
+restarted_dirs, restarted_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 
 mixed_data = read_pdfs(mixed_ras, mixed_dirs)
 fixed_data = read_pdfs(fixed_ras, fixed_dirs)
+restarted_data = read_pdfs(restarted_ras, restarted_dirs)
 mixed_scalars = read_data(mixed_ras, mixed_dirs)
 fixed_scalars = read_data(fixed_ras, fixed_dirs)
+restarted_scalars = read_data(restarted_ras, restarted_dirs)
 
-mk = '{:.4e}'.format(2.61e9)
-fk = '{:.4e}'.format(1.00e8)
+#mk = '{:.4e}'.format(2.61e9)
+#fk = '{:.4e}'.format(1.00e8)
+
+mk = '{:.4e}'.format(9.51e11)
+fk = '{:.4e}'.format(1.00e10)
 
 # Set up figure subplots
 fig = plt.figure(figsize=(7.5, 2))
@@ -99,13 +107,13 @@ cax = plt.subplot(gs.new_subplotspec((950, 825), 50, 100))
 # Panel 1, PDF comparison
 plt.sca(axs[0])
 ax = axs[0]
-mx, mp, mdx = [mixed_data[mk]['T'][k] for k in ['xs', 'pdf', 'dx']]
+mx, mp, mdx = [restarted_data[mk]['T'][k] for k in ['xs', 'pdf', 'dx']]
 fx, fp, fdx = [fixed_data[fk]['T'][k] for k in ['xs', 'pdf', 'dx']]
 
-delta_T_mixed = mixed_scalars[mk]['delta_T']
+delta_T_mixed = restarted_scalars[mk]['delta_T']
 dT = np.mean(delta_T_mixed[-5000:])
-plt.plot(mx/dT, mp*dT, label='mixedFT', c=mColor)
-plt.plot(fx, fp, label='fixedT', c=fColor)
+plt.plot(mx/dT, mp*dT, label='FT', c=mColor)
+plt.plot(fx, fp, label='TT', c=fColor)
 plt.yscale('log')
 ax.set_ylabel(r'$P(T/\Delta T)$', labelpad=-1)
 ax.set_xlabel(r'$T/\Delta T$', labelpad=-1)
@@ -124,14 +132,17 @@ ax.set_xlim(0, np.max(mx/dT))
 plt.sca(axs[1])
 ax = axs[1]
 
-with h5py.File('./data/rbc/mixedFT_2d/ra2.61e9/slice_file.h5', 'r') as f:
+#with h5py.File('./data/rbc/mixedFT_2d/ra2.61e9/slice_file.h5', 'r') as f:
+with h5py.File('./data/rbc/restarted_mixed_T2m/ra9.51e11/slices_s47.h5', 'r') as f:
     x = f['scales/x/1.0'][()].flatten()
     z = f['scales/z/1.0'][()].flatten()
-    T = f['tasks/T'][()][10,:]
+    T = f['tasks/T'][()][15,:]
 
 with h5py.File('./data/rbc/mixedFT_2d/ra2.61e9/avg_profs/averaged_avg_profs.h5', 'r') as f:
     T_prof = f['T'][()][0,:]
 
+delta_T_mixed = restarted_scalars['{:.4e}'.format(9.51e11)]['delta_T']
+dT = np.mean(delta_T_mixed[-5000:])
 
 x_basis = de.Fourier(    'x', len(x), interval=[-1, 1], dealias=1)
 z_basis = de.Chebyshev(  'z', len(z), interval=[-1/2, 1/2], dealias=1)
@@ -141,20 +152,20 @@ base_scale=1
 highres_n = 4096
 big_scale=int(highres_n/len(x))
 T_field = domain.new_field()
-T_field['g'] = T - T_prof
+T_field['g'] = T - T.mean(axis=0)#T_prof
 
 x_big = domain.grid(0, scales=big_scale)
 z_big = domain.grid(1, scales=big_scale)
 zz_b, xx_b = np.meshgrid(z_big.flatten(), x_big.flatten())
 
 T_field.set_scales(big_scale, keep_data=True)
-c = ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin=-dT/2, vmax=dT/2)
+c = ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin=-dT/3, vmax=dT/3)
 
-top_plume_bounds = [(-0.75, -0.6, -0.6, -0.75, -0.75),  (0.5, 0.5, 0.4, 0.4, 0.5)]
-bot_plume_bounds = [(0.25, 0.4, 0.4, 0.25, 0.25), (-0.4, -0.4, -0.5, -0.5, -0.4)]
+top_plume_bounds = [(-0.72, -0.65, -0.65, -0.72, -0.72),  (0.5, 0.5, 0.45, 0.45, 0.5)]
+bot_plume_bounds = [(0.53, 0.6, 0.6, 0.53, 0.53), (-0.45, -0.45, -0.5, -0.5, -0.45)]
 for i in range(4):
-    plt.plot(top_plume_bounds[0][i:i+2], top_plume_bounds[1][i:i+2], c='k')
-    plt.plot(bot_plume_bounds[0][i:i+2], bot_plume_bounds[1][i:i+2], c='k')
+    plt.plot(top_plume_bounds[0][i:i+2], top_plume_bounds[1][i:i+2], c='k', lw=0.5)
+    plt.plot(bot_plume_bounds[0][i:i+2], bot_plume_bounds[1][i:i+2], c='k', lw=0.5)
 
 ax.set_xlim(-1, 1)
 ax.set_ylim(-0.5, 0.5)
@@ -168,7 +179,7 @@ ax.text(0.51, 0.92, 'Fixed Temp (top)', transform = ax.transAxes)
 # Panel 3, Dynamics--Upper plume
 plt.sca(axs[2])
 ax = axs[2]
-ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin=-dT/2, vmax=dT/2)
+ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin=-dT/3, vmax=dT/3)
 ax.set_xlim(np.min(top_plume_bounds[0]), np.max(top_plume_bounds[0]))
 ax.set_ylim(np.min(top_plume_bounds[1]), np.max(top_plume_bounds[1]))
 
@@ -176,7 +187,7 @@ ax.set_ylim(np.min(top_plume_bounds[1]), np.max(top_plume_bounds[1]))
 # Panel 4, Dynamics--Lower plume
 plt.sca(axs[3])
 ax = axs[3]
-ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin=-dT/2, vmax=dT/2)
+ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin=-dT/3, vmax=dT/3)
 ax.set_xlim(np.min(bot_plume_bounds[0]), np.max(bot_plume_bounds[0]))
 ax.set_ylim(np.min(bot_plume_bounds[1]), np.max(bot_plume_bounds[1]))
 
@@ -188,7 +199,7 @@ for i in [2, 3]:
 bar = plt.colorbar(c, cax=cax, orientation='horizontal')#, rasterized=True)
 cax.set_xticklabels(())
 bar.set_ticks(())
-cax.text(0.5, -0.55, r'$\pm\Delta T / 2$', transform=ax.transAxes, ha='center')
+cax.text(0.5, -0.55, r'$\pm\Delta T / 3$', transform=ax.transAxes, ha='center')
 cax.text(0.5, -0.21, r'$T - \bar{T}$', transform=ax.transAxes, ha='center')
 #cax.annotate(r'$-|S| \times 10^{-5}$', fontsize=8,  xy=(-0.37, 0.5), va='center', annotation_clip=False)
 #cax.annotate(r'$|S| \times 10^{-5}$', fontsize=8,  xy=(1.02, 0.5),  va='center',  annotation_clip=False)

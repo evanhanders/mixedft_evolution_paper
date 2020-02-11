@@ -12,6 +12,8 @@ matplotlib.rcParams.update({'font.size': 9})
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+
 import h5py
 
 import pandas as pd
@@ -88,29 +90,38 @@ def read_asymms(ra_list, dir_list):
 
 mixed_dirs = glob.glob("./data/rbc/mixedFT_2d/ra*/")
 fixed_dirs = glob.glob("./data/rbc/fixedT_2d/ra*/")
+restarted_dirs = glob.glob("./data/rbc/restarted_mixed_T2m/ra*/")
 numbered_dirs  = [(f, float(f.split("./data/rbc/mixedFT_2d/ra")[-1].split("/")[0])) for f in mixed_dirs]
 mixed_dirs, mixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 numbered_dirs  = [(f, float(f.split("./data/rbc/fixedT_2d/ra")[-1].split("/")[0])) for f in fixed_dirs]
 fixed_dirs, fixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
+numbered_dirs  = [(f, float(f.split("./data/rbc/restarted_mixed_T2m/ra")[-1].split("/")[0])) for f in restarted_dirs]
+restarted_dirs, restarted_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 
 mixed_profs = read_profs(mixed_ras, mixed_dirs)
 fixed_profs = read_profs(fixed_ras, fixed_dirs)
+restarted_profs = read_profs(restarted_ras, restarted_dirs)
 mixed_scalars = read_data(mixed_ras, mixed_dirs)
 fixed_scalars = read_data(fixed_ras, fixed_dirs)
+restarted_scalars = read_data(restarted_ras, restarted_dirs)
 mixed_asymms = read_asymms(mixed_ras, mixed_dirs)
 fixed_asymms = read_asymms(fixed_ras, fixed_dirs)
+restarted_asymms = read_asymms(restarted_ras, restarted_dirs)
 
 
-mk = '{:.4e}'.format(2.61e9)
-fk = '{:.4e}'.format(1.00e8)
+mk = '{:.4e}'.format(9.51e11)
+fk = '{:.4e}'.format(1.00e10)
 
-mz = mixed_profs[mk]['z']
+mz = restarted_profs[mk]['z']
 fz = fixed_profs[fk]['z']
 max_nz = np.max((len(mz), len(fz)))
 
 
-delta_T_mixed = mixed_scalars[mk]['delta_T']
+delta_T_mixed = restarted_scalars[mk]['delta_T']
 dT = np.mean(delta_T_mixed[-5000:])
+Nu_fixedT = fixed_scalars[fk]['Nu']
+Nu = np.mean(Nu_fixedT[-5000:])
+flux_scale = (np.sqrt(1e10)/Nu)**(-1)
 
 
 z_basis = de.Chebyshev(  'z', max_nz, interval=[-1/2, 1/2], dealias=1)
@@ -125,128 +136,236 @@ z = domain.grid(0)
 fig = plt.figure()
 
 # Set up figure subplots
-fig = plt.figure(figsize=(7.5, 2))
+fig = plt.figure(figsize=(7.5, 4))
 gs = gridspec.GridSpec(1000, 1000)
 
-subplots = [( (50 , 0),         600,    315),
-            ( (650, 0),         300,    315),
-            ( (50,  315),       600,    315),
-            ( (650, 315),       300,    315),
-            ( (50,  750),       600,    250),
-            ( (650, 750),       300,    250)
+subplots = [( (0 , 0),         330,    250),
+            ( (330, 0),        330,    250),
+            ( (660, 0),        330,    250), 
+            ( (0 ,  350),      330,    250),
+            ( (330, 350),      330,    250),
+            ( (660, 350),      330,    250), 
+            ( (0 ,  700),      330,    250),
+            ( (330, 700),      330,    250),
+            ( (660, 700),      330,    250), 
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
+axins_l = []
+axins_r = []
+axins_m = []
 
 
+bounds_out = 0.5
+bounds_in  = 0.47
 
-#Panel 1 - Temp
+#Row 1 - Temp
 k = 'T'
-ax1, ax2 = axs[0], axs[1]
-ax1.plot(fz, fixed_profs[fk][k][0,:],    c=fColor, label='fixed-T', lw=2)
-ax1.plot(mz, mixed_profs[mk][k][0,:]/dT, c=mColor, label='mixed-FT')
-ax1.set_ylim(0, 1)
-ax1.legend(loc='lower left', frameon=False, fontsize=7)
-ax1.set_ylabel(r'$\bar{T}/\Delta T$')
+axl, axm, axr= axs[0], axs[3], axs[6]
+for ax in [axl, axm, axr]:
+    ax.plot(fz, fixed_profs[fk][k][0,:],    c=fColor, label='TT', lw=2)
+    ax.plot(mz, restarted_profs[mk][k][0,:]/dT, c=mColor, label='FT')
+#ax1.legend(loc='lower left', frameon=False, fontsize=7)
+axl.set_ylabel(r'$\bar{T}/\Delta T$')
+axm.legend(loc='lower center', ncol=2, frameon=False, fontsize=7)
 
-#Panel 2 - Temp diff
-p_mixed.set_scales(len(mixed_profs[mk][k][0,:])/max_nz)
+axl.set_xlim(-bounds_out, -bounds_in)
+axm.set_xlim(-bounds_in, bounds_in)
+axr.set_xlim(bounds_in, bounds_out)
+
+axl.set_ylim(0.5, 1)
+axm.set_ylim(0.46, 0.54)
+axr.set_ylim(0, 0.5)
+
+
+# Inset panels - temp diff
+p_mixed.set_scales(len(restarted_profs[mk][k][0,:])/max_nz)
 p_fixed.set_scales(len(fixed_profs[fk][k][0,:])/max_nz)
-p_mixed['g'] = mixed_profs[mk][k][0,:]/dT
+p_mixed['g'] = restarted_profs[mk][k][0,:]/dT
 p_fixed['g'] = fixed_profs[fk][k][0,:]
 for p in [p_mixed, p_fixed]: p.set_scales(1, keep_data=True)
 
-ax2.plot(z, 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g']), c='k')
-ax2.set_yscale('log')
-ax2.set_ylim(1e-1, 3e0)
-ax2.set_ylabel('% diff')
-ax2.set_xticks((-0.5, 0, 0.5))
+for ax, loc in [(axl, 'upper right'), (axm, 'upper right'), (axr, 'lower left')]:
+    axins = inset_axes(ax, width='50%', height='30%', loc=loc)
+    err = 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])
+    axins.plot(z, err, c='k')
+    xlim = ax.get_xbound()
+    this_err = err[(z < xlim[-1])*(z > xlim[0])]
+    bounds = this_err.min()/2, this_err.max()*2
+    axins.set_ylim(0, 1)
+    axins.set_yticks((0, 0.5, 1))
+    axins.set_xlim(xlim)
+    if ax is axl: 
+        axins.set_ylabel('% diff', fontsize=8, labelpad=-0.5)
+        axins_l.append(axins)
+    elif ax is axm: 
+        axins_m.append(axins)
+    elif ax is axr: 
+        axins_r.append(axins)
 
-#Panel 3 - Asymmetries
-ax1, ax2 = axs[2], axs[3]
+    axins.xaxis.set_ticklabels([])
+
+        
+    if 'left' in loc:
+        axins.yaxis.tick_right()
+        
+
+#Middle Row - Asymmetries
 k1 = 'T-w_pos'
 k2 = 'T-w_neg'
 
-ax1.plot(mz, mixed_asymms[mk][k1]/dT, c=mColor, lw=2)
-ax1.plot(mz, mixed_asymms[mk][k2]/dT, c=mColor, ls='--', lw=2)
-ax1.plot(fz, fixed_asymms[fk][k1], c=fColor, lw=1, label='Upflows')
-ax1.plot(fz, fixed_asymms[fk][k2], c=fColor, ls='--', lw=1, label='Downflows')
-ax1.legend(loc='lower left', frameon=False, fontsize=7)
+axl, axm, axr= axs[1], axs[4], axs[7]
+for ax in [axl, axm, axr]:
+    ax.plot(mz, restarted_asymms[mk][k1]/dT, c=mColor, lw=2)
+    ax.plot(mz, restarted_asymms[mk][k2]/dT, c=mColor, ls='--', lw=2)
+    ax.plot(fz, fixed_asymms[fk][k1], c=fColor, lw=1, label='Upflows')
+    ax.plot(fz, fixed_asymms[fk][k2], c=fColor, ls='--', lw=1, label='Downflows')
+#ax1.legend(loc='lower left', frameon=False, fontsize=7)
+axl.set_ylabel(r'$\bar{T}/\Delta T$')
+
+axl.set_xlim(-bounds_out, -bounds_in)
+axm.set_xlim(-bounds_in, bounds_in)
+axr.set_xlim(bounds_in, bounds_out)
+
+axl.set_ylim(0.5, 1)
+axm.set_ylim(0.46, 0.54)
+axr.set_ylim(0, 0.5)
+
+axm.legend(loc='lower center', frameon=False, fontsize=7)
 
 
 #Panel 4 - Asymmetry diffs
-for k, ls in [(k1, '-'), (k2, '--')]:
-    p_mixed.set_scales(len(mixed_asymms[mk][k])/max_nz)
-    p_fixed.set_scales(len(fixed_asymms[fk][k])/max_nz)
-    p_mixed['g'] = mixed_asymms[mk][k]/dT
-    p_fixed['g'] = fixed_asymms[fk][k]
-    for p in [p_mixed, p_fixed]: p.set_scales(1, keep_data=True)
+for ax, loc in [(axl, 'upper right'), (axm, 'upper right'), (axr, 'lower left')]:
+    axins = inset_axes(ax, width='50%', height='30%', loc=loc)
+    if ax is axl: 
+        axins_l.append(axins)
+    elif ax is axm: 
+        axins_m.append(axins)
+    elif ax is axr: 
+        axins_r.append(axins)
 
-    good = np.abs(p_fixed['g'])/p_fixed['g'].max() > 0.1
-    ax2.plot(z[good], np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])[good], c='k', ls=ls)
-ax2.set_yscale('log')
-ax2.set_ylim(1e-3, 3e-2)
+    for k, ls in [(k1, '-'), (k2, '--')]:
+        p_mixed.set_scales(len(restarted_asymms[mk][k])/max_nz)
+        p_fixed.set_scales(len(fixed_asymms[fk][k])/max_nz)
+        p_mixed['g'] = restarted_asymms[mk][k]/dT
+        p_fixed['g'] = fixed_asymms[fk][k]
+        for p in [p_mixed, p_fixed]: p.set_scales(1, keep_data=True)
 
+        good = np.abs(p_fixed['g'])/p_fixed['g'].max() > 0.1
+        this_z = z[good]
+        err = 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])[good]
 
-#Panel 5 - enth Flux
-k = 'enth_flux'
-ax1, ax2 = axs[4], axs[5]
-ax1.axhline(0, c='k', lw=0.5)
-ax1.plot(fz, fixed_profs[fk][k][0,:], c=fColor, lw=2)
-ax1.plot(mz, mixed_profs[mk][k][0,:]/dT**(3/2), c=mColor, label=r'$F_{\mathrm{enth}}$')
+        axins.plot(this_z, err, c='k', ls=ls)
+        xlim = ax.get_xbound()
+        this_err = err[(this_z < xlim[-1])*(this_z > xlim[0])]
+        bounds = this_err.min()/2, this_err.max()*2
+        if ax is axl:
+            axins.set_ylim(0, 4)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 2, 4))
+        else:
+            axins.set_ylim(0, 1.5)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 0.75, 1.5))
+        axins.set_xlim(xlim)
 
-#Panel 6 - enth flux diff
-ax2.axhline(1, c='k', lw=0.5)
-p_mixed.set_scales(len(mixed_profs[mk][k][0,:])/max_nz)
-p_fixed.set_scales(len(fixed_profs[fk][k][0,:])/max_nz)
-p_mixed['g'] = mixed_profs[mk][k][0,:]/dT**(3/2)
-p_fixed['g'] = fixed_profs[fk][k][0,:]
-for p in [p_mixed, p_fixed]: p.set_scales(1, keep_data=True)
+        axins.xaxis.set_ticklabels([])
 
-good = np.abs(p_fixed['g'])/p_fixed['g'].max() > 0.02
-ax2.plot(z[good], 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])[good], c='k')
-
-#Panel 5 - kappa Flux
-k = 'kappa_flux'
-ax1.plot(fz, fixed_profs[fk][k][0,:], c=fColor, ls='-.', lw=2)
-ax1.plot(mz, mixed_profs[mk][k][0,:]/dT**(3/2), c=mColor, ls='-.', label=r'$F_{\mathrm{cond}}$')
-ax1.set_ylim(-3e-4, 0.0027)
-ax1.set_yticks((0, 0.001, 0.002))
-ax1.legend(loc='center', frameon=False, fontsize=7)
-ax1.set_ylabel(r'Flux/($\Delta T$)$^{3/2}$')
-
-#Panel 6 - kappa flux diff
-p_mixed.set_scales(len(mixed_profs[mk][k][0,:])/max_nz)
-p_fixed.set_scales(len(fixed_profs[fk][k][0,:])/max_nz)
-p_mixed['g'] = mixed_profs[mk][k][0,:]/dT**(3/2)
-p_fixed['g'] = fixed_profs[fk][k][0,:]
-for p in [p_mixed, p_fixed]: p.set_scales(1, keep_data=True)
-
-good1 = np.abs(p_fixed['g'][z<0])/p_fixed['g'][z<0].max() > 0.02
-good2 = np.abs(p_fixed['g'][z>0])/p_fixed['g'][z>0].max() > 0.02
-ax2.plot(z[z<0][good1], 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])[z<0][good1], c='k', ls='-.')
-ax2.plot(z[z>0][good2], 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])[z>0][good2], c='k', ls='-.')
-ax2.set_ylabel('% diff')
-ax2.set_yscale('log')
-ax2.set_ylim(1e-1, 30)
-ax2.set_yticks((1e-1, 1, 10))
+            
+        if 'left' in loc:
+            axins.yaxis.tick_right()
 
 
 
+#
+#
+##Row 3 - fluxes
+k1 = 'enth_flux'
+k2 = 'kappa_flux'
+
+axl, axm, axr= axs[2], axs[5], axs[8]
+for ax in [axl, axm, axr]:
+    ax.plot(mz, restarted_profs[mk][k1][0,:]/dT**(3/2)/flux_scale, c=mColor, lw=2)
+    ax.plot(mz, restarted_profs[mk][k2][0,:]/dT**(3/2)/flux_scale, c=mColor, ls='--', lw=2)
+    ax.plot(fz, fixed_profs[fk][k1][0,:]/flux_scale, c=fColor, lw=1, label=r'$F_{\mathrm{enth}}$')
+    ax.plot(fz, fixed_profs[fk][k2][0,:]/flux_scale, c=fColor, ls='--', lw=1, label=r'$F_{\mathrm{cond}}$')
+axl.set_ylabel(r'Flux$\,\cdot\,\frac{\mathrm{Nu}}{\sqrt{\mathrm{Ra}_{\Delta T}}}$')
+
+axl.set_xlim(-bounds_out, -bounds_in)
+axm.set_xlim(-bounds_in, bounds_in)
+axr.set_xlim(bounds_in, bounds_out)
+
+axm.legend(loc='lower center', frameon=False, fontsize=7, ncol=2)
 
 
-#mixed_profs[mk][k][0,:]/dT/fixed_profs[fk][k][0,:])
-for i in [1, 3, 5]:
+#Flux diffs
+for ax, loc in [(axl, 'center right'), (axm, 'center right'), (axr, 'center left')]:
+    axins = inset_axes(ax, width='50%', height='30%', loc=loc)
+    if ax is axl: 
+        axins_l.append(axins)
+    elif ax is axm: 
+        axins_m.append(axins)
+    elif ax is axr: 
+        axins_r.append(axins)
+
+    for k, ls in [(k1, '-'), (k2, '--')]:
+        p_mixed.set_scales(len(restarted_profs[mk][k][0,:])/max_nz)
+        p_fixed.set_scales(len(fixed_profs[fk][k][0,:])/max_nz)
+        p_mixed['g'] = restarted_profs[mk][k][0,:]/dT**(3/2)/flux_scale
+        p_fixed['g'] = fixed_profs[fk][k][0,:]/flux_scale
+        for p in [p_mixed, p_fixed]: p.set_scales(1, keep_data=True)
+        xlim = ax.get_xbound()
+
+        this_z = z
+        err = 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])
+        mag = np.sqrt(p_fixed['g']**2 + p_mixed['g']**2)
+        z_bounds = (this_z <= xlim[-1])*(this_z >= xlim[0])
+        if ax is axm:
+            print(k, p_fixed['g'][z_bounds])
+        good = (p_fixed['g'][z_bounds] >  0.1)
+        bad  = (p_fixed['g'][z_bounds] <= 0.1) 
+
+        axins.plot(this_z[z_bounds][good], err[z_bounds][good], c='k', ls=ls)
+        axins.plot(this_z[z_bounds][bad],  mag[z_bounds][bad], c='k', ls=ls)
+        this_err = err[z_bounds]
+        bounds = this_err.min()/2, this_err.max()*2
+        axins.set_ylim(1e-1, 10)#this_err.min()/2, this_err.max()*2)
+        axins.set_yscale('log')
+        axins.set_yticks((1e-1, 1e0, 10))
+        axins.set_xlim(xlim)
+
+        axins.xaxis.set_ticklabels([])
+
+            
+        if 'left' in loc:
+            axins.yaxis.tick_right()
+
+
+
+for i in [2, 5, 8]:
     axs[i].set_xlabel('z')
 
-for i in [0, 2, 4]:
+for i in [0, 1, 3, 4, 6, 7]:
     axs[i].set_xticks(())
 
-for i in [2, 3]:
-    axs[i].set_yticks(())
-    axs[i].set_xticks(())
+axs[2].set_xticks((-bounds_out, -bounds_out + (bounds_out-bounds_in)/2, -bounds_in))
+axs[5].set_xticks((-0.4, -0.2, 0, 0.2, 0.4))
+axs[8].set_xticks((bounds_in, bounds_out - (bounds_out-bounds_in)/2, bounds_out))
 
-for i in range(6):
-    axs[i].set_xlim(-0.5, 0.5)
+
+for ax in axins_l:
+    ax.set_xticks((-bounds_out, -bounds_out + (bounds_out-bounds_in)/2, -bounds_in))
+for ax in axins_m:
+    ax.set_xticks((-0.4, -0.2, 0, 0.2, 0.4))
+for ax in axins_r:
+    ax.set_xticks((bounds_in, bounds_out - (bounds_out-bounds_in)/2, bounds_out))
+
+for i in [0, 1, 2]:
+    axs[i].set_xlim(-bounds_out, -bounds_in)
+
+for i in [3, 4, 5]:
+    axs[i].set_xlim(-bounds_in, bounds_in)
+
+for i in [6, 7, 8]:
+    axs[i].set_xlim(bounds_in, bounds_out)
+
 
 fig.savefig('rbc_1D_profiles.png', dpi=300, bbox_inches='tight')
 fig.savefig('rbc_1D_profiles.pdf', dpi=300, bbox_inches='tight')

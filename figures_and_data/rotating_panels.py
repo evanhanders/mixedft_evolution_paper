@@ -116,11 +116,11 @@ for i in range(3):
 plt.sca(axs[0])
 ax = axs[0]
 #plt.grid(which='both')
-ax.plot([1, 1], [1,1], color=mColor, lw=2, label='mixedFT')
+ax.plot([1, 1], [1,1], color=mColor, lw=2, label='FT')
 plt.axhline(np.mean(mixed_trace['ra_flux'])/2.75e9, color=mColor, lw=1, ls='-.')
 plt.axhline(np.mean(fixed_trace['ra_temp'])/2.75e9, color=fColor, lw=1)
 ax.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/2.75e9, color=mColor, lw=2, label='')
-ax.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/2.75e9, color=fColor, lw=1, ls='-.', label='fixedT')
+ax.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/2.75e9, color=fColor, lw=1, ls='-.', label='TT')
 ax.legend(loc='center', frameon=True, fontsize=7)
 ax.set_ylabel(r'Ra/$(2.75 \times 10^9)$')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
@@ -133,8 +133,8 @@ plt.sca(axs[1])
 ax = axs[1]
 
 
-plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Ro'], color=mColor, lw=2, label='mixedFT')
-plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Ro'], color=fColor, lw=2, label='fixedT')
+plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Ro'], color=mColor, lw=2, label='FT')
+plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Ro'], color=fColor, lw=2, label='TT')
 plt.axhline(1, c=fColor, lw=1)
 plt.yscale('log')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
@@ -149,8 +149,8 @@ ax = axs[2]
 
 
 Pe_final_temp = np.mean(fixed_trace['Pe'][-5000:])
-plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color=mColor, lw=2, label='mixedFT')
-plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color=fColor, lw=2, label='fixedT')
+plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color=mColor, lw=2, label='FT')
+plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color=fColor, lw=2, label='TT')
 plt.axhline(1, c=fColor, lw=1)
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 ax.set_ylabel(r'Pe/Pe$_{\Delta T}$')
@@ -209,7 +209,7 @@ nu_func = lambda ra: 0.138*np.array(ra)**(0.285) #Johnston & Doering 2009
 for k, data in mixed_data.items():
     df = pd.DataFrame(data=data)
     rolled = df.rolling(window=1000, min_periods=1000).mean()
-    label='mixedFT'
+    label='FT'
 #    mArrowColor='chocolate'
     plt.arrow(0.62, 0.65, -0.03, -0.06,transform=ax.transAxes,\
                  head_width=0.04, head_length=0.04, color='k', rasterized='True', zorder=np.inf)
@@ -227,7 +227,8 @@ for ra, data in fixed_data.items():
     my_ra.append(float(ra))
     my_nu.append(nu)
     my_nu_sampleMean.append(stdev/np.sqrt(N))
-plt.errorbar(my_ra, my_nu, yerr=(my_nu_sampleMean), lw=0, elinewidth=1, capsize=1.5, markerfacecolor=sm.to_rgba(6), markeredgecolor=fColor, ms=10, marker='*', label='fixedT')
+plt.errorbar(my_ra, my_nu, yerr=(my_nu_sampleMean), lw=0, elinewidth=1, capsize=1.5, markerfacecolor=sm.to_rgba(6), markeredgecolor=fColor, ms=5, marker='o', label='TT')
+plt.errorbar(my_ra[3], my_nu[3], yerr=(my_nu_sampleMean)[3], lw=0, elinewidth=1, capsize=1.5, markerfacecolor=sm.to_rgba(6), markeredgecolor=fColor, ms=10, marker='*', label='TT')
 
 handles, labels = ax.get_legend_handles_labels()
 order = [0, 1, 2, 3]
@@ -266,26 +267,25 @@ cax.text(0.4, -0.75, r'$\pm\omega_{\mathrm{max}}$', transform=cax.transAxes)
 
 
 #Reporting
-my_ra = []
-my_pe = []
-my_pe_sampleMean = []
 N = 5000
 for ra, data in fixed_data.items():
+    nu = np.mean(data['Nu'][-N:])
+    nu_stdev = np.std(data['Nu'][-N:])
     pe = np.mean(data['Pe'][-N:])
-    stdev = np.std(data['Pe'][-N:])
-    my_ra.append(float(ra))
-    my_pe.append(pe)
-    my_pe_sampleMean.append(stdev/np.sqrt(N))
+    pe_stdev = np.std(data['Pe'][-N:])
+    ro = np.mean(data['Ro'][-N:])
+    ro_stdev = np.std(data['Ro'][-N:])
+    print('{:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}'.format(float(ra), nu, nu_stdev/np.sqrt(N), pe, pe_stdev/np.sqrt(N), ro, ro_stdev))
 
-for i, ra in enumerate(my_ra):
-    print('{:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}'.format(ra, my_nu[i], my_nu_sampleMean[i], my_pe[i], my_pe_sampleMean[i]))
 print('-----------------------------------------')
 for ra, data in mixed_data.items():
     nu = np.mean(data['Nu'][-N:])
     nu_stdev = np.std(data['Nu'][-N:])
     pe = np.mean(data['Pe'][-N:])
     pe_stdev = np.std(data['Pe'][-N:])
-    print('{:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}'.format(float(ra), nu, nu_stdev/np.sqrt(N), pe, pe_stdev/np.sqrt(N)))
+    ro = np.mean(data['Ro'][-N:])
+    ro_stdev = np.std(data['Ro'][-N:])
+    print('{:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}\t {:.2e} +/- {:.2e}'.format(float(ra), nu, nu_stdev/np.sqrt(N), pe, pe_stdev/np.sqrt(N), ro, ro_stdev))
     
 
 
