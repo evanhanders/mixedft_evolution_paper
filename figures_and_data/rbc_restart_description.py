@@ -88,9 +88,15 @@ mixed_pdfs = read_pdfs(mixed_ras, mixed_dirs)
 fixed_pdfs = read_pdfs(fixed_ras, fixed_dirs)
 restarted_pdfs = read_pdfs(restarted_ras, restarted_dirs)
 
-fk = '{:.4e}'.format(1.00e8)
-mk = '{:.4e}'.format(2.61e9)
-rk = '{:.4e}'.format(2.61e9)
+#fk = '{:.4e}'.format(1.00e8)
+#mk = '{:.4e}'.format(2.61e9)
+#rk = '{:.4e}'.format(2.61e9)
+
+fk = '{:.4e}'.format(1.00e9)
+mk = '{:.4e}'.format(4.83e10)
+rk = '{:.4e}'.format(4.83e10)
+
+Nu_approx=48.3
 
 # Get rolling averages of all data; Output is every 0.1 time units
 avg_window = 25 #time units
@@ -105,9 +111,9 @@ good_fixed_times = fixed_trace['sim_time'] <= partial_restarted_trace['sim_time'
 for k in fixed_trace.keys():
     fixed = fixed_trace[k][good_fixed_times]
     if k == 'left_flux' or k == 'right_flux':
-        restarted_trace[k] = np.concatenate((fixed/26.1**(3./2), partial_restarted_trace[k][1:])) 
+        restarted_trace[k] = np.concatenate((fixed/Nu_approx**(3./2), partial_restarted_trace[k][1:])) 
     elif 'T' in k:
-        restarted_trace[k] = np.concatenate((fixed, partial_restarted_trace[k][1:]*26.1)) 
+        restarted_trace[k] = np.concatenate((fixed, partial_restarted_trace[k][1:]*Nu_approx)) 
     else:
         restarted_trace[k] = np.concatenate((fixed, partial_restarted_trace[k][1:])) 
 
@@ -142,25 +148,25 @@ for i in [0, 1, 2]:
 plt.sca(axs[0])
 ax = axs[0]
 #plt.grid(which='both')
-plt.plot(rolledr['sim_time'], rolledr['ra_flux']/2.61e9, color='black', lw=1, ls='-.', label=r'Ra$_{\partial_z T}/26.1$')#\langle\mathrm{Nu}\rangle$')
-plt.plot(rolledr['sim_time'], rolledr['ra_temp']/1.00e8, color='black', lw=1, label=r'Ra$_{\Delta T}$')
-ax.legend(loc='lower right', frameon=False, borderpad=0, fontsize=7)
-ax.set_ylabel(r'Ra/$10^8$')
-plt.ylim(0.925, 1.075)
+plt.plot(rolledr['sim_time'], rolledr['ra_flux']/(1e9*Nu_approx), color='black', lw=1, ls='-.', label=r'Ra$_{\partial_z T}/48.3\,\,$')#\langle\mathrm{Nu}\rangle$')
+plt.plot(rolledr['sim_time'], rolledr['ra_temp']/(1e9), color='black', lw=1, label=r'Ra$_{\Delta T}$')
+ax.legend(loc='lower center', borderpad=0.25, fontsize=7, ncol=2)
+ax.set_ylabel(r'Ra/$10^9$')
+plt.ylim(0.9, 1.1)
 ax.set_yticks((0.95, 1, 1.05))
 plt.yscale('log')
 
 
-#Panel 2, left flux 
+#Panel 2, bot flux 
 plt.sca(axs[1])
 ax = axs[1]
 
 Nu_final_temp = np.mean(fixed_trace['Nu'][-5000:])
 #plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1],     rolledm['left_flux']*(np.sqrt(2.61e9)), color='olivedrab', lw=1)
-plt.plot(rolledr['sim_time'], rolledr['left_flux']*np.sqrt(2.61e9), color='black', lw=1)
+plt.plot(rolledr['sim_time'], rolledr['left_flux']*np.sqrt(1e9*Nu_approx), color='black', lw=1)
 print(rolledr['left_flux'])
 #plt.axhline(1, c='black', lw=1)
-ax.set_ylabel(r'left $\frac{\mathrm{Pe}_{\mathrm{ff}}^{-1}|\partial_z T|}{\mathrm{Flux}}$')
+ax.set_ylabel(r'bot $\frac{\mathrm{Pe}_{\mathrm{ff}}^{-1}|\partial_z T|}{\mathrm{Flux}}$')
 ax.set_ylim(0.925, 1.075)
 ax.set_yticks((0.95, 1, 1.05))
 
@@ -171,7 +177,7 @@ ax = axs[2]
 
 plt.plot(rolledr['sim_time'], rolledr['left_T'], color='black', lw=1)
 #plt.axhline(1, c='black', lw=1)
-ax.set_ylabel(r'left $T/\Delta T$')
+ax.set_ylabel(r'bot $T/\Delta T$')
 #plt.yscale('log')
 ax.set_xlabel(r'$t$')
 ax.set_ylim(0.925, 1.075)
@@ -179,7 +185,7 @@ ax.set_yticks((0.95, 1, 1.05))
 print(rolledr['left_T'])
 
 keys = ['T', 'enstrophy', 'enth_flux', 'w']
-labels = [r'$T$', r'$\omega^2$', r'$w T$', r'$w$']
+labels = [r'$T/\Delta T$', r'$\omega^2 / 10^3$', r'$w T\cdot 10^3$', r'$w$']
 for i, field in enumerate(keys):
     ax = axs[3+i] 
     mx, mp, mdx = [mixed_pdfs[mk][field][k] for k in ['xs', 'pdf', 'dx']]
@@ -187,8 +193,8 @@ for i, field in enumerate(keys):
 
     ax.fill_between(mx, 1e-16, mp, color='olivedrab', alpha=0.5)
     ax.fill_between(rx, 1e-16, rp, color='black', alpha=0.5)
-    ax.plot(mx, mp, label='mixedFT', color='olivedrab')
-    ax.plot(rx, rp, label='t-to-m', color='black')
+    ax.plot(mx, mp, label='FT', color='olivedrab')
+    ax.plot(rx, rp, label='TT-to-FT', color='black')
     ax.set_yscale('log')
     ax.set_xlabel(labels[i])
     ax.set_ylim(np.min((mp[mp>0].min(), rp[rp>0].min())), np.max((mp.max(), rp.max())))
@@ -196,10 +202,13 @@ for i, field in enumerate(keys):
     if field == 'enstrophy':
         ax.legend(loc='best', frameon=False)
 
-axs[3].set_xticks((0, 0.02, 0.04))
-axs[4].set_xticks((0, 300, 600))
-axs[5].set_xticks((-2.5e-3, 0, 2.5e-3))
-axs[6].set_xticks((-0.1, 0, 0.1))
+axs[3].set_xticks((0, 0.5/Nu_approx, 1/Nu_approx))
+axs[3].set_xticklabels((0, 0.5, 1))
+axs[4].set_xticks((0, 1e3, 2e3, 3e3, 4e3, 5e3))
+axs[4].set_xticklabels((0, 1, 2, 3, 4, 5))
+axs[5].set_xticks((-2e-3, -1e-3, 0, 1e-3, 2e-3))
+axs[5].set_xticklabels((-2, -1, 0, 1, 2))
+axs[6].set_xticks((-0.2, -0.1, 0, 0.1, 0.2, ))
 
 for i in [3, 4]:
     axs[i].xaxis.set_ticks_position('top')
@@ -218,6 +227,18 @@ for i in [0, 1]:
 
 for i in [0, 1, 2]:
     axs[i].set_xlim(0, restarted_trace['sim_time'][-1])
+
+for i, field in enumerate(keys):
+    mx, mp, mdx = [mixed_pdfs[mk][field][k] for k in ['xs', 'pdf', 'dx']]
+    rx, rp, rdx = [restarted_pdfs[rk][field][k] for k in ['xs', 'pdf', 'dx']]
+
+    print(field, " FT, then TT-to-FT")
+    for x, p, dx in ((mx, mp, mdx), (rx, rp, rdx)):
+        mean = np.sum(x*p*dx)
+        sigma= np.sqrt(np.sum((x-mean)**2*p*dx))
+        skew = (1/sigma**3)*np.sum((x-mean)**3*p*dx)
+        kurt = (1/sigma**4)*np.sum((x-mean)**4*p*dx)
+        print('mean: {:.4e}, sigma: {:.4e}, skew: {:.4e}, kurt: {:.4e}'.format(mean, sigma, skew, kurt))
 
 
 
