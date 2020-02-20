@@ -26,6 +26,8 @@ def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 
         data = OrderedDict()
         sub_runs = glob.glob('{:s}/run*/'.format(dr))
         if len(sub_runs) > 0:
+            numbered_dirs  = [(f, float(f.split("run")[-1].split("/")[0])) for f in sub_runs]
+            sub_runs, run_num = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
             partial_data = OrderedDict()
             for k in keys:
                 partial_data[k] = []
