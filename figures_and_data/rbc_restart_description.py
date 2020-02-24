@@ -187,11 +187,20 @@ ax.set_yticks((0.95, 1, 1.05))
 print(rolledr['left_T'])
 
 keys = ['T', 'enstrophy', 'enth_flux', 'w']
-labels = [r'$T/\Delta T$', r'$\omega^2 / 10^3$', r'$w T\cdot 10^3$', r'$w$']
+labels = [r'$T/\Delta T$', r'$\omega^2 / 10^2$', r'$w T\cdot 10^3$', r'$w$']
 for i, field in enumerate(keys):
     ax = axs[3+i] 
     mx, mp, mdx = [mixed_pdfs[mk][field][k] for k in ['xs', 'pdf', 'dx']]
     rx, rp, rdx = [restarted_pdfs[rk][field][k] for k in ['xs', 'pdf', 'dx']]
+
+    mcdf = np.zeros_like(mp)
+    rcdf = np.zeros_like(rp)
+    for j in range(len(mp)-1):
+        mcdf[j+1] = mcdf[j] + mp[j]*mdx
+    for j in range(len(rp)-1):
+        rcdf[j+1] = rcdf[j] + rp[j]*rdx
+    good_m = (mcdf > 0.0001)*(mcdf < 0.9999)*(mp > 0)
+    good_r = (rcdf > 0.0001)*(rcdf < 0.9999)*(rp > 0)
 
     ax.fill_between(mx, 1e-16, mp, color='olivedrab', alpha=0.5)
     ax.fill_between(rx, 1e-16, rp, color='black', alpha=0.5)
@@ -199,18 +208,27 @@ for i, field in enumerate(keys):
     ax.plot(rx, rp, label='TT-to-FT', color='black')
     ax.set_yscale('log')
     ax.set_xlabel(labels[i])
-    ax.set_ylim(np.min((mp[mp>0].min(), rp[rp>0].min())), np.max((mp.max(), rp.max())))
-    ax.set_xlim(np.min((mx.min(), rx.min())), np.max((mx.max(), rx.max())))
+
+
+
+
+    min_x_bounds = np.min((np.min(mx[good_m]), np.min(rx[good_r])))
+    max_x_bounds = np.max((np.max(mx[good_m]), np.max(rx[good_r])))
+
+    min_y_bounds = np.min((np.min(mp[good_m]), np.min(rp[good_r])))
+
+    ax.set_xlim(min_x_bounds, max_x_bounds)
+    ax.set_ylim(min_y_bounds, 1.5*np.max((mp[good_m].max(), rp[good_r].max())))
     if field == 'enstrophy':
         ax.legend(loc='best', frameon=False)
 
 axs[3].set_xticks((0, 0.5/Nu_approx, 1/Nu_approx))
 axs[3].set_xticklabels((0, 0.5, 1))
-axs[4].set_xticks((0, 1e3, 2e3, 3e3, 4e3, 5e3))
-axs[4].set_xticklabels((0, 1, 2, 3, 4, 5))
-axs[5].set_xticks((-2e-3, -1e-3, 0, 1e-3, 2e-3))
-axs[5].set_xticklabels((-2, -1, 0, 1, 2))
-axs[6].set_xticks((-0.2, -0.1, 0, 0.1, 0.2, ))
+axs[4].set_xticks((1e2, 2e2, 3e2, 4e2))
+axs[4].set_xticklabels((1, 2, 3, 4))
+axs[5].set_xticks((-1e-3, 0, 1e-3))
+axs[5].set_xticklabels((-1, 0, 1))
+axs[6].set_xticks((-0.1, 0, 0.1))
 
 for i in [3, 4]:
     axs[i].xaxis.set_ticks_position('top')

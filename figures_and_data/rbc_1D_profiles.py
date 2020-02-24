@@ -110,13 +110,13 @@ mixed_asymms = read_asymms(mixed_ras, mixed_dirs)
 fixed_asymms = read_asymms(fixed_ras, fixed_dirs)
 restarted_asymms = read_asymms(restarted_ras, restarted_dirs)
 
-ra_dt = 1.00e8
-mk = '{:.4e}'.format(2.61e9)
-fk = '{:.4e}'.format(1.00e8)
-#mk = '{:.4e}'.format(4.83e10)
-#fk = '{:.4e}'.format(1.00e9)
-#mk = '{:.4e}'.format(9.51e11)
-#fk = '{:.4e}'.format(1.00e10)
+#ra_dt = 1.00e8
+#mk = '{:.4e}'.format(2.61e9)
+#fk = '{:.4e}'.format(1.00e8)
+
+ra_dt = 1.00e9
+mk = '{:.4e}'.format(4.83e10)
+fk = '{:.4e}'.format(1.00e9)
 
 mz = mixed_profs[mk]['z']
 fz = fixed_profs[fk]['z']
