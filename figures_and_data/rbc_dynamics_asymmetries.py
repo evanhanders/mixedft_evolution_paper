@@ -117,8 +117,8 @@ dT = np.mean(delta_T_mixed[-5000:])
 plt.plot(mx/dT, mp*dT, label='FT', c=mColor)
 plt.plot(fx, fp, label='TT', c=fColor)
 plt.yscale('log')
-ax.set_ylabel(r'$P(T/\Delta T)$', labelpad=-1)
-ax.set_xlabel(r'$T/\Delta T$', labelpad=-1)
+ax.set_ylabel(r'$P(T/\Delta T)$', labelpad=0)
+ax.set_xlabel(r'$T/\Delta T$', labelpad=0)
 ax.legend(loc='upper right', frameon=False, fontsize=7, markerfirst=False, borderpad=0.1)
 
 ax.fill_between(mx/dT, 1e-16, mp*dT, color=mColor, alpha=0.5)
@@ -166,16 +166,17 @@ c = ax.pcolormesh(xx_b, zz_b, T_field['g'], cmap='RdBu_r', rasterized=True, vmin
 top_plume_bounds = [(-0.72, -0.65, -0.65, -0.72, -0.72),  (0.5, 0.5, 0.45, 0.45, 0.5)]
 bot_plume_bounds = [(0.53, 0.6, 0.6, 0.53, 0.53), (-0.45, -0.45, -0.5, -0.5, -0.45)]
 for i in range(4):
-    plt.plot(top_plume_bounds[0][i:i+2], top_plume_bounds[1][i:i+2], c='k', lw=0.5)
-    plt.plot(bot_plume_bounds[0][i:i+2], bot_plume_bounds[1][i:i+2], c='k', lw=0.5)
+    plt.plot(top_plume_bounds[0][i:i+2], top_plume_bounds[1][i:i+2], c='k', lw=1)
+    plt.plot(bot_plume_bounds[0][i:i+2], bot_plume_bounds[1][i:i+2], c='k', lw=1)
 
 ax.set_xlim(-1, 1)
 ax.set_ylim(-0.5, 0.5)
 ax.set_ylabel('z', labelpad=-1)
 ax.set_xlabel('x', labelpad=-1)
 
-ax.text(0.02, 0.02, 'Fixed Flux (bottom)', transform = ax.transAxes)
-ax.text(0.51, 0.92, 'Fixed Temp (top)', transform = ax.transAxes)
+bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.75)
+ax.text(0.03, 0.07, 'Fixed Flux (bottom)', transform = ax.transAxes, bbox=bbox_props)
+ax.text(0.50, 0.88, 'Fixed Temp (top)', transform = ax.transAxes, bbox=bbox_props)
 
  
 # Panel 3, Dynamics--Upper plume

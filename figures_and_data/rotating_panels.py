@@ -29,7 +29,7 @@ def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 
         data = OrderedDict()
         sub_runs = glob.glob('{:s}/run*/'.format(dr))
         if len(sub_runs) > 0:
-            numbered_dirs  = [(r, int(r.split('run')[-1].split('_')[0])) for r in sub_runs]
+            numbered_dirs  = [(r, int(r.split('run')[-1].split('/')[0].split('_')[0])) for r in sub_runs]
             sub_runs, run_num = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
             partial_data = OrderedDict()
             for k in keys:
@@ -105,13 +105,6 @@ cax = plt.subplot(gs.new_subplotspec((950, 580), 50, 280))
 caxEk = plt.subplot(gs.new_subplotspec((70, 560), 30, 440))
 
 
-#Show times of dynamics panels
-for i in range(3):
-    axs[i].axvline(100   - mixed_trace['sim_time'][-1], c='k', lw=0.5)
-    axs[i].axvline(5380  - mixed_trace['sim_time'][-1], c='k', lw=0.5)
-    axs[i].axvline(13215 - mixed_trace['sim_time'][-1], c='k', lw=0.5)
-
-
 #Panel 1, Ra evolution
 plt.sca(axs[0])
 ax = axs[0]
@@ -125,7 +118,7 @@ plt.axhline(np.mean(mixed_trace['ra_flux'])/2.75e9, color=mColor, lw=1, ls='-.')
 plt.axhline(np.mean(fixed_trace['ra_temp'])/2.75e9, color=fColor, lw=1)
 ax.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['ra_temp']/2.75e9, color=mColor, lw=2, label='')
 ax.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['ra_flux']/2.75e9, color=fColor, lw=1, ls='-.', label='')
-ax.legend(loc='center', frameon=True, fontsize=7, ncol=2)
+ax.legend(loc='center right', frameon=True, fontsize=7, ncol=2)
 ax.set_ylabel(r'Ra/$(2.75 \times 10^9)$')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 plt.ylim(0.9, 10)
@@ -139,7 +132,7 @@ ax = axs[1]
 
 plt.plot(rolledm['sim_time']-mixed_trace['sim_time'][-1], rolledm['Ro'], color=mColor, lw=2, label='FT')
 plt.plot(rolledf['sim_time']-fixed_trace['sim_time'][-1], rolledf['Ro'], color=fColor, lw=2, label='TT')
-plt.axhline(1, c=fColor, lw=1)
+plt.axhline(np.mean(fixed_trace['Ro'][-5000:]), c=fColor, lw=0.5)
 plt.yscale('log')
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 plt.ylim(0.08, 2)
@@ -155,13 +148,25 @@ ax = axs[2]
 Pe_final_temp = np.mean(fixed_trace['Pe'][-5000:])
 plt.plot(mixed_trace['sim_time']-mixed_trace['sim_time'][-1], mixed_trace['Pe']/Pe_final_temp, color=mColor, lw=2, label='FT')
 plt.plot(fixed_trace['sim_time']-fixed_trace['sim_time'][-1], fixed_trace['Pe']/Pe_final_temp, color=fColor, lw=2, label='TT')
-plt.axhline(1, c=fColor, lw=1)
+plt.axhline(1, c=fColor, lw=0.5)
 plt.xlim(-mixed_trace['sim_time'][-1], 0)
 ax.set_ylabel(r'Pe/Pe$_{\Delta T}$')
 plt.yscale('log')
-ax.set_xlabel(r'$t - t_{\mathrm{final}}$')
+ax.set_xlabel(r'$(t - t_{\mathrm{final}})/ 10^{3}$')
 ax.legend(loc='upper right', frameon=True, fontsize=7)
 plt.ylim(0.7, 20)
+
+ticks = np.array((-1.25e4, -1e4, -7.5e3, -5e3, -2.5e3, 0))
+ax.set_xticks(ticks)
+ax.set_xticklabels(ticks/1e3)
+
+
+#Show times of dynamics panels
+for i in range(3):
+    axs[i].axvline(100   - mixed_trace['sim_time'][-1], c='k', lw=0.5)
+    axs[i].axvline(5380  - mixed_trace['sim_time'][-1], c='k', lw=0.5)
+    axs[i].axvline(13215 - mixed_trace['sim_time'][-1], c='k', lw=0.5)
+
 
 
 

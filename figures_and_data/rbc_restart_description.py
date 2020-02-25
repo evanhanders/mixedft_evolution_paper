@@ -199,13 +199,18 @@ for i, field in enumerate(keys):
         mcdf[j+1] = mcdf[j] + mp[j]*mdx
     for j in range(len(rp)-1):
         rcdf[j+1] = rcdf[j] + rp[j]*rdx
-    good_m = (mcdf > 0.0001)*(mcdf < 0.9999)*(mp > 0)
-    good_r = (rcdf > 0.0001)*(rcdf < 0.9999)*(rp > 0)
+    if i == 1:
+        good_m = (mcdf < 0.9999)*(mp > 0)
+        good_r = (rcdf < 0.9999)*(rp > 0)
+    else:
+        good_m = (mcdf > 0.0001)*(mcdf < 0.9999)*(mp > 0)
+        good_r = (rcdf > 0.0001)*(rcdf < 0.9999)*(rp > 0)
 
-    ax.fill_between(mx, 1e-16, mp, color='olivedrab', alpha=0.5)
-    ax.fill_between(rx, 1e-16, rp, color='black', alpha=0.5)
-    ax.plot(mx, mp, label='FT', color='olivedrab')
-    ax.plot(rx, rp, label='TT-to-FT', color='black')
+    factor = 1
+    ax.fill_between(mx, 1e-16, factor*mp, color='olivedrab', alpha=0.5)
+    ax.fill_between(rx, 1e-16, factor*rp, color='black', alpha=0.5)
+    ax.plot(mx, factor*mp, label='FT', color='olivedrab')
+    ax.plot(rx, factor*rp, label='TT-to-FT', color='black')
     ax.set_yscale('log')
     ax.set_xlabel(labels[i])
 
@@ -218,7 +223,7 @@ for i, field in enumerate(keys):
     min_y_bounds = np.min((np.min(mp[good_m]), np.min(rp[good_r])))
 
     ax.set_xlim(min_x_bounds, max_x_bounds)
-    ax.set_ylim(min_y_bounds, 1.5*np.max((mp[good_m].max(), rp[good_r].max())))
+    ax.set_ylim(factor*min_y_bounds, factor*1.5*np.max((mp[good_m].max(), rp[good_r].max())))
     if field == 'enstrophy':
         ax.legend(loc='best', frameon=False)
 

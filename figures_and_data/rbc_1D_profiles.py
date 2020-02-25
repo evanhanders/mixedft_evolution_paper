@@ -197,8 +197,8 @@ for ax, loc in [(axl, 'upper right'), (axr, 'lower left')]:
     if ax is axl: 
         axins.set_ylabel('% diff', fontsize=8, labelpad=0)
         axins_l.append(axins)
-        axins.set_ylim(0, 2)
-        axins.set_yticks((0, 1, 2))
+        axins.set_ylim(0, 3)
+        axins.set_yticks((0, 1.5, 3))
 #        axins.set_ylim(0, 0.5)
 #        axins.set_yticks((0, 0.25, 0.5))
     elif ax is axr: 
@@ -256,8 +256,8 @@ for ax, loc in [(axl, 'upper right'), (axr, 'lower left')]:
         this_err = err[(this_z < xlim[-1])*(this_z > xlim[0])]
         bounds = this_err.min()/2, this_err.max()*2
         if ax is axl:
-            axins.set_ylim(0, 4)#this_err.min()/2, this_err.max()*2)
-            axins.set_yticks((0, 2, 4))
+            axins.set_ylim(0, 3)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 1.5, 3))
         else:
             axins.set_ylim(0, 2)#this_err.min()/2, this_err.max()*2)
             axins.set_yticks((0, 1, 2))
@@ -294,7 +294,7 @@ for ax, loc in [(axl, 'center right'), (axr, 'center left')]:
     elif ax is axr: 
         axins_r.append(axins)
 
-    for k, ls in [(k1, '-')]:
+    for k, ls in [(k2, '-')]:
         p_mixed.set_scales(len(mixed_profs[mk][k][0,:])/max_nz)
         p_fixed.set_scales(len(fixed_profs[fk][k][0,:])/max_nz)
         p_mixed['g'] = mixed_profs[mk][k][0,:]/dT**(3/2)/flux_scale
@@ -304,6 +304,7 @@ for ax, loc in [(axl, 'center right'), (axr, 'center left')]:
 
         this_z = z
         err = 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])
+#        print(np.max(np.abs(p_fixed['g'][(this_z <= 0.45)*(this_z >= -0.45)])))
         z_bounds = (this_z <= xlim[-1])*(this_z >= xlim[0])
         good = (p_fixed['g'][z_bounds] >  0.1)
 
@@ -311,11 +312,11 @@ for ax, loc in [(axl, 'center right'), (axr, 'center left')]:
         this_err = err[z_bounds]
         bounds = this_err.min()/2, this_err.max()*2
         if ax is axl:
-            axins.set_ylim(0, 4)#this_err.min()/2, this_err.max()*2)
-            axins.set_yticks((0, 2, 4))
+            axins.set_ylim(0, 2)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 1, 2))
         else:
-            axins.set_ylim(0, 6)#this_err.min()/2, this_err.max()*2)
-            axins.set_yticks((0, 3, 6))
+            axins.set_ylim(0, 1)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 0.5, 1))
 #        axins.set_yscale('log')
 #        axins.set_yticks((1e-1, 1e0, 10))
 

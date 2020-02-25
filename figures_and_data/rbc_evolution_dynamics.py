@@ -16,6 +16,7 @@ import h5py
 
 import pandas as pd
 import dedalus.public as de
+from scipy.interpolate import interp1d
 
 mColor = 'darkorange'
 fColor = 'indigo'
@@ -102,17 +103,17 @@ fke = '{:.4e}'.format(1.00e10)
 fkl = '{:.4e}'.format(1.00e9)
 
 # Set up figure subplots
-fig = plt.figure(figsize=(7.5, 7))
+fig = plt.figure(figsize=(7.5, 8))
 gs = gridspec.GridSpec(1000, 1000)
 
-subplots = [( (50  ,   0),          250,    500),
-            ( (300 ,   0),          250,    500),
-            ( (650 ,   0),          175,    500),
-            ( (50  , 500),          250,    500),
-            ( (300 , 500),          250,    500),
-            ( (650 , 500),          175,    500),
-            ( (825 , 0),            175,    500),
-            ( (825 , 500),          175,    500),
+subplots = [( (50  ,   0),          225,    500),
+            ( (275 ,   0),          225,    500),
+            ( (600 ,   0),          200,    500),
+            ( (50  , 500),          225,    500),
+            ( (275 , 500),          225,    500),
+            ( (600 , 500),          200,    500),
+            ( (800 , 0),            200,    500),
+            ( (800 , 500),          200,    500),
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 
@@ -194,9 +195,27 @@ axtt = axs[2]
 axft = axs[6]
 mx, mp, mdx = [mixed_data[mke]['T'][k] for k in ['xs', 'pdf', 'dx']]
 fx, fp, fdx = [fixed_data[fke]['T'][k] for k in ['xs', 'pdf', 'dx']]
+fdx = float(fdx)
+mdx = float(mdx)
 
-axtt.axvline(np.sum(fx*fp*fdx), c=fColor)
-axft.axvline(np.sum(mx*mp*mdx), c=mColor)
+mmean  = np.sum(mx*mp*mdx)
+msigma = np.sqrt(np.sum((mx-mmean)**2*mp*mdx))
+fmean  = np.sum(fx*fp*fdx)
+fsigma = np.sqrt(np.sum((fx-fmean)**2*fp*fdx))
+
+mcdf = np.zeros_like(mp)
+for i in range(len(mp)-1):
+    mcdf[i+1] = mcdf[i] + mp[i]*mdx
+fcdf = np.zeros_like(fp)
+for i in range(len(fp)-1):
+    fcdf[i+1] = fcdf[i] + fp[i]*fdx
+
+ffunc = interp1d(fcdf, fx-fdx/2)
+mfunc = interp1d(mcdf, mx-mdx/2)
+axft.fill_between([mfunc(0.16), mfunc(0.84)], 1e-16, 1e5, color='grey', alpha=0.3)
+axft.axvline(mfunc(0.5), c='black', lw=0.5)
+axtt.fill_between([ffunc(0.16), ffunc(0.84)], 1e-16, 1e5, color='grey', alpha=0.3)
+axtt.axvline(ffunc(0.5), c='black', lw=0.5)
 
 axft.plot(mx, mp, label='FT', c=mColor)
 #plt.plot(mx/dT, mp*dT, label='FT', c=mColor)
@@ -204,7 +223,7 @@ axtt.plot(fx, fp, label='TT', c=fColor)
 for ax in [axft, axtt]:
     ax.set_yscale('log')
     ax.set_ylabel(r'$P(T)$', labelpad=-0.25)
-    ax.set_xlabel(r'$T$', labelpad=-0.25)
+    ax.set_xlabel(r'$T$')
 #    ax.legend(loc='upper right', frameon=False, fontsize=7, markerfirst=False, borderpad=0.1)
 
 mcdf = np.zeros_like(mp)
@@ -215,13 +234,14 @@ axft.fill_between(mx, 1e-16, mp, color=mColor, alpha=0.5)
 #ax.fill_between(mx/dT, 1e-16, mp*dT, color=mColor, alpha=0.5)
 axtt.fill_between(fx, 1e-16, fp, color=fColor, alpha=0.5)
 
-axtt.set_ylim(np.min(fp[fp > 0]), np.max(fp[fp > 0]))
-axft.set_ylim(1e-3, np.max(mp[mp > 0]))
+axtt.set_ylim(np.min(fp[fp > 0]), 1.5*np.max(fp[fp > 0]))
+axft.set_ylim(1e-3, 1.5*np.max(mp[mp > 0]))
 axtt.set_xlim(0, 1)
 axft.set_xlim(0, 0.3)#2*np.sum(mx*mp*mdx))#mx[mcdf > 0.999][0])#2*loop[-1][-1])
 
 axtt.set_xticks((0, 0.25, 0.5, 0.75))
 axft.set_xticks((0, 0.05, 0.1, 0.15, 0.2, 0.25))
+axtt.xaxis.set_label_position('top')
 
 
 # Late PDFs
@@ -229,42 +249,59 @@ axtt = axs[5]
 axft = axs[7]
 mx, mp, mdx = [mixed_data[mk]['T'][k] for k in ['xs', 'pdf', 'dx']]
 fx, fp, fdx = [fixed_data[fkl]['T'][k] for k in ['xs', 'pdf', 'dx']]
+fdx = float(fdx)
+mdx = float(mdx)
 
-axtt.axvline(np.sum(fx*fp*fdx), c=fColor)
-axft.axvline(np.sum(mx*mp*mdx), c=mColor)
+mmean  = np.sum(mx*mp*mdx)
+msigma = np.sqrt(np.sum((mx-mmean)**2*mp*mdx))
+fmean  = np.sum(fx*fp*fdx)
+fsigma = np.sqrt(np.sum((fx-fmean)**2*fp*fdx))
+
+mcdf = np.zeros_like(mp)
+for i in range(len(mp)-1):
+    mcdf[i+1] = mcdf[i] + mp[i]*mdx
+fcdf = np.zeros_like(fp)
+for i in range(len(fp)-1):
+    fcdf[i+1] = fcdf[i] + fp[i]*fdx
+
+ffunc = interp1d(fcdf, fx-fdx/2)
+mfunc = interp1d(mcdf, mx-mdx/2)
+axft.fill_between([mfunc(0.16), mfunc(0.84)], 1e-16, 1e5, color='grey', alpha=0.3)
+axft.axvline(mfunc(0.5), c='black', lw=0.5)
+axtt.fill_between([ffunc(0.16), ffunc(0.84)], 1e-16, 1e5, color='grey', alpha=0.3)
+axtt.axvline(ffunc(0.5), c='black', lw=0.5)
 
 axft.plot(mx, mp, label='FT', c=mColor)
 #plt.plot(mx/dT, mp*dT, label='FT', c=mColor)
 axtt.plot(fx, fp, label='TT', c=fColor)
 for ax in [axft, axtt]:
     ax.set_yscale('log')
-#    ax.set_ylabel(r'$P(T)$', labelpad=-0.25)
-    ax.set_xlabel(r'$T$', labelpad=-0.25)
+    ax.set_ylabel(r'$P(T)$', labelpad=-0.25)
+    ax.set_xlabel(r'$T$')
 #    ax.legend(loc='upper right', frameon=False, fontsize=7, markerfirst=False, borderpad=0.1)
 
-mcdf = np.zeros_like(mp)
-for i in range(len(mp)-1):
-    mcdf[i+1] = mcdf[i] + mp[i]*mdx
-print(mcdf)
 
 axft.fill_between(mx, 1e-16, mp, color=mColor, alpha=0.5)
 #ax.fill_between(mx/dT, 1e-16, mp*dT, color=mColor, alpha=0.5)
 axtt.fill_between(fx, 1e-16, fp, color=fColor, alpha=0.5)
 
-axtt.set_ylim(np.min(fp[fp > 0]), np.max(fp[fp > 0]))
-axft.set_ylim(fp[mcdf > 0.99999][0], np.max(mp[mp > 0]))
-axtt.set_xlim(0, 1.5)
-axft.set_xlim(0, 3*np.sum(mx*mp*mdx))#mx[mcdf > 0.999][0])#2*loop[-1][-1])
+axtt.set_ylim(np.min(fp[fp > 0]), 1.5*np.max(fp[fp > 0]))
+axft.set_ylim(mp[mcdf > 0.9999][0], 1.5*np.max(mp[mp > 0]))
+axtt.set_xlim(0, 1.35)
+axft.set_xlim(0, mx[mcdf > 0.9999][0])#3*np.sum(mx*mp*mdx))#mx[mcdf > 0.999][0])#2*loop[-1][-1])
 
 
-axtt.set_xticks((0, 0.5, 1, 1.5))
+axtt.set_xticks((0, 0.5, 1))
 axft.set_xticks((0, 0.005, 0.01, 0.015, 0.02, 0.025))
+axtt.xaxis.set_label_position('top')
+axft.yaxis.set_label_position('right')
+axtt.yaxis.set_label_position('right')
 
 
-axs[2].text(0.17, 0.86, r"TT, Ra$_{\Delta T}\,=\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[2].transAxes)
-axs[6].text(0.25, 0.86, r"FT (early), Ra$_{\Delta T}\,\approx\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[6].transAxes)
-axs[5].text(0.84, 0.86, r"TT, Ra$_{\Delta T}\,=\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[5].transAxes)
-axs[7].text(0.78, 0.86, r"FT (late), Ra$_{\Delta T}\,\approx\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[7].transAxes)
+axs[2].text(0.18, 0.87, r"TT, Ra$_{\Delta T}\,=\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[2].transAxes)
+axs[6].text(0.25, 0.87, r"FT (early), Ra$_{\Delta T}\,\approx\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[6].transAxes)
+axs[5].text(0.83, 0.87, r"TT, Ra$_{\Delta T}\,=\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[5].transAxes)
+axs[7].text(0.77, 0.87, r"FT (late), Ra$_{\Delta T}\,\approx\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[7].transAxes)
 
 
 for i in (0, 1, 3, 4):

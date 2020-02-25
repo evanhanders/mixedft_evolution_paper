@@ -79,6 +79,10 @@ restarted_data = read_data(restarted_ras, restarted_dirs)
 avg_window = 100 #time units
 fixed_trace = fixed_data['{:.4e}'.format(1.00e9)]
 mixed_trace = mixed_data['{:.4e}'.format(4.83e10)]
+
+good = mixed_trace['sim_time'] <= 1e4
+for k in mixed_trace:
+    mixed_trace[k] = mixed_trace[k][good]
 dff = pd.DataFrame(data=fixed_trace)
 rolledf = dff.rolling(window=avg_window*10, min_periods=avg_window*10).mean()
 dfm = pd.DataFrame(data=mixed_trace)
