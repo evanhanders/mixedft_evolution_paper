@@ -134,14 +134,10 @@ ax.set_xlim(0, np.max(mx/dT))
 plt.sca(axs[1])
 ax = axs[1]
 
-#with h5py.File('./data/rbc/mixedFT_2d/ra2.61e9/slice_file.h5', 'r') as f:
-with h5py.File('./data/rbc/restarted_mixed_T2m/ra9.51e11/slices_s47.h5', 'r') as f:
-    x = f['scales/x/1.0'][()].flatten()
-    z = f['scales/z/1.0'][()].flatten()
-    T = f['tasks/T'][()][15,:]
-
-with h5py.File('./data/rbc/mixedFT_2d/ra2.61e9/avg_profs/averaged_avg_profs.h5', 'r') as f:
-    T_prof = f['T'][()][0,:]
+with h5py.File('./data/rbc/restarted_mixed_T2m/ra9.51e11/temp_slice.h5', 'r') as f:
+    x = f['x'][()]
+    z = f['z'][()]
+    T = f['T'][()]
 
 delta_T_mixed = restarted_scalars['{:.4e}'.format(9.51e11)]['delta_T']
 dT = np.mean(delta_T_mixed[-5000:])
@@ -154,7 +150,7 @@ base_scale=1
 highres_n = 4096
 big_scale=int(highres_n/len(x))
 T_field = domain.new_field()
-T_field['g'] = T - T.mean(axis=0)#T_prof
+T_field['g'] = T - T.mean(axis=0)
 
 x_big = domain.grid(0, scales=big_scale)
 z_big = domain.grid(1, scales=big_scale)

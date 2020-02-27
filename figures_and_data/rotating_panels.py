@@ -255,15 +255,15 @@ plt.ylim(1, 7e2)
 
 #Panel 5-7, Colormaps
 
-early_slice_f = 'data/rotation/mixedFT/ra2.1e10/slices/slices_t100_512x384x384_s1.h5'
-mid_slice_f = 'data/rotation/mixedFT/ra2.1e10/slices/slices_t5380_128x384x384_s1.h5'
-late_slice_f = 'data/rotation/mixedFT/ra2.1e10/slices/slices_t13215_128x384x384_s1.h5'
+early_slice_f = 'data/rotation/mixedFT/ra2.1e10/vort_slice_early.h5'#slices/slices_t100_512x384x384_s1.h5'
+mid_slice_f = 'data/rotation/mixedFT/ra2.1e10/vort_slice_mid.h5'#slices/slices_t5380_128x384x384_s1.h5'
+late_slice_f = 'data/rotation/mixedFT/ra2.1e10/vort_slice_late.h5'#slices/slices_t13215_128x384x384_s1.h5'
 for i, filename, t in [(4, early_slice_f, r'100'), (5, mid_slice_f, r'5400'), (6, late_slice_f, r'13,200')]:
     plt.sca(axs[i])
     ax = axs[i]
     with h5py.File(filename, 'r') as f:
-        vorticity = f['tasks']['vort_z integ'][0,:].squeeze()
-        x, y = f['scales/x/1.0'], f['scales/y/1.0']
+        vorticity = f['vort_z integ'][()]
+        x, y = f['x'], f['y']
         yy, xx = np.meshgrid(y, x)
         maxv = np.abs(vorticity.max())
         c = plt.pcolormesh(xx, yy, vorticity, cmap='PiYG_r', vmin=-maxv, vmax=maxv, rasterized=True)

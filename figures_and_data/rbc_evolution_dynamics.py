@@ -120,26 +120,26 @@ axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 cax = plt.subplot(gs.new_subplotspec((0, 650), 50, 200))
 
 #Dynamics files
-ra1e9_TT  = './data/rbc/fixedT_2d/ra1.00e9/slices_s50.h5'
-ra1e10_TT = './data/rbc/fixedT_2d/ra1.00e10/run07/slices_s1.h5'
-ra1e9_FT  = './data/rbc/mixedFT_2d/ra4.83e10/run03/slices_s416.h5'
-ra1e10_FT = './data/rbc/mixedFT_2d/ra4.83e10/run03/slices_s22.h5' 
+ra1e9_TT  = './data/rbc/fixedT_2d/ra1.00e9/temp_slice.h5'#slices_s50.h5'
+ra1e10_TT = './data/rbc/fixedT_2d/ra1.00e10/temp_slice.h5'#run07/slices_s1.h5'
+ra1e9_FT  = './data/rbc/mixedFT_2d/ra4.83e10/temp_slice_late.h5'#run03/slices_s416.h5'
+ra1e10_FT = './data/rbc/mixedFT_2d/ra4.83e10/temp_slice_early.h5'#run03/slices_s22.h5' 
 
-loop =  (   (axs[0], ra1e10_TT, 7,  np.mean(fixed_scalars[fke]['delta_T'][-5000:]) ),
-            (axs[1], ra1e10_FT, 10,   np.mean(mixed_scalars[mk]['delta_T'][7500:12500])   ),
-            (axs[3], ra1e9_TT,  10,  np.mean(fixed_scalars[fkl]['delta_T'][-5000:]) ),
-            (axs[4], ra1e9_FT,  10,   np.mean(mixed_scalars[mk]['delta_T'][-5000:])  )
+loop =  (   (axs[0], ra1e10_TT,   np.mean(fixed_scalars[fke]['delta_T'][-5000:]) ),
+            (axs[1], ra1e10_FT,    np.mean(mixed_scalars[mk]['delta_T'][7500:12500])   ),
+            (axs[3], ra1e9_TT,    np.mean(fixed_scalars[fkl]['delta_T'][-5000:]) ),
+            (axs[4], ra1e9_FT,     np.mean(mixed_scalars[mk]['delta_T'][-5000:])  )
         )
 
-for ax, filen, writen, dT in loop:
+for ax, filen, dT in loop:
     print('writing from file {}'.format(filen))
     print('delta T is {:.4e}'.format(dT))
     plt.sca(ax)
 
     with h5py.File(filen, 'r') as f:
-        x = f['scales/x/1.0'][()].flatten()
-        z = f['scales/z/1.0'][()].flatten()
-        T = f['tasks/T'][()][writen,:]
+        x = f['x'][()]
+        z = f['z'][()]
+        T = f['T'][()]
     print(T.max(), T.min())
 
 
