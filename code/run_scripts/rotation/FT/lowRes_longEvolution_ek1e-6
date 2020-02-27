@@ -1,0 +1,41 @@
+#PBS -S /bin/bash
+#PBS -N rotating_rayleigh_benard_ek1e-6_mixedFT_128_384_2
+#PBS -l select=37:ncpus=28:mpiprocs=28:model=bro_ele
+#PBS -l walltime=120:00:00
+#PBS -j oe
+#PBS -q long
+
+OUT_DIR=./rotating_outputs/
+
+deactivate
+source ~/dedalus_new/bin/activate
+
+
+EK=1e-6
+RA=2.1e10
+AR=4.81e-1
+NZ=128
+NX=384
+NY=$NX
+
+export MPI_LAUNCH_TIMEOUT=60
+#select=37:ncpus=28:mpiprocs=28:model=bro_ele
+#select=26:ncpus=40:mpiprocs=40:model=cas_ait
+
+date
+mpiexec_mpt -np 1024 ~/.python3 rotating_rayleigh_benard.py \
+        --Rayleigh=$RA  \
+        --Ekman=$EK     \
+        --nz=$NZ        \
+        --nx=$NX        \
+        --ny=$NX        \
+        --mesh=32,32    \
+        --run_time_wall=119.5 \
+        --run_time_buoy=15000 \
+        --aspect=$AR \
+        --safety=0.4 \
+        --root_dir=$OUT_DIR \
+        --label=longEvolution_128_384_2_from12180 \
+        --restart=./rotating_outputs/rotating_rayleigh_benard_mixedFT_stressFree_Ek1e-6_Ra2.1e10_Pr1_a4.81e-1_longEvolution_128_384_2_from10370/final_checkpoint/final_checkpoint_s1.h5 \
+         > $OUT_DIR\/out.ra$RA.ek$EK.$PBS_JOBID
+date

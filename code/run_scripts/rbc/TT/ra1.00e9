@@ -1,0 +1,28 @@
+#PBS -S /bin/bash
+#PBS -N RB_fixed_ra1.00e9
+#PBS -l select=19:ncpus=28:mpiprocs=28:model=bro_ele
+#PBS -l walltime=120:00:00
+#PBS -j oe
+#PBS -q long
+
+
+
+cd $PBS_O_WORKDIR
+
+RA=1.00e9
+NZ=1024
+NX=2048
+
+
+date
+mpiexec_mpt -np 512 ~/.python3 rayleigh_benard.py \
+        --Rayleigh=$RA  \
+        --nz=$NZ        \
+        --nx=$NX        \
+        --run_time_wall=119 \
+        --run_time_buoy=1000 \
+        --fixed_t \
+        --safety=0.7 \
+        --RK443 \
+         > out.fixed_t.ra$RA.$PBS_JOBID
+date

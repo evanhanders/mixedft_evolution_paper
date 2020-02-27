@@ -1,0 +1,29 @@
+#PBS -S /bin/bash
+#PBS -N RB_mixed_restartedT2m_ra2.61e9_early
+#PBS -l select=10:ncpus=28:mpiprocs=28:model=bro_ele
+#PBS -l walltime=30:00:00
+#PBS -j oe
+#PBS -q long
+
+
+
+cd $PBS_O_WORKDIR
+
+RA=2.61e9
+NZ=512
+NX=1024
+
+
+date
+mpiexec_mpt -np 256 ~/.python3 rayleigh_benard.py \
+        --Rayleigh=$RA  \
+        --nz=$NZ        \
+        --nx=$NX        \
+        --run_time_wall=29 \
+        --run_time_buoy=1000 \
+        --safety=0.7 \
+        --RK443 \
+        --restart_T2m=./mixedFT_paper_runs/rayleigh_benard_2D_fixedT_noSlip_Ra1.00e8_Pr1_a2/checkpoint/checkpoint_s10.h5 \
+        --restart_T2m_Nu=25.4 \
+         > out.restartT2m.mixed_ft.ra$RA.$PBS_JOBID
+date

@@ -1,0 +1,35 @@
+#PBS -S /bin/bash
+#PBS -N rotating_rayleigh_benard_fixedT_ek1e-6_supercrit9
+#PBS -l select=19:ncpus=28:mpiprocs=28:model=bro_ele
+#PBS -l walltime=120:00:00
+#PBS -j oe
+#PBS -q long
+
+OUT_DIR=./rotating_outputs/
+
+EK=1e-6
+RA=8.25e9
+AR=4.81e-1
+NZ=256
+NX=256
+NY=$NX
+
+
+date
+mpiexec_mpt -np 512 ~/.python3 rotating_rayleigh_benard.py \
+        --Rayleigh=$RA  \
+        --Ekman=$EK     \
+        --nz=$NZ        \
+        --nx=$NX        \
+        --ny=$NX        \
+        --mesh=32,16    \
+        --run_time_wall=119.5 \
+        --run_time_buoy=2500 \
+        --aspect=$AR \
+        --safety=0.4 \
+        --root_dir=$OUT_DIR \
+        --fixed_t \
+        --label=supercrit9_run02 \
+        --restart=rotating_outputs/rotating_rayleigh_benard_fixedT_stressFree_Ek1e-6_Ra8.25e9_Pr1_a4.81e-1_supercrit9/final_checkpoint/final_checkpoint_s1.h5 \
+         > $OUT_DIR\/out.fixedT.supercrit9.ra$RA.ek$EK.$PBS_JOBID
+date

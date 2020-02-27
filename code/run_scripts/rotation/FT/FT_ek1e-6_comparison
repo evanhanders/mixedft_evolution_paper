@@ -1,0 +1,35 @@
+#PBS -S /bin/bash
+#PBS -N rotating_rayleigh_benard_ek1e-6_mixedFT_384_512
+#PBS -l select=147:ncpus=28:mpiprocs=28:model=bro_ele
+#PBS -l walltime=48:00:00
+#PBS -j oe
+#PBS -q long
+
+OUT_DIR=./rotating_outputs/
+
+EK=1e-6
+RA=2.1e10
+AR=4.81e-1
+NZ=512
+NX=384
+NY=$NX
+
+
+#-l select=205:ncpus=20:mpiprocs=20:model=ivy
+#-l select=103:ncpus=40:mpiprocs=40:model=sky_ele
+#-l select=147:ncpus=28:mpiprocs=28:model=bro_ele
+date
+mpiexec_mpt -np 4096 ~/.python3 rotating_rayleigh_benard.py \
+        --Rayleigh=$RA  \
+        --Ekman=$EK     \
+        --nz=$NZ        \
+        --nx=$NX        \
+        --ny=$NX        \
+        --mesh=64,64    \
+        --run_time_wall=47.8 \
+        --run_time_buoy=100 \
+        --aspect=$AR \
+        --safety=0.4 \
+        --root_dir=$OUT_DIR \
+         > $OUT_DIR\/out.512x384x384.ra$RA.ek$EK.$PBS_JOBID
+date
