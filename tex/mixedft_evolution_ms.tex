@@ -609,14 +609,14 @@ The code used to run these simulations can be found online in the repository of 
 \begin{table}[ht]
 \caption{
 	Input and output values from the simulations in this work are shown; all simulations have a Prandtl number of 1.
-	Input quantities are the boundary conditions (BCs), Rayleigh number (Ra), coefficient resolution (nz$\times$nx$\times$ny), and the total simulation run time in freefall units $t_{\text{simulation}}$ and in cpu-hours.
+	Input quantities are the boundary conditions (BCs), Rayleigh number (Ra), coefficient resolution (nx$\times$ny$\times$nz, or horizontal $\times$ vertical), and the total simulation run time in freefall units $t_{\text{simulation}}$ and in cpu-hours.
 	Output quantities are the Nusselt (Nu), P\'{e}clet (Pe), and Rossby (Ro) numbers.
 	Reported values of Nu, Re, and Ro are the sample mean over the last 500 freefall time units.
 	Reported uncertainties are the standard deviation of the sample mean; when the uncertainty is not reported, it is smaller than the number of reported digits.
 	The ``Nu comp'' values are comparison Nu values reported in ref.~\cite{zhu&all2018}.
 	Resolutions marked by a $*$ show the initial, highest resolution utilized in the simulation.
 	The 2D FT Ra = $4.83 \times 10^{10}$ simulation's resolution was changed to $1024\times2048$ about 500 freefall time units after transient.
-	The rotating FT case's resolution was reduced to $256\times384^2$ about one hundred freefall time units after transient, and was further reduced to $128\times384^2$ about $3.3\times 10^3$ freefall times after transient.
+	The rotating FT case's resolution was reduced to $384^2\times256$ about one hundred freefall time units after transient, and was further reduced to $384^2\times128$ about $3.3\times 10^3$ freefall times after transient.
 }
 \setlength{\tabcolsep}{8pt}
 \label{table:simulations}
@@ -624,7 +624,7 @@ The code used to run these simulations can be found online in the repository of 
 \resizebox{\textwidth}{!}{
 \begin{tabular}{c c c c c c c c c}
 \hline																	
-BCs	&	Ra	&	nz$\times$nx$\times$ny	& $t_{\text{simulation}}$	&	cpu-hours 	&	Nu	&	Nu comp	&	Pe  & Ro \\
+BCs	&	Ra	&	nx$\times$ny$\times$nz	& $t_{\text{simulation}}$	&	cpu-hours 	&	Nu	&	Nu comp	&	Pe  & Ro \\
 \hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
 \multicolumn{7}{c}{\vspace{0.1cm}2D Runs ($\Gamma = 2$, no-slip)} \\
 \hline
@@ -643,11 +643,11 @@ TT-to-FT	&	$9.51 \times 10^{11}$	&	2048x4096	&	1000		&	$7.91 \times 10^4$	& 	$93
 \hline																	
 \multicolumn{7}{c}{\vspace{0.1cm}3D Rotating Runs (Ek = $10^{-6}$, $\Gamma = 0.481$, stress-free)} \\
 \hline																	
-TT	&	$1.38 \times 10^9$		&	128$\times$64$^2$	&	2565		&	$2.98 \times 10^3$	&	$2.17$			&	---		&	$2.84 \times 10^2$  & $(3.38 \pm 0.17) \times 10^{-2}$ \\
-TT	&	$1.83 \times 10^9$		&	128$\times$64$^2$	&	2545		&	$3.54 \times 10^3$	&	$3.56$			&	---		&	$5.28 \times 10^2$  & $(5.67 \pm 0.33) \times 10^{-2}$ \\
+TT	&	$1.38 \times 10^9$		&	64$^2\times$128 	&	2565		&	$2.98 \times 10^3$	&	$2.17$			&	---		&	$2.84 \times 10^2$  & $(3.38 \pm 0.17) \times 10^{-2}$ \\
+TT	&	$1.83 \times 10^9$		&	64$^2\times$128 	&	2545		&	$3.54 \times 10^3$	&	$3.56$			&	---		&	$5.28 \times 10^2$  & $(5.67 \pm 0.33) \times 10^{-2}$ \\
 TT	&	$2.29 \times 10^9$		&	128$^3$				&	2537		&	$1.08 \times 10^4$	&	$5.61$			&	---		&	$8.91 \times 10^2$  & $(8.56 \pm 0.44) \times 10^{-2}$ \\
 TT	&	$2.75 \times 10^9$		&	128$^3$				&	5035		&	$2.6 \times 10^4$	&	$8.04 \pm 0.01$	&	---		&	$1.71 \times 10^3$  & $(1.17 \pm 0.06) \times 10^{-1}$ \\
-FT	&	$2.1 \times 10^{10}$	&	512$\times$384$^2$*	&	13950		&	$2.3 \times 10^6$	&	$7.86 \pm 0.01$	&	---		&	$1.76 \times 10^3$  & $(1.14 \pm 0.06) \times 10^{-1}$ \\
+FT	&	$2.1 \times 10^{10}$	&	384$^2\times$512*	&	13950		&	$2.3 \times 10^6$	&	$7.86 \pm 0.01$	&	---		&	$1.76 \times 10^3$  & $(1.14 \pm 0.06) \times 10^{-1}$ \\
 TT	&	$3.67 \times 10^9$		&	128$^3$				&	2532		&	$1.55 \times 10^4$	&	$12.5$			&	---		&	$3.39 \times 10^3$  & $(1.74 \pm 0.08) \times 10^{-1}$ \\
 TT	&	$4.58 \times 10^9$		&	128$^3$				&	2530		&	$1.69 \times 10^4$	&	$17.6$			&	---		&	$4.77 \times 10^3$  & $(2.35 \pm 0.08) \times 10^{-1}$ \\
 TT	&	$5.50 \times 10^9$		&	192$^3$				&	2402		&	$7.35 \times 10^4$	&	$22.8$			&	---		&	$6.38 \times 10^3$  & $(2.96 \pm 0.11) \times 10^{-1}$ \\
