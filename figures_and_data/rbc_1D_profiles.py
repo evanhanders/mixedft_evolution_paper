@@ -294,7 +294,7 @@ for ax, loc in [(axl, 'center right'), (axr, 'center left')]:
     elif ax is axr: 
         axins_r.append(axins)
 
-    for k, ls in [(k2, '-')]:
+    for k, ls in [(k1, '-')]:
         p_mixed.set_scales(len(mixed_profs[mk][k][0,:])/max_nz)
         p_fixed.set_scales(len(fixed_profs[fk][k][0,:])/max_nz)
         p_mixed['g'] = mixed_profs[mk][k][0,:]/dT**(3/2)/flux_scale
