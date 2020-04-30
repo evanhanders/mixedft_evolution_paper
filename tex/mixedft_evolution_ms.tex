@@ -79,6 +79,7 @@ We will refer to the common choice of fixing temperature at both boundaries as `
 It is generally assumed that FT and FF boundaries should fundamentally behave similarly \cite{goluskin2016}, and the behavior of FF boundaries is well-known \cite{otero&all2002, johnston&doering2009}.
 FF and TT boundaries exhibit the same scaling of convective heat transport (quantified by the Nusselt number, Nu) as a function of increased convective driving (quantified by the Rayleigh number, Ra) \cite{johnston&doering2009}.
 It is natural to assume that FT simulations should follow the same Nu vs.~Ra scaling laws as FF and TT boundary conditions.
+Indeed, \citet{calkins&all2015b} have found a dynamical equivalence between FT and TT boundaries in rapidly rotating RBC.
 However, FT boundaries introduce complexities into the convective solution which neither FF nor TT boundaries are exposed to.
 First, the evolved mean temperature of a simulation with FT boundaries differs from the initial mean temperature, and therefore the thermal reservoir of the convective system must evolve (``relax'') over time \cite{anders&all2018}.
 Second, FT boundary conditions are fundamentally asymmetric, and it is unclear if these asymmetries affect the evolved convective solution.
@@ -376,6 +377,7 @@ The remaining discrepancies between the PDFs are small and seem to primarily be 
 \vspace{-0.5cm}
 \caption{ 
 	The first four moments, as defined in Eqn.~\ref{eqn:pdf_moments}, of each of the PDFs shown in Fig.~\ref{fig:rbc_restart_description} are displayed below.
+	Note that the coefficient resolution of the evolved FT simulation and the TT-to-FT simulation are the same (nz, nx) = (1024, 2048).
 }
 \vspace{-0.25cm}
 \setlength{\tabcolsep}{12pt}
@@ -467,7 +469,9 @@ We explore this further in the discussion in section \ref{sec:discussion}.
 
 We now extend our study to a more complicated experiment: 3D rotating RBC with an Ekman number of $10^{-6}$.
 We study a TT case at Ra$_{\Delta T} = 2.75\times 10^9$, and an FT case at $\text{Ra}_{\partial_z T} = 2.1 \times 10^{10}$ (the supercriticality of the TT case is $\sim 3$).
-These simulations employ stress free boundary conditions which allow for the generation of mean flows such as large scale vortices (LSV) \cite{couston&all2019}.
+\footnote{At these parameters, we would be in the cellular convection regime of \citet{stellmach&all2014}, but our dynamics are different due to our choice of stress free boundary conditions.
+}.
+These simulations employ stress free boundary conditions which allow for the generation of mean flows such as large scale vortices (LSV) \citep{stellmach&all2014, rubio&all2014, guervilly&all2014, guervilly&hughes2017, favier&all2014, favier&all2019, couston&all2019}.
 
 In the left three panels of Fig.~\ref{fig:rotating_panels}, we compare the time evolution of the FT and TT cases.
 The top left panel shows the evolution of Ra$_{\partial_z T}$ and Ra$_{\Delta T}$.
