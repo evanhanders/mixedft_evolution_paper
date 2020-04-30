@@ -80,7 +80,7 @@ We will refer to the common choice of fixing temperature at both boundaries as `
 It is generally assumed that FT and FF boundaries should fundamentally behave similarly \cite{goluskin2016}, and the behavior of FF boundaries is well-known \cite{otero&all2002, johnston&doering2009}.
 FF and TT boundaries exhibit the same scaling of convective heat transport (quantified by the Nusselt number, Nu) as a function of increased convective driving (quantified by the Rayleigh number, Ra) \cite{johnston&doering2009}.
 It is natural to assume that FT simulations should follow the same Nu vs.~Ra scaling laws as FF and TT boundary conditions.
-\ea{Indeed, \citet{calkins&all2015b} have found a dynamical equivalence between FT and TT boundaries in rapidly rotating RBC.}
+\ea{Indeed, \citet{calkins&all2015} have found a dynamical equivalence between FF and TT boundaries in rapidly rotating RBC.}
 However, FT boundaries introduce complexities into the convective solution which neither FF nor TT boundaries are exposed to.
 First, the evolved mean temperature of a simulation with FT boundaries differs from the initial mean temperature, and therefore the thermal reservoir of the convective system must evolve (``relax'') over time \cite{anders&all2018}.
 Second, FT boundary conditions are fundamentally asymmetric, and it is unclear if these asymmetries affect the evolved convective solution.
@@ -103,9 +103,11 @@ Finally, in section \ref{sec:discussion}, we summarize our findings and briefly 
 % EXPERIMENT
 %%%%%%%%%%%
 %%%%%%%%%%%%
-
 \section{Simulation Details}
 \label{sec:simulations}
+\ea{
+\subsection{Equations, Control Parameters, Boundary Conditions, and Numerics}
+}
 We study incompressible RBC under a freefall nondimensionalization; for details of this nondimensionalization, we refer readers to our previous work \cite{anders&all2018}.
 In section \ref{sec:rotating_results}, we study convection in the presence of vertical global rotation \cite{julien&all1996}, and include the Coriolis term in the momentum equation for generality.
 The Boussinesq equations of motion are
@@ -155,7 +157,7 @@ For comparison with the literature, we specify $\Gamma = 2$ and these simulation
 u = w = 0 \, \, \text{at}\,\,z = \{-0.5, 0.5\}.
 \label{eqn:vel_bcs}
 \end{equation}
-For this choice of boundary conditions, the critical value of the Rayleigh number is Ra$_{\partial_z T} = 1296$ for FT boundaries and Ra$_{\Delta T} = 1708$ for TT boundaries \cite{goluskin2016}.
+For this choice of \ea{aspect ratio and} boundary conditions, the critical value of the Rayleigh number is Ra$_{\partial_z T} = 1296$ for FT boundaries and Ra$_{\Delta T} = 1708$ for TT boundaries \cite{goluskin2016}.
 Due to this difference in onset, it is reasonable to expect important differences between FT and TT solutions at low supercriticalities.
 However, for the supercriticalities of O($10^{5+}$) studied in Sec.~\ref{sec:2d_results}, we do not expect this difference in linear stability to be very important.
 
@@ -171,16 +173,11 @@ We utilize the Dedalus\footnote{\url{http://dedalus-project.org/}} pseudospectra
 Our 2D simulations use an implicit-explicit (IMEX), third-order, four-stage Runge-Kutta timestepping scheme RK443; our 3D rotating simulations use the second-order, two-stage Runge-Kutta scheme RK222 \cite{ascher&all1997}. 
 The code used to run simulations and to create the figures in this work are available publicly online in a repository of supplemental materials \cite{anders&all2020a_supp}\footnote{Simulations were conducted using v1.0.0 of our \texttt{boussinesq\_convection} github repository \cite{code:boussinesq_convection}.}.
 Variables are time-evolved on a dealiased Chebyshev (vertical) and Fourier (horizontal, periodic) domain in which the physical grid dimensions are 3/2 the size of the coefficient grid.  
-We fill $T_1$ with random white noise whose magnitude is $10^{-6}/\Peff$, and which is vertically tapered to zero at the boundaries.
-We filter this noise spectrum in coefficient space, such that only the lower 25\% of the coefficients have power; this low-pass filter is used to avoid populating the highest wavenumbers with noise in order to improve the stability of our spectral timestepping methods.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Ra & Nu arguments
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Nondimensional Output Quantities}
+\ea{
+\subsection{Output Quantities \& Mapping Between Temperature Nondimensionalizations}
+}
 \label{sec:ra_nu_relations}
 Throughout this work we will measure and report the evolved value of the Nusselt number (Nu).
 We define and measure Nu instantaneously as
@@ -189,12 +186,33 @@ We define and measure Nu instantaneously as
 = 1 + \Peff\frac{\angles{w T}}{-\Delta T},
 \end{equation}
 where $\angles{}$ represent a volume average ($\angles{A} \equiv \iint A\,dx\,dz / \Gamma$ in 2D and $\angles{A} \equiv \iiint A\,dx\,dy\,dz / \Gamma^2$ in 3D for some quantity $A$), and $\Delta T = \angles{\partial_z T}$ is the (negative) temperature difference between the top and bottom plate.
-In an evolved, statistically stationary state, $\left.\text{Nu} = 1 + \Peff\angles{wT} = \partial_z T\right|_{z = \{-0.5, 0.5\}}$ when TT boundaries are employed, and $\text{Nu} = (-\Delta T)^{-1}$ when FT boundaries and a flux nondimensionalization are employed.
-This implies that Nu is the conversion between a temperature and flux nondimensionalization such that the equilibrated state of any convective solution is characterized by Ra$_{\Delta T}$ and Ra$_{\partial_z T}$ according to
+\ea{In an evolved, statistically stationary state \cite{calkins&all2015}, 
 \begin{equation}
-\text{Ra}_{\partial_z T} = \text{Ra}_{\Delta T} \text{Nu}.
+\text{Nu} = \frac{\beta L_z}{\Delta T}, \,\,\text{where}\,\,
+\beta \begin{cases}
+< -1 & \text{(TT)} \\
+= -1 & \text{(FT/FF)},
+\end{cases},
+\qquad
+\Delta T \begin{cases}
+= -1 & \text{(TT)} \\
+\in [-1, 0) & \text{(FT/FF)}
+\end{cases},
+\label{eqn:evolved_nu}
+\end{equation}
+and where $\beta$ is the temperature gradient achieved at the domain boundaries.
+Nu is therefore the conversion between a temperature and flux nondimensionalization such that the equilibrated state of any convective solution is characterized by Ra$_{\Delta T}$ and Ra$_{\partial_z T}$ according to
+\begin{equation}
+\text{Ra}_{\partial_z T} = \text{Ra}_{\Delta T} \text{Nu},
+\qquad
+T_{\text{TT}} = \text{Nu} T_{\text{FT}},
+\qquad
+\bm{u}_{\text{TT}} = \sqrt{\text{Nu}} \bm{u}_{\text{FT}}.
 \label{eqn:ra_relation}
 \end{equation}
+This mapping is presented by ref.~\cite{calkins&all2015} for a diffusion timescale nondimensionalization, and we have expanded it here for a freefall timescale nondimensionalization.}
+
+
 
 Throughout this work, we will also measure the evolved P\'{e}clet number (Pe) and in section \ref{sec:rotating_results} we will measure the Rossby number (Ro).
 These nondimensional quantities are defined as
@@ -203,6 +221,67 @@ These nondimensional quantities are defined as
 \end{equation}
 where $|\bm{A}|$ represents the magnitude of the vector $\bm{A}$.
 
+\ea{
+\subsection{Initial Conditions}
+The time evolution of FT simulations is sensitive to the choice of initial conditions made due to the fact that the evolved, nonlinear convective dynamics determine the mean temperature for this choice of boudnary conditions.
+For this reason, we will study FT simulations which employ three different formulations of the initial temperature field.
+
+\paragraph{Classical ICs} 
+Our first set of initial conditions are the ``classical'' initial conditions on which the system was nondimensionalized,
+\begin{equation}
+T_c(z) = 0.5 - z.
+\end{equation}
+Simulations which employ these initial conditions will be simply denoted as ``FT'' simulations.
+
+\paragraph{Nu-based ICs} 
+Our second set of initial conditions are ``Nusselt-based'' initial conditions.
+As we will show in sections \ref{sec:results}, the evolved state of each FT simulation corresponds to an equivalent TT simulation.
+As a result, Nu~vs.~Ra scaling laws derived for TT simulations can be expected to hold for FT simulations.
+According to Eqn.~\ref{eqn:ra_relation}, we can rearrange a given scaling law,
+\begin{equation}
+\text{Nu} = A \text{Ra}_{\Delta T}^{\alpha} \rightarrow \text{Nu} = (A \text{Ra}_{\partial_z T}^{\alpha})^{1/(1+\alpha)},
+\end{equation}
+and use this law along with Eqn.~\ref{eqn:evolved_nu} to predict the evolved temperature jump in an FT simulation,
+\begin{equation}
+\Delta T = \frac{\beta L_z}{\text{Nu}} = -(A \text{Ra}_{\partial_z T}^{\alpha})^{-1/(1+\alpha)}.
+\end{equation}
+Our ``Nusselt-based'' initial conditions construct an initial temperature profile which is consistent with the bottom fixed-flux boundary condition but whose initial $\Delta T$ is determined by a specific Nu~vs.~Ra scaling law.
+The vertical temperature derivative is,
+\begin{equation}
+\frac{\partial T_N}{\partial z} = \grad_{\text{interior}} + w(z)(-1 - \grad_{\text{interior}}),
+\end{equation}
+where $w(z)$ is a windowing function which sets the temperature gradient to $-1$ near the boundaries,
+$$
+w(z) = 1 + \frac{1}{2}\left(\text{erf}\left[\frac{z - (0.5 - 2\delta_w)}{0.5\delta_w}\right] - \text{erf}\left[\frac{z - (-0.5 + 2\delta_w)}{0.5\delta_w}\right]\right),
+$$
+Here, $\delta_w = -\Delta T / 2$, an estimate of the boundary layer width, and $\grad_{\text{interior}}$, the temperature gradient in the interior of the domain, is determined by setting $\int \partial_z T_N dz = \Delta T$.
+%why do we choose erf? why don't we specify a "right" bl shape?
+
+\paragraph{TT-to-FT}
+In some experiments, the proper Nu~vs.~Ra law is not well-known, or is not agreed upon by the community (see e.g.,~Sec.\ref{sec:rotation}).
+For such cases, it may still be numerically useful to be able to study converged FT simulations without having to resort to classical ICs.
+We will therefore examine ``TT-to-FT'' initial conditions, in which we run a TT simulation through its convective transient to statistical equilibrium, then use the full evolved nonlinear state as initial conditions for an FT simulation.
+}
+To achieve this, we perform these steps:
+\begin{enumerate}
+\item Run a TT simulation to its statistically stationary state ($\sim100+$ freefall time units). 
+Measure $\text{Nu}$ in that state.
+\item Re-nondimensionalize from TT to FT according to Eqn.~\ref{eqn:ra_relation}.
+\item Restart the simulation with FT boundaries and continue timestepping.
+\end{enumerate}
+
+\ea{\paragraph{Additional ICs}
+In all cases, we assume that the initial temperature profile is in hydrostatic equilibrium, and solve for $\varpi$ accordingly.
+We assume zero velocity in the initial state, except in the case of TT-to-FT simulations.
+For classical and Nu-based ICs,
+}
+we fill $T_1$ with random white noise whose magnitude is $10^{-6}/\Peff$, and which is vertically tapered to zero at the boundaries.
+We filter this noise spectrum in coefficient space, such that only the lower 25\% of the coefficients have power; this low-pass filter is used to avoid populating the highest wavenumbers with noise in order to improve the stability of our spectral timestepping methods.
+
+\ea{
+\subsection{Evolutionary Timescales}
+
+}
 
 %%%%%%%%%%%%
 %%%%%%%%%%%
