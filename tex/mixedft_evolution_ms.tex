@@ -279,9 +279,46 @@ we fill $T_1$ with random white noise whose magnitude is $10^{-6}/\Peff$, and wh
 We filter this noise spectrum in coefficient space, such that only the lower 25\% of the coefficients have power; this low-pass filter is used to avoid populating the highest wavenumbers with noise in order to improve the stability of our spectral timestepping methods.
 
 \ea{
-\subsection{Evolutionary Timescales}
+\subsection{Timescales}
+\label{sec:timescales}
+}
+\paragraph{Dynamical Timescales}
+One \ea{result of the mapping in Eqn.~\ref{eqn:ra_relation}} is that the nondimensional dynamical freefall timescale is a poor description of the \emph{evolved} freefall timescale.
+The velocities in an FT simulation are smaller than the velocities in a TT simulation by a factor of $\sqrt{\text{Nu}}$.
+As a result, every simulation freefall time unit in a TT simulation samples a factor of $\sqrt{\text{Nu}}$ more dynamics than a nondimensional freefall time in an FT simulation.
+\ea{To ensure that comparisons between TT and FT simulations are accurate, measurements in FT simulations will be taken over time windows longer by a factor of $\sqrt{\text{Nu}}$ than comparable windows in TT simulations.}
+
+\ea{
+\paragraph{Evolutionary Timescales}
+The thermal energy reservoir of our 2D Cartesian systems, and the rate of change of this reservoir due to conduction at the boundaries, is
+\begin{equation}
+E = \iint T\,dx\,dz = \Gamma \int T\,dz,
+\qquad
+\frac{dE}{dt} = -\iint \grad\cdot F_{\text{cond}}\,dx\,dz = -\Gamma F_{\text{cond,z}}\bigg|_{z=-0.5}^{z=0.5}
+\end{equation}
+where the conductive flux is $F_{\text{cond}} = -\Peff^{-1}\grad T$, $F_{\text{cond,z}}$ is its z-component, and where $\int T dz = \Delta T / 2$ in RBC.
+The thermal relaxation time of a \RB convection experiment is therefore
+\begin{equation}
+\tau_{\text{th}} = \frac{\Delta E}{dE/dt},
+\,\,\text{with}\,\,
+\Delta E = E(t=\infty) - E(t=0).
+\end{equation}
+In the case of TT boundary conditions, we expect $\Delta E = 0$, as the initial and final state have the same mean temperature.
+The goal of our ``Nu-based'' and TT-to-FT initial conditions is to create FT systems in which $\Delta E = 0$ is also true, creating a system with a negligible relaxational timescale.
+
+For the case of classical ICs in an FT system, $\Delta T(t=0) = -1$ and $\Delta T(t=\infty) = -\text{Nu}^{-1}$, and the temperature gradient at the bottom boundary is fixed at a value of -1.
+The thermal relaxation timescale is therefore
+\begin{equation}
+\tau_{\text{th, FT-classical}} = \Peff \frac{\text{Nu}^{-1} - 1}{\partial_z T(z=0.5) + 1} \sim \frac{\sqrt{\text{Ra Pr}}}{|\partial_z T(z = 0.5)| - 1}.
+\end{equation}
+Where the final expression is for the large Ra case where Nu$^{-1} \rightarrow 0$.
+The magnitude of the temperature derivative achieved at the top boundary is initially very large ($|\partial_z T(z=0.5)|_{\text{early}} > \text{Nu}(t=\infty)$; see e.g., Fig.~1b in \cite{anders&all2018}), but monotonically decreases in magnitude throughout the evolution of a simulation, making it difficult to estimate the true thermal relaxation time.
+However, it is reasonable to assume that the evolutionary timescale lies within the window $\tau_{\text{th, FT-classical}} \in [\sqrt{\text{Ra Pr}} \,\text{Nu}^{-1}, \sqrt{\text{Ra Pr}}]$.
+
+
 
 }
+
 
 %%%%%%%%%%%%
 %%%%%%%%%%%
@@ -496,19 +533,6 @@ The rapid relaxation of TT simulations therefore suggests that experimental rest
 The long rundown of FT experiments on display in Fig.~\ref{fig:rbc_scalar_comparisons} is entirely due to the energy reservoir (the mean temperature) drifting over time.
 Put differently, the classic RBC setup for $T_0(z)$ is a bad choice of initial conditions for FT boundaries, and TT-to-FT simulations use TT dynamics to choose a more ideal set of initial conditions.
 
-
-\subsubsection{Changing Timescales}
-\label{sec:timescales}
-One surprising result of our FT simulations is that the nondimensional dynamical freefall timescale is a poor description of the \emph{evolved} freefall timescale.
-As noted above in our TT-to-FT procedure, the velocities in an FT simulation are smaller than the velocities in a TT simulation by a factor of $\sqrt{\text{Nu}}$.
-As a result, every simulation freefall time unit in a TT simulation samples a factor of $\sqrt{\text{Nu}}$ more dynamics than a nondimensional freefall time in an FT simulation.
-This is on display in the left panels of Fig~\ref{fig:rbc_restart_description}, where the flow variations occur at a higher temporal frequency in the TT portion of the simulation than in the FT portion.
-
-These results imply that the true nondimensional freefall time of an FT simulation is $\tau_{\text{ff}} = \sqrt{\text{Nu}}$ in simulation freefall time units.
-However, we note that Ra$_{\partial_z T}$ is the input value of Ra for an FT simulations, and that Ra$_{\partial_z T}/$Ra$_{\Delta T} = \text{Nu}$.
-The thermal diffusion timescale, $\tau_{\text{th}}$, which scales like $\tau_{\text{th}} \propto \sqrt{\text{Ra}_{\text{input}}}$, is also larger in an FT simulation than in a comparable TT simulation by a factor of $\sqrt{\text{Nu}}$.
-One convective freefall timescale therefore occurs over the same fraction of a diffusion timescale regardless of boundary conditions or temperature nondimensionalization, $\tau_{\text{ff}}/\tau_{\text{th}} \neq f(\text{Nu})$.
-These findings suggest that comparing FT and TT dynamics may be more straightforward under a thermal diffusion nondimensionalization \cite{goluskin2016} than the freefall nondimensionalization we have used throughout this work.
 
 \subsection{Asymmetries induced by mixed boundaries}
 \label{sec:asymmetries}
