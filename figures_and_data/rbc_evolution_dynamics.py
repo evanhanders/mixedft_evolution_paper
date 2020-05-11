@@ -71,14 +71,14 @@ def read_pdfs(ra_list, dir_list):
             full_data['{:.4e}'.format(ra)] = data
     return full_data
 
-mixed_dirs = glob.glob("./data/rbc/mixedFT_2d/ra*/")
-fixed_dirs = glob.glob("./data/rbc/fixedT_2d/ra*/")
-restarted_dirs = glob.glob("./data/rbc/restarted_mixed_T2m/ra*/")
-numbered_dirs  = [(f, float(f.split("./data/rbc/mixedFT_2d/ra")[-1].split("/")[0])) for f in mixed_dirs]
+mixed_dirs = glob.glob("./data/rbc/classic_FT_2D/ra*/")
+fixed_dirs = glob.glob("./data/rbc/TT_2D/ra*/")
+restarted_dirs = glob.glob("./data/rbc/TT-to-FT_2D/ra*/")
+numbered_dirs  = [(f, float(f.split("./data/rbc/classic_FT_2D/ra")[-1].split("/")[0])) for f in mixed_dirs]
 mixed_dirs, mixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
-numbered_dirs  = [(f, float(f.split("./data/rbc/fixedT_2d/ra")[-1].split("/")[0])) for f in fixed_dirs]
+numbered_dirs  = [(f, float(f.split("./data/rbc/TT_2D/ra")[-1].split("/")[0])) for f in fixed_dirs]
 fixed_dirs, fixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
-numbered_dirs  = [(f, float(f.split("./data/rbc/restarted_mixed_T2m/ra")[-1].split("/")[0])) for f in restarted_dirs]
+numbered_dirs  = [(f, float(f.split("./data/rbc/TT-to-FT_2D/ra")[-1].split("/")[0])) for f in restarted_dirs]
 restarted_dirs, restarted_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 
 mixed_data = read_pdfs(mixed_ras, mixed_dirs)
@@ -88,7 +88,7 @@ mixed_scalars = read_data(mixed_ras, mixed_dirs)
 fixed_scalars = read_data(fixed_ras, fixed_dirs)
 restarted_scalars = read_data(restarted_ras, restarted_dirs)
 
-early_pdf = './data/rbc/mixedFT_2d/ra4.83e10/early_pdfs/pdf_data.h5'
+early_pdf = './data/rbc/classic_FT_2D/ra4.83e10/early_pdfs/pdf_data.h5'
 with h5py.File('{:s}'.format(early_pdf), 'r') as f:
     data = OrderedDict()
     for k in f.keys():
@@ -120,10 +120,10 @@ axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 cax = plt.subplot(gs.new_subplotspec((0, 650), 50, 200))
 
 #Dynamics files
-ra1e9_TT  = './data/rbc/fixedT_2d/ra1.00e9/temp_slice.h5'#slices_s50.h5'
-ra1e10_TT = './data/rbc/fixedT_2d/ra1.00e10/temp_slice.h5'#run07/slices_s1.h5'
-ra1e9_FT  = './data/rbc/mixedFT_2d/ra4.83e10/temp_slice_late.h5'#run03/slices_s416.h5'
-ra1e10_FT = './data/rbc/mixedFT_2d/ra4.83e10/temp_slice_early.h5'#run03/slices_s22.h5' 
+ra1e9_TT  = './data/rbc/TT_2D/ra1.00e9/temp_slice.h5'#slices_s50.h5'
+ra1e10_TT = './data/rbc/TT_2D/ra1.00e10/temp_slice.h5'#run07/slices_s1.h5'
+ra1e9_FT  = './data/rbc/classic_FT_2D/ra4.83e10/temp_slice_late.h5'#run03/slices_s416.h5'
+ra1e10_FT = './data/rbc/classic_FT_2D/ra4.83e10/temp_slice_early.h5'#run03/slices_s22.h5' 
 
 loop =  (   (axs[0], ra1e10_TT,   np.mean(fixed_scalars[fke]['delta_T'][-5000:]) ),
             (axs[1], ra1e10_FT,    np.mean(mixed_scalars[mk]['delta_T'][7500:12500])   ),

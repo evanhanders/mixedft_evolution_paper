@@ -61,14 +61,14 @@ def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 
 
 # Get data from files
 base_dir = './data/rbc/'
-mixed_dirs = glob.glob("{:s}mixedFT_2d/ra*/".format(base_dir))
-fixed_dirs = glob.glob("{:s}fixedT_2d/ra*/".format(base_dir))
-restarted_dirs = glob.glob("{:s}restarted_mixed_T2m/ra*/".format(base_dir))
-numbered_dirs  = [(f, float(f.split("{:s}mixedFT_2d/ra".format(base_dir))[-1].split("/")[0])) for f in mixed_dirs]
+mixed_dirs = glob.glob("{:s}classic_FT_2D/ra*/".format(base_dir))
+fixed_dirs = glob.glob("{:s}TT_2D/ra*/".format(base_dir))
+restarted_dirs = glob.glob("{:s}TT-to-FT_2D/ra*/".format(base_dir))
+numbered_dirs  = [(f, float(f.split("{:s}classic_FT_2D/ra".format(base_dir))[-1].split("/")[0])) for f in mixed_dirs]
 mixed_dirs, mixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
-numbered_dirs  = [(f, float(f.split("{:s}fixedT_2d/ra".format(base_dir))[-1].split("/")[0])) for f in fixed_dirs]
+numbered_dirs  = [(f, float(f.split("{:s}TT_2D/ra".format(base_dir))[-1].split("/")[0])) for f in fixed_dirs]
 fixed_dirs, fixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
-numbered_dirs  = [(f, float(f.split("{:s}restarted_mixed_T2m/ra".format(base_dir))[-1].split("/")[0])) for f in restarted_dirs]
+numbered_dirs  = [(f, float(f.split("{:s}TT-to-FT_2D/ra".format(base_dir))[-1].split("/")[0])) for f in restarted_dirs]
 restarted_dirs, restarted_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 
 mixed_data = read_data(mixed_ras, mixed_dirs)

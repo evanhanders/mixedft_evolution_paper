@@ -70,14 +70,14 @@ def read_pdfs(ra_list, dir_list):
             full_data['{:.4e}'.format(ra)] = data
     return full_data
 
-mixed_dirs = glob.glob("./data/rbc/mixedFT_2d/ra*/")
-fixed_dirs = glob.glob("./data/rbc/fixedT_2d/ra*/")
-restarted_dirs = glob.glob("./data/rbc/restarted_mixed_T2m/ra*/")
-numbered_dirs  = [(f, float(f.split("./data/rbc/mixedFT_2d/ra")[-1].split("/")[0])) for f in mixed_dirs]
+mixed_dirs = glob.glob("./data/rbc/classic_FT_2D/ra*/")
+fixed_dirs = glob.glob("./data/rbc/TT_2D/ra*/")
+restarted_dirs = glob.glob("./data/rbc/TT-to-FT_2D/ra*/")
+numbered_dirs  = [(f, float(f.split("./data/rbc/classic_FT_2D/ra")[-1].split("/")[0])) for f in mixed_dirs]
 mixed_dirs, mixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
-numbered_dirs  = [(f, float(f.split("./data/rbc/fixedT_2d/ra")[-1].split("/")[0])) for f in fixed_dirs]
+numbered_dirs  = [(f, float(f.split("./data/rbc/TT_2D/ra")[-1].split("/")[0])) for f in fixed_dirs]
 fixed_dirs, fixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
-numbered_dirs  = [(f, float(f.split("./data/rbc/restarted_mixed_T2m/ra")[-1].split("/")[0])) for f in restarted_dirs]
+numbered_dirs  = [(f, float(f.split("./data/rbc/TT-to-FT_2D/ra")[-1].split("/")[0])) for f in restarted_dirs]
 restarted_dirs, restarted_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 
 mixed_data = read_pdfs(mixed_ras, mixed_dirs)
@@ -134,7 +134,7 @@ ax.set_xlim(0, np.max(mx/dT))
 plt.sca(axs[1])
 ax = axs[1]
 
-with h5py.File('./data/rbc/restarted_mixed_T2m/ra9.51e11/temp_slice.h5', 'r') as f:
+with h5py.File('./data/rbc/TT-to-FT_2D/ra9.51e11/temp_slice.h5', 'r') as f:
     x = f['x'][()]
     z = f['z'][()]
     T = f['T'][()]
