@@ -61,11 +61,11 @@ def read_data(ra_list, dir_list, keys=['Nu', 'delta_T', 'sim_time', 'Pe', 'KE', 
 
 # Get data from files
 base_dir = './data/rotation/'
-mixed_dirs = glob.glob("{:s}mixedFT/ra*/".format(base_dir))
-fixed_dirs = glob.glob("{:s}fixedT/ra*/".format(base_dir))
-numbered_dirs  = [(f, float(f.split("{:s}mixedFT/ra".format(base_dir))[-1].split("/")[0])) for f in mixed_dirs]
+mixed_dirs = glob.glob("{:s}classic_FT/ra*/".format(base_dir))
+fixed_dirs = glob.glob("{:s}TT/ra*/".format(base_dir))
+numbered_dirs  = [(f, float(f.split("{:s}classic_FT/ra".format(base_dir))[-1].split("/")[0])) for f in mixed_dirs]
 mixed_dirs, mixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
-numbered_dirs  = [(f, float(f.split("{:s}fixedT/ra".format(base_dir))[-1].split("/")[0])) for f in fixed_dirs]
+numbered_dirs  = [(f, float(f.split("{:s}TT/ra".format(base_dir))[-1].split("/")[0])) for f in fixed_dirs]
 fixed_dirs, fixed_ras = zip(*sorted(numbered_dirs, key=lambda x: x[1]))
 
 mixed_data = read_data(mixed_ras, mixed_dirs)
@@ -255,9 +255,9 @@ plt.ylim(1, 7e2)
 
 #Panel 5-7, Colormaps
 
-early_slice_f = 'data/rotation/mixedFT/ra2.1e10/vort_slice_early.h5'#slices/slices_t100_512x384x384_s1.h5'
-mid_slice_f = 'data/rotation/mixedFT/ra2.1e10/vort_slice_mid.h5'#slices/slices_t5380_128x384x384_s1.h5'
-late_slice_f = 'data/rotation/mixedFT/ra2.1e10/vort_slice_late.h5'#slices/slices_t13215_128x384x384_s1.h5'
+early_slice_f = 'data/rotation/classic_FT/ra2.1e10/vort_slice_early.h5'#slices/slices_t100_512x384x384_s1.h5'
+mid_slice_f = 'data/rotation/classic_FT/ra2.1e10/vort_slice_mid.h5'#slices/slices_t5380_128x384x384_s1.h5'
+late_slice_f = 'data/rotation/classic_FT/ra2.1e10/vort_slice_late.h5'#slices/slices_t13215_128x384x384_s1.h5'
 for i, filename, t in [(4, early_slice_f, r'100'), (5, mid_slice_f, r'5400'), (6, late_slice_f, r'13,200')]:
     plt.sca(axs[i])
     ax = axs[i]
