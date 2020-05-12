@@ -80,16 +80,16 @@ for k in data['TT']: print(k)
 fig = plt.figure(figsize=(7.5, 8))
 gs = gridspec.GridSpec(1000, 1000)
 
-subplots = [( (0 , 100),      165,    352),
-            ( (175, 100),     330,    352),
-            ( (515, 100),     330,    352),
-            ( (0,  500),      165,    352),
-            ( (175, 500),     330,    352),
-            ( (515, 500),     330,    352),
-            ( (860, 0),       140,    200),
-            ( (860, 267),     140,    200),
-            ( (860, 533),     140,    200),
-            ( (860, 800),     140,    200),
+subplots = [( (0 ,  175),     330,    352),
+            ( (340, 175),     165,    352),
+            ( (515, 175),     330,    352),
+            ( (0,   575),      330,    352),
+            ( (340, 575),     165,    352),
+            ( (515, 575),     330,    352),
+            ( (860, 0),       140,    180),
+            ( (860, 273),     140,    180),
+            ( (860, 547),     140,    180),
+            ( (860, 820),     140,    180),
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 cax = plt.subplot(gs.new_subplotspec((150, 950), 500, 50))
@@ -120,37 +120,39 @@ for i, bc in enumerate(data.keys()):
     vert_map = data[bc]['slice_T'] - np.mean(data[bc]['slice_T'], axis=0)
     maxval = data[bc]['delta_T_mean']/3
 
+    horiz_field.set_scales(1)
+    horiz_field['g'] = top_map
+    horiz_field.set_scales(horiz_scales, keep_data=True)
+    c = axs[0+3*i].pcolormesh(xx_tb,  yy_tb,  horiz_field['g'],  vmin=-maxval, vmax=maxval, cmap='RdBu_r')
+
+
     vert_field.set_scales(1)
     vert_field['g'] = vert_map
     vert_field.set_scales(vert_scales, keep_data=True)
-    c = axs[0+3*i].pcolormesh(xx_mid, zz_mid, vert_field['g'], vmin=-maxval, vmax=maxval, cmap='RdBu_r')
+    c = axs[1+3*i].pcolormesh(xx_mid, zz_mid, vert_field['g'], vmin=-maxval, vmax=maxval, cmap='RdBu_r')
+
 
     horiz_field.set_scales(1)
     horiz_field['g'] = bot_map
-    horiz_field.set_scales(horiz_scales, keep_data=True)
-    c = axs[1+3*i].pcolormesh(xx_tb,  yy_tb,  horiz_field['g'],  vmin=-maxval, vmax=maxval, cmap='RdBu_r')
-
-    horiz_field.set_scales(1)
-    horiz_field['g'] = top_map
     horiz_field.set_scales(horiz_scales, keep_data=True)
     c = axs[2+3*i].pcolormesh(xx_tb,  yy_tb,  horiz_field['g'],  vmin=-maxval, vmax=maxval, cmap='RdBu_r')
 
 bar = plt.colorbar(c, cax=cax, orientation='vertical')
 cax.set_xticklabels(())
 bar.set_ticks(())
-cax.text(0.5, -0.1, r'$-\Delta T / 3$', ha='center', va='center', transform=cax.transAxes)
-cax.text(0.5, 1.1,  r'$+\Delta T / 3$', ha='center', va='center', transform=cax.transAxes)
+cax.text(0.5, -0.05, r'$-\Delta T / 3$', ha='center', va='center', transform=cax.transAxes)
+cax.text(0.5, 1.05,  r'$+\Delta T / 3$', ha='center', va='center', transform=cax.transAxes)
 cax.text(1.1, 0.5,   r'$T - \overline{T}$',     transform=cax.transAxes, va='center', rotation=-90)
 
-#axs[5].text(0.5, -0.12, '$T(y = 0)$',   transform=axs[5].transAxes, ha='center')
-#axs[6].text(0.5, -0.12, '$T(z=-0.49)$', transform=axs[6].transAxes, ha='center')
-#axs[7].text(0.5, -0.12, '$T(z=0.49)$',  transform=axs[7].transAxes, ha='center')
+axs[0].text(-0.4, 0.5, 'Top Boundary Layer\n($z=0.49$)',       transform=axs[0].transAxes, ha='center', va='center')
+axs[1].text(-0.4, 0.5, 'Vertical Slice\n($y=0$)',              transform=axs[1].transAxes, ha='center', va='center')
+axs[2].text(-0.4, 0.5, 'Bottom Boundary Layer\n($z=-0.49$)',   transform=axs[2].transAxes, ha='center', va='center')
 
 
 bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.75)
 for i, bc in enumerate(['TT', 'FT']):
-    axs[0+3*i].text(0.08, 0.87, bc, ha="center", va="center", size=8, bbox=bbox_props, transform=axs[0+3*i].transAxes)
-    axs[1+3*i].text(0.08, 0.94, bc, ha="center", va="center", size=8, bbox=bbox_props, transform=axs[1+3*i].transAxes)
+    axs[0+3*i].text(0.08, 0.94, bc, ha="center", va="center", size=8, bbox=bbox_props, transform=axs[0+3*i].transAxes)
+    axs[1+3*i].text(0.08, 0.87, bc, ha="center", va="center", size=8, bbox=bbox_props, transform=axs[1+3*i].transAxes)
     axs[2+3*i].text(0.08, 0.94, bc, ha="center", va="center", size=8, bbox=bbox_props, transform=axs[2+3*i].transAxes)
 
 
@@ -158,8 +160,8 @@ for i in range(6):
     axs[i].set_xticks(())
     axs[i].set_yticks(())
 
-for i in [1, 2, 4, 5]:
-    axs[i].axhline(0, c='grey', lw=1, ls='--')
+for i in [0, 2, 3, 5]:
+    axs[i].axhline(0, c='g', lw=1, ls='--')
 
 for i, c in zip((0, 3, 7, 1, 4, 8, 2, 5, 9), ('orange', 'orange', 'orange', 'green', 'green', 'green', 'blue', 'blue', 'blue')):
     for k in axs[i].spines.keys():
@@ -173,15 +175,14 @@ for i, bc in enumerate(data.keys()):
     axs[6].plot(        data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i], label=bc)
     axs[6].fill_between(data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
 
+    axs[7].plot(        data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
+    axs[7].fill_between(data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
 
-    axs[7].plot(        data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[7].fill_between(data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
+    axs[8].plot(        data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
+    axs[8].fill_between(data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
 
-    axs[8].plot(        data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[8].fill_between(data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
-
-    axs[9].plot(        data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[9].fill_between(data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
+    axs[9].plot(        data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
+    axs[9].fill_between(data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
 
 
 axs[6].legend(loc='best', fontsize=8)
@@ -191,9 +192,9 @@ axs[6].set_ylabel(r'$P(T)$')
 
 for i in [6, 7, 8, 9]:
     axs[i].set_yscale('log')
-for i in [6, 7]:
+for i in [6, 8]:
     axs[i].set_ylim(1e-3, 30)
-for i in [8, 9]:
+for i in [7, 9]:
     axs[i].set_ylim(1e-3, 10)
 axs[6].set_xlim(0, 1.5)
 
