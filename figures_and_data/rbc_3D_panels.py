@@ -123,19 +123,19 @@ for i, bc in enumerate(data.keys()):
     horiz_field.set_scales(1)
     horiz_field['g'] = top_map
     horiz_field.set_scales(horiz_scales, keep_data=True)
-    c = axs[0+3*i].pcolormesh(xx_tb,  yy_tb,  horiz_field['g'],  vmin=-maxval, vmax=maxval, cmap='RdBu_r')
+    c = axs[0+3*i].pcolormesh(xx_tb,  yy_tb,  horiz_field['g'],  vmin=-maxval, vmax=maxval, cmap='RdBu_r', rasterized=True)
 
 
     vert_field.set_scales(1)
     vert_field['g'] = vert_map
     vert_field.set_scales(vert_scales, keep_data=True)
-    c = axs[1+3*i].pcolormesh(xx_mid, zz_mid, vert_field['g'], vmin=-maxval, vmax=maxval, cmap='RdBu_r')
+    c = axs[1+3*i].pcolormesh(xx_mid, zz_mid, vert_field['g'], vmin=-maxval, vmax=maxval, cmap='RdBu_r', rasterized=True)
 
 
     horiz_field.set_scales(1)
     horiz_field['g'] = bot_map
     horiz_field.set_scales(horiz_scales, keep_data=True)
-    c = axs[2+3*i].pcolormesh(xx_tb,  yy_tb,  horiz_field['g'],  vmin=-maxval, vmax=maxval, cmap='RdBu_r')
+    c = axs[2+3*i].pcolormesh(xx_tb,  yy_tb,  horiz_field['g'],  vmin=-maxval, vmax=maxval, cmap='RdBu_r', rasterized=True)
 
 bar = plt.colorbar(c, cax=cax, orientation='vertical')
 cax.set_xticklabels(())
@@ -173,21 +173,24 @@ for i, c in zip((0, 3, 7, 1, 4, 8, 2, 5, 9), ('orange', 'orange', 'orange', 'gre
 #PDF plots
 for i, bc in enumerate(data.keys()):
     axs[6].plot(        data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i], label=bc)
-    axs[6].fill_between(data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
+    axs[6].fill_between(data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
 
     axs[7].plot(        data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[7].fill_between(data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
+    axs[7].fill_between(data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
 
     axs[8].plot(        data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[8].fill_between(data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
+    axs[8].fill_between(data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
 
     axs[9].plot(        data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[9].fill_between(data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5)
+    axs[9].fill_between(data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
 
 
 axs[6].legend(loc='best', fontsize=8)
-axs[6].set_xlabel(r'$T$')
-axs[6].set_ylabel(r'$P(T)$')
+axs[6].set_xlabel(r'$T/\Delta T$')
+axs[6].set_ylabel(r'$P(T/\Delta T)$')
+axs[7].set_xlabel(r'$T_{\mathrm{top}}/\Delta T$')
+axs[8].set_xlabel(r'$T_{\mathrm{vert}}/\Delta T$')
+axs[9].set_xlabel(r'$T_{\mathrm{bot}}/\Delta T$')
 
 
 for i in [6, 7, 8, 9]:
@@ -200,4 +203,4 @@ axs[6].set_xlim(0, 1.5)
 
 
 fig.savefig('rbc_3D_panels.png', dpi=300, bbox_inches='tight')
-#fig.savefig('rbc_3D_panels.pdf', dpi=300, bbox_inches='tight')
+fig.savefig('rbc_3D_panels.pdf', dpi=300, bbox_inches='tight')
