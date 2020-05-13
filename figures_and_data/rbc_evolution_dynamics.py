@@ -174,11 +174,11 @@ axs[0].xaxis.set_ticks_position('top')
 axs[0].xaxis.set_label_position('top')
 
 
-bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.75)
-axs[0].text(0.18, 0.11, r"TT, Ra$_{\Delta T}\,=\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[0].transAxes)
-axs[1].text(0.25, 0.89, r"FT (early), Ra$_{\Delta T}\,\approx\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[1].transAxes)
-axs[3].text(0.83, 0.11, r"TT, Ra$_{\Delta T}\,=\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[3].transAxes)
-axs[4].text(0.77, 0.89, r"FT (late), Ra$_{\Delta T}\,\approx\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[4].transAxes)
+bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.5)
+axs[0].text(0.03, 0.11, r"TT, Ra$_{\Delta T}\,=\,{10}^{10}$",               ha="left",  va="center", size=9, bbox=bbox_props, transform=axs[0].transAxes)
+axs[1].text(0.03, 0.89, r"FT (early), Ra$_{\Delta T}\,\approx\,{10}^{10}$", ha="left",  va="center", size=9, bbox=bbox_props, transform=axs[1].transAxes)
+axs[3].text(0.97, 0.11, r"TT, Ra$_{\Delta T}\,=\,{10}^{9}$",                ha="right", va="center", size=9, bbox=bbox_props, transform=axs[3].transAxes)
+axs[4].text(0.97, 0.89, r"FT (late), Ra$_{\Delta T}\,\approx\,{10}^{9}$",   ha="right", va="center", size=9, bbox=bbox_props, transform=axs[4].transAxes)
 
 #Colorbar
 bar = plt.colorbar(c, cax=cax, orientation='horizontal')#, rasterized=True)
@@ -186,8 +186,8 @@ cax.set_xticklabels(())
 bar.set_ticks(())
 cax.text(1.05, 0.35, r'$\pm\Delta T / 3$', transform=cax.transAxes, ha='left')
 cax.text(-0.05,0.35,  r'$T - \bar{T}$', transform=cax.transAxes, ha='right')
-#cax.annotate(r'$-|S| \times 10^{-5}$', fontsize=8,  xy=(-0.37, 0.5), va='center', annotation_clip=False)
-#cax.annotate(r'$|S| \times 10^{-5}$', fontsize=8,  xy=(1.02, 0.5),  va='center',  annotation_clip=False)
+#cax.annotate(r'$-|S| \times {10}^{-5}$', fontsize=8,  xy=(-0.37, 0.5), va='center', annotation_clip=False)
+#cax.annotate(r'$|S| \times {10}^{-5}$', fontsize=8,  xy=(1.02, 0.5),  va='center',  annotation_clip=False)
 
 
 # Early PDFs
@@ -236,13 +236,15 @@ axtt.fill_between(fx, 1e-16, fp, color=fColor, alpha=0.5)
 
 axtt.set_ylim(np.min(fp[fp > 0]), 1.5*np.max(fp[fp > 0]))
 axft.set_ylim(1e-3, 1.5*np.max(mp[mp > 0]))
-axtt.set_xlim(0, 1)
-axft.set_xlim(0, 0.3)#2*np.sum(mx*mp*mdx))#mx[mcdf > 0.999][0])#2*loop[-1][-1])
+axtt.set_xlim(0, ffunc(0.5)*2)
+axft.set_xlim(0, mfunc(0.5)*2)
 
 axtt.set_xticks((0, 0.25, 0.5, 0.75))
 axft.set_xticks((0, 0.05, 0.1, 0.15, 0.2, 0.25))
 axtt.xaxis.set_label_position('top')
 
+
+axft_early = axft
 
 # Late PDFs
 axtt = axs[5]
@@ -287,8 +289,8 @@ axtt.fill_between(fx, 1e-16, fp, color=fColor, alpha=0.5)
 
 axtt.set_ylim(np.min(fp[fp > 0]), 1.5*np.max(fp[fp > 0]))
 axft.set_ylim(mp[mcdf > 0.9999][0], 1.5*np.max(mp[mp > 0]))
-axtt.set_xlim(0, 1.35)
-axft.set_xlim(0, mx[mcdf > 0.9999][0])#3*np.sum(mx*mp*mdx))#mx[mcdf > 0.999][0])#2*loop[-1][-1])
+axtt.set_xlim(0, 1.34)
+axft.set_xlim(0, mx[mcdf > 0.9999][0])
 
 
 axtt.set_xticks((0, 0.5, 1))
@@ -298,10 +300,10 @@ axft.yaxis.set_label_position('right')
 axtt.yaxis.set_label_position('right')
 
 
-axs[2].text(0.18, 0.87, r"TT, Ra$_{\Delta T}\,=\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[2].transAxes)
-axs[6].text(0.25, 0.87, r"FT (early), Ra$_{\Delta T}\,\approx\,10^{10}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[6].transAxes)
-axs[5].text(0.83, 0.87, r"TT, Ra$_{\Delta T}\,=\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[5].transAxes)
-axs[7].text(0.77, 0.87, r"FT (late), Ra$_{\Delta T}\,\approx\,10^{9}$", ha="center", va="center", size=8, bbox=bbox_props, transform=axs[7].transAxes)
+axs[2].text(0.03, 0.87, r"TT, Ra$_{\Delta T}\,=\,{10}^{10}$",                   ha="left",  va="center", size=9, bbox=bbox_props, transform=axs[2].transAxes)
+axs[6].text(0.03, 0.94, "FT (early),\n"+r"Ra$_{\Delta T}\,\approx\,{10}^{10}$", ha="left",  va="top",    size=9, bbox=bbox_props, transform=axs[6].transAxes)
+axs[5].text(0.97, 0.87, r"TT, Ra$_{\Delta T}\,=\,{10}^{9}$",                    ha="right", va="center", size=9, bbox=bbox_props, transform=axs[5].transAxes)
+axs[7].text(0.97, 0.87, r"FT (late), Ra$_{\Delta T}\,\approx\,{10}^{9}$",       ha="right", va="center", size=9, bbox=bbox_props, transform=axs[7].transAxes)
 
 
 for i in (0, 1, 3, 4):

@@ -206,6 +206,9 @@ for i in [6, 8]:
 for i in [7, 9]:
     axs[i].set_ylim(1e-3, 10)
 axs[6].set_xlim(0, 1.5)
+axs[8].set_xlim(0, 1.5)
+axs[7].set_xlim(0, 0.75)
+axs[9].set_xlim(0.25, 1.5)
 
 
 fig.savefig('rbc_3D_panels.png', dpi=300, bbox_inches='tight')

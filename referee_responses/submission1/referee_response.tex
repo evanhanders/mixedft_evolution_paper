@@ -106,7 +106,7 @@ We have presented this in its general form so that people can chose their favori
 Due to its excellent agreement with the simulations we ran, we have chosen to stick with the $\alpha = 0.285$ law that we have used previously in this work.
 This means that a Ra$^{-0.22}$ law is a better fit for our data than Ra$^{-1/4}$, but those are pretty hard to distinguish between; so -- yes, this scaling roughly holds in our simulations.
 \item For the specific case of classical RBC, the initial conditions that you describe here are probably simpler to use than our TT-to-FT initial conditions.
-See section II.C for a description of these ``Nu-based'' initial conditions, and section III.(TODO) for a description of evolution in these systems.
+See section II.C for a description of these ``Nu-based'' initial conditions, and section III.B for a brief description of evolution in these systems.
 One difficulty of using Nu-based initial conditions is that they are sensitive to the Nu vs.~Ra law that is used.
 For more complex simulations (e.g., rotationally- or magnetically- constrained RBC) where the Nu vs.~Ra laws are more contentious and less universally agreed-upon in the community, Nu-based ICs which presume the answer may be less reliable than TT-to-FT simulations.
 \end{enumerate}
@@ -120,7 +120,8 @@ Does this scaling law hold? It seems not completely crazy according to your figu
 \end{myquotation}
 Deriving the equilibration time is a bit trickier than this estimate because the difference between the flux leaving through the top of the domain constantly evolves over time.
 We've added a derivation of this timescale and a discussion of this subtlety to a new section II.D.
-(TODO: Does this scaling law hold?)
+In practice, we find that this definition of an equilibration time far \emph{over}estimates the relaxational timescale.
+We find that the relaxational time is $(\text{a few})\cdot(\sqrt{\text{Ra Pr}}/\text{Nu})$, and have said so at the end of section III.C.
 
 \begin{myquotation}
 Comments:
@@ -138,9 +139,9 @@ We have rearranged section II so that it has a few distinct subsections to help 
 -       Figure 1: how did you chose the scales for the temperature axis of the bottom figures? 
 I would e.g. align the median values with the top figures (not done on the left).
 \end{myquotation}
-For the right two PDFs, we chose scales so as to align median values.
-For the left two PDFs, we chose scales which tried to show the shape of the PDFs and avoid excess white space.
-TODO: We have adjusted the scale of the the bottom left PDF so that its median value is aligned with the top left panel.
+For the right two PDFs, we chose scales so as to align median values (and show the range of the FT PDF).
+For the left two PDFs, we previously chose scales which tried to show the shape of the PDFs and avoid excess white space.
+We have adjusted the scale of the the bottom left PDF so that its median value is aligned with the top left panel.
 \begin{myquotation}
 -       P.5 and figure 3: how do you define the boundary layers?
 \end{myquotation}
@@ -157,14 +158,14 @@ Section III has been split into a few sections (one each for the different IC ch
 -       P.10: you don’t prove the validity of your results in 3D in the non-rotating case. 
 I don’t see any reason why it would be different from 2D, but is it impossible to run one case to show it?
 \end{myquotation}
-TODO: We have added section III.D and Fig.~4 to show that 3D results are in line with 2D results.
+We have added section III.D and Fig.~4 to show that 3D results are in line with 2D results.
 
 \begin{myquotation}
 Typo:
 p.3: The codeS used to run simulations and to create the figures...
-Caption of figure 2: “Re vs. Ra is compensated…” -> Pe vs. Ra
+Caption of figure 2:``Re vs. Ra is compensated…'' $\rightarrow$ Pe vs. Ra
 \end{myquotation}
-TODO: These typos have been fixed.
+These typos have been fixed.
 
 \newpage
 \noindent
