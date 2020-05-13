@@ -64,20 +64,17 @@ fixed_data = read_data(fixed_ras, fixed_dirs)
 N = 10
 for k, data in mixed_data.items():
     fig = plt.figure()
-    plt.grid(which='both')
-    Nu = data['Nu'][400:]
     ra_dz = float(k)
     ra_dT = ra_dz*data['delta_T'][400:]
     finite = np.isfinite(ra_dT)
-    Nu = Nu[finite]
     ra_dT = ra_dT[finite]
 
+    #Set up Ra bins
     ra_ranges = np.zeros((N,2))
     if '4.83' in k:
         max_dT = 2.5e10
     else:
         max_dT = ra_dT.max()
-#    ra_points = np.linspace(ra_dT.min(), max_dT, N)
     ra_points = np.logspace(np.log10(ra_dT.min()), np.log10(max_dT), N)
     ra_ranges[0][0] = ra_dT.min()
     ra_ranges[-1][-1] = max_dT
@@ -85,27 +82,61 @@ for k, data in mixed_data.items():
     for i in range(N-1):
         ra_ranges[i][1] = ra_points[i] + dra[i]/2
         ra_ranges[i+1][0] = ra_points[i+1] - dra[i]/2
+    
+    for i, fd in enumerate(['Nu', 'Pe']):
+        ax = fig.add_subplot(1, 2, 1+i)
+        plt.grid(which='both')
+        values  = data[fd][400:]
+        values  = values[finite]
 
-    ras, nus, err = np.zeros(N), np.zeros(N), np.zeros(N)
-    for i in range(N):
-        good = (ra_dT > ra_ranges[i][0] ) * (ra_dT <= ra_ranges[i][1])
-        mean_ra = np.mean(ra_dT[good])
-        mean_nu = np.mean(Nu[good])
-        std_nu  = np.std(Nu[good])
-        plt.plot(ra_dT[good], Nu[good])
-        ras[i] = mean_ra
-        nus[i] = mean_nu
-        err[i] = std_nu/np.sqrt(np.sum(good))
-    plt.errorbar(ras, nus, yerr=err, zorder=1e2, ms=4, marker='o', c='k', capsize=1, elinewidth=1, lw=0) 
-    fit = curve_fit(line, np.log10(ras), np.log10(nus), (-1, 1/3), err)
-    print('best fit: {:.2e} * ra ^ {:.3g}'.format(10**fit[0][0], fit[0][1]))
-    plt.plot(ras, 10**(fit[0][0])*(ras)**(fit[0][1]), c='k')
-    print(fit)
+        ras, vals, err = np.zeros(N), np.zeros(N), np.zeros(N)
+        for j in range(N):
+            good = (ra_dT > ra_ranges[j][0] ) * (ra_dT <= ra_ranges[j][1])
+            mean_ra = np.mean(ra_dT[good])
+            mean_val = np.mean(values[good])
+            std_val  = np.std(values[good])
+            plt.plot(ra_dT[good], values[good])
+            ras[j]  = mean_ra
+            vals[j] = mean_val
+            err[j]  = std_val/np.sqrt(np.sum(good))
+        plt.errorbar(ras, vals, yerr=err, zorder=1e2, ms=4, marker='o', c='k', capsize=1, elinewidth=1, lw=0) 
+        fit = curve_fit(line, np.log10(ras), np.log10(vals), (-1, 1/3), err)
+        print('(FT, Ra = {}) best fit: {} = {:.2e} * ra ^ {:.3g}'.format(k, fd, 10**fit[0][0], fit[0][1]))
+        plt.plot(ras, 10**(fit[0][0])*(ras)**(fit[0][1]), c='k')
+        plt.xscale('log')
+        plt.yscale('log')
+        plt.xlabel('Ra')
+        if i == 0:
+            plt.ylabel('Nu')
+            plt.ylim(5e0, 2e2)
+        elif i == 1:
+            plt.ylabel('Pe')
+            plt.ylim(1e3, 1e5)
+        fig.savefig('FT_scalings_{}_vs_time.png'.format(k), dpi=200, bbox_inches='tight')
+
+fig = plt.figure()
+for i, fd in enumerate(['Nu', 'Pe']):
+    ax = fig.add_subplot(1,2, 1+i)
+    fixed_ra = []
+    fixed_val = []
+    fixed_err = []
+    for k in fixed_data.keys():
+        if fd == 'Pe' and float(k) < 1e9: continue
+        fixed_ra.append(float(k))
+        fixed_val.append(np.mean(fixed_data[k][fd][-5000:]))
+        fixed_err.append(np.std(fixed_data[k][fd][-5000:])/np.sqrt(5000))
+    fixed_ra = np.array(fixed_ra)
+    fixed_val = np.array(fixed_val)
+    fixed_err = np.array(fixed_err)
+
+    plt.errorbar(fixed_ra, fixed_val, yerr=fixed_err, zorder=1e2, ms=4, marker='o', c='k', capsize=1, elinewidth=1, lw=0) 
+    fit = curve_fit(line, np.log10(fixed_ra), np.log10(fixed_val), (-1, 1/3), fixed_err)
+    print('(TT) best fit: {} = {:.2e} * ra ^ {:.3g}'.format(fd, 10**fit[0][0], fit[0][1]))
+    plt.plot(fixed_ra, 10**(fit[0][0])*(fixed_ra)**(fit[0][1]), c='k')
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('Ra')
-    plt.ylabel('Nu')
-    plt.ylim(5e0, 2e2)
-    fig.savefig('nuVra_{}_vs_time.png'.format(k), dpi=200, bbox_inches='tight')
+    plt.ylabel(fd)
 
 
+fig.savefig('TT_scalings.png', dpi=200, bbox_inches='tight')
