@@ -23,10 +23,16 @@ mColor = 'darkorange'#olivedrab'
 fColor = 'indigo'
 colors = [fColor, mColor]
 
+top_border_color    = 'darkblue'
+middle_border_color = 'seagreen'
+bottom_border_color = 'firebrick'
+
+
 # Get data from files
 base_dir = './data/rbc/3D/'
 TT_dir   = 'TT/ra1e8'
-FT_dir   = 'Nu_based_FT/ra2.61e9'
+#FT_dir   = 'Nu_based_FT/ra2.61e9'
+FT_dir   = 'TT-to-FT/ra3.1e9'
 
 data = OrderedDict()
 for label, dr in zip(['TT', 'FT'], [base_dir+TT_dir, base_dir+FT_dir]):
@@ -161,12 +167,12 @@ for i in range(6):
     axs[i].set_yticks(())
 
 for i in [0, 2, 3, 5]:
-    axs[i].axhline(0, c='g', lw=1, ls='--')
+    axs[i].axhline(0, c=middle_border_color, lw=1.5, ls='--')
 
-for i, c in zip((0, 3, 7, 1, 4, 8, 2, 5, 9), ('orange', 'orange', 'orange', 'green', 'green', 'green', 'blue', 'blue', 'blue')):
+for i, c in zip((0, 3, 7, 1, 4, 8, 2, 5, 9), (*[top_border_color]*3, *[middle_border_color]*3, *[bottom_border_color]*3)):
     for k in axs[i].spines.keys():
         axs[i].spines[k].set_color(c)
-        axs[i].spines[k].set_linewidth(1)
+        axs[i].spines[k].set_linewidth(1.5)
 
 
 
