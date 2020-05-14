@@ -47,15 +47,17 @@ why thermal relaxation matters and how to accelerate it}
 
 \begin{abstract}
 Astrophysical simulations of convection frequently impose different thermal boundary conditions at the top and the bottom of the domain in an effort to more accurately reflect the natural system being modeled.
-In this work, we study \RB convection (RBC) with mixed (``FT'') temperature boundary conditions.
-We aim to understand how FT boundaries change the nature of the convective solution compared to the traditional choice of fixing the temperature at the top and bottom of the domain (``TT'').
-We find that simulations with FT boundaries experience a long thermal rundown while simulations with TT boundaries do not.
-In the relaxed state, the mean behavior of an FT simulation corresponds to an equivalent simulation with TT boundaries.
-The fast evolution of TT simulations can therefore be taken advantage of to rapidly relax FT simulations.
-We show that these findings carry over to more complicated problems through a brief examination of rotating convection.
-We furthermore find that FT boundaries introduce minor asymmetries into the flow fields, with the fixed flux boundary producing more extreme events than the fixed temperature boundary, but that these asymmetries do not appreciably affect the bulk flows.
-We conclude that thermal relaxation occurs in two stages: (1) changes to the experimental energy reservoir and (2) changes to the stratification of the experiment.
-Through the proper choice of boundary conditions or initial conditions, the first of these stages can be bypassed, and the second stage seems to be irrelevant for RBC.
+In this work, we study \RB convection (RBC) \ea{under the Boussinesq approximation}.
+\ea{We examine simulations with mixed ``FT'' boundary conditions in which the flux is fixed at the bottom boundary and the temperature is fixed at the top.}
+We aim to understand how FT boundaries change the nature of the convective solution compared to the traditional choice of \ea{``TT'' boundaries, in which the temperature is fixed} at the top and bottom of the domain.
+\ea{We demonstrate that the timescale of thermal relaxation for FT simulations is dependent upon the initial conditions.
+``Classic'' initial conditions which employ a hydrostatically- and thermally- balanced linear temperature profile exhibit a long thermal relaxation.
+This long relaxation timescale can be skipped by either using a TT simulation's nonlinear state as initial conditions for an FT simulation, or by choosing initial conditions which more accurately guess the temperature difference between the top and bottom plates in the evolved state.}
+In the \ea{thermally} relaxed\ea{, statistically stationary} state, the mean behavior of an FT simulation corresponds to an equivalent simulation with TT boundaries.
+\ea{FT boundaries are fundamentally asymmetric, and we examine the asymmetries that these boundaries produce in the flow.
+We find that the fixed-flux boundary produces more extreme temperature events than the fixed-temperature boundary.
+However, these near-boundary asymmetries do not measurably break the symmetry in the convective interior.
+We briefly explore rotating RBC to demonstrate that our findings with respect to thermal relaxation carry over to this more complex case.}
 \end{abstract}
 \maketitle
 
@@ -388,11 +390,14 @@ The purple circles filled with orange and yellow circles are comparison TT simul
 The top-right panel is a scaling plot for Nu vs.~Ra$_{\Delta T}$ compensated by the best fit reported in ref.~\cite{johnston&doering2009}.
 The bottom-right panel is a scaling plot of Pe vs~Ra$_{\Delta T}$ compensated by the expected scaling \cite{ahlers&all2009}.
 We find that FT simulations carry marginally more flux (higher Nu) and are more turbulent (higher Pe) than comparable TT simulations as they relax through this parameter space.
-\ea{(TODO)}
-%TODO: report scaling laws.
+\ea{By binning Ra$_{\Delta T}(t)$, Nu$(t)$, and Pe$(t)$ into ten bins over the evolution of our FT simulations, we can quantify the path through parameter space that our FT simulations trace out.
+By performing a least-squares fit to this data, the best-fit paths for Ra$_{\partial_z T} = 4.83 \times 10^{10}$ are $\text{Nu} = 0.0618\,\text{Ra}_{\Delta T}^{0.322}$ and $\text{Pe} = (5.73 \times 10^{-2})\,\text{Ra}_{\Delta T}^{0.597}$.
+At Ra$_{\partial_z T} = 2.61 \times 10^{9}$, our best-fit paths are $\text{Nu} = 0.0845\,\text{Ra}_{\Delta T}^{0.310}$ and $\text{Pe} = (4.05 \times 10^{-3})\,\text{Ra}_{\Delta T}^{0.739}$.
+By comparison, the best fit scaling laws for our TT cases are $\text{Nu} = 0.141\,\text{Ra}_{\Delta T}^{0.282}$ (very similar to the law reported in ref.~\cite{johnston&doering2009}), $\text{Pe} = (0.303)\,\text{Ra}_{\Delta T}^{0.516}$ (for Ra$_{\Delta T} \geq 10^9$), and $\text{Pe} = (2.41 \times 10^{-2})\,\text{Ra}_{\Delta T}^{0.64}$.
+}
 These heightened values of Nu and Pe suggest that the dynamics do not immediately ``forget'' the higher-Ra$_{\Delta T}$ state that they recently timestepped through on their way to achieving thermal relaxation.
 
-Achieving thermal relaxation in pure FT simulations is computationally costly for two reasons: (1) the turbulent dynamics at the large initial Ra$_{\Delta T}$ require more spectral modes to resolve than the equilibrated state (compare the left and right dynamics in Fig.~\ref{fig:rbc_evolution_dynamics}), and (2) thousands of freefall times must pass during relaxation (see Fig.~\ref{fig:rbc_scalar_comparisons}).
+Achieving thermal relaxation in \ea{classic} FT simulations is computationally costly for two reasons: (1) the turbulent dynamics at the large initial Ra$_{\Delta T}$ require more spectral modes to resolve than the equilibrated state (compare the left and right dynamics in Fig.~\ref{fig:rbc_evolution_dynamics}), and (2) thousands of freefall times must pass during relaxation (see Fig.~\ref{fig:rbc_scalar_comparisons}).
 For example, for the cases displayed in the left panels of Fig.~\ref{fig:rbc_scalar_comparisons} with a modest Ra$_{\Delta T} = 10^9$, the shown evolution of $10^4$ time units of the FT simulation cost $\sim 4.5 \times 10^5$ cpu-hours, while the TT equivalent case cost only $5.6 \times 10^4$ cpu-hours -- nearly an order of magnitude difference.
 FT simulation dynamics evolve slowly during thermal relaxation, and these images, PDFs, and traces demonstrate the importance of waiting for thermal relaxation to be achieved when conducting an FT simulation.
 
@@ -584,13 +589,15 @@ Unsurprisingly, we find that the PDF of the temperature field of a vertical slic
 \end{figure}
 
 In Fig.~\ref{fig:rbc_1D_profiles}, we compare the time- and horizontally-averaged profiles of the temperature and fluxes in the evolved FT and TT cases presented in Fig.~\ref{fig:rbc_scalar_comparisons}.
-Time averages are taken over 500 nondimensional freefall time units for the TT case and over 2000 nondimensional freefall time units for the FT case, sampled once every 0.1 time units (the difference in averaging window is explained in Sec.~\ref{sec:timescales}).
+Time averages are taken over 500 freefall time units for the \ea{evolved flows}, sampled once every 0.1 time units.
 In the three left panels, we display profiles of (top) the mean temperature, (middle) the mean temperature in upflows (solid) and downflows (dashed), and (bottom) the convective enthalpy flux ($F_{\text{enth}} = wT$, solid) and the conductive flux ($F_{\text{cond}} = -\Peff^{-1}\grad T$, dashed).
 Most of the interesting structure is in the boundary layers, located between the sides of the plots and the thin vertical black lines.
+\ea{Here, we define the boundary layers as the heights above or below which conduction carries 95\% of the flux.
+We find a boundary layer depth of $\sim 0.024$ at Ra$_{\Delta T} = 10^9$, and show three times this depth in the zoomed in panels}
 Zoomed in plots of the bottom and top boundary layers are respectively shown in the middle and right columns.
 Inset panels show the percentage difference between the FT and TT solutions.
 In the flux panels (bottom row), we do not plot the percentage difference in the conductive flux, as this quantity is undefined in the bulk of the interior where that flux is zero.
-The conductive flux of the two cases agrees to within a few \% in the boundary layers, and the largest deviations away from zero in the interior are O(0.01) in the plotted units. 
+The conductive flux of the two cases agrees to within a few \% in the boundary layers, and the \ea{FT and TT cases differ by no more than 0.0025 in the plotted units} in the interior. 
 
 We find good ($\sim 1\%$) agreement between the FT and TT temperature profiles and enthalpy fluxes throughout the full depth of the domain, with slightly larger differences near the bottom boundary where the boundary conditions differ.
 When we split the temperature profile into upflows and downflows, we find that FT upflows/downflows are slightly warmer/cooler than their TT counterparts at the hot, bottom boundary.
@@ -649,6 +656,7 @@ This implies that the thermal relaxation process can walk through the parameter 
 In the bottom panel, we display the evolution of Pe over time.
 Strangely, the peak value of Pe occurs a few hundred freefall times after the convective transient.
 After achieving this peak value, Pe monotonically decreases toward its relaxed state.
+\ea{We find that the thermal relaxation of this case takes $\sim (2/3)\sqrt{\text{Ra}_{\partial_z T}}/\text{Nu}$ nondimensional freefall time units.}
 
 In the upper right panel of Fig.~\ref{fig:rotating_panels}, we plot Nu vs.~Ra for rotating simulations.
 Select TT cases are plotted as cyan circles with purple outlines (where the cyan color denotes the value of Ek$\,=\,10^{-6}$ according to the color bar).
@@ -658,7 +666,10 @@ We have additionally included some literature data from numerical simulations (c
 These experiments were conducted in a cylindrical geometry at a different Pr, and are not meant to be one-to-one-comparable, but are meant to guide the eye to the nature of the parameter space of rotating convection.
 The solid black line is the best-fit line for rotationally unconstrained simulations with Ra $\geq 10^{10}$ from ref.~\cite{cheng&all2015}.
 As expected, the scaling of Nu vs.~Ra is steep in the rotationally constrained regime \cite{julien&all2012, plumley&julien2019}, which these simulations trace through.
-As in Fig.~\ref{fig:rbc_scalar_comparisons}, the FT values of Nu are once again somewhat elevated above the comparable TT simulations.
+\ea{We find that at values of Ra$_{\Delta T} \gtrsim 8 \times 10^9$, scaling laws start to flatten towards the unconstrained regime.
+The FT simulation at all times when Ra$_{\Delta T} < 8 \times 10^9$ traces out $\text{Nu} = (1.08 \times 10^{-18})\,\text{Ra}_{\Delta T}^{2}$ and $\text{Pe} = (4.26 \times 10^{-20})\,\text{Ra}_{\Delta T}^{2.4}$.
+The TT simulation with Ra$_{\Delta T} < 8 \times 10^9$ trace out $\text{Nu} = (9.36 \times 10^{-17})\,\text{Ra}_{\Delta T}^{1.79}$ and $\text{Pe} = (4.78 \times 10^{-19})\,\text{Ra}_{\Delta T}^{2.27}$.}
+As in Fig.~\ref{fig:rbc_scalar_comparisons}, the FT \ea{scaling laws} are once again \ea{steeper than} the comparable TT \ea{laws}.
 
 In the bottom right three panels of Fig.~\ref{fig:rotating_panels}, we plot the vertically integrated vertical vorticity in the simulation at three different times.
 In the left panel, a dominant LSV which is aligned with the global rotation dominates the simulation at early times.
@@ -783,7 +794,7 @@ The codes used to run these simulations can be found online in the repository of
 	Input and output values from the simulations in this work are shown; all simulations have a Prandtl number of 1.
 	Input quantities are the boundary conditions (BCs), Rayleigh number (Ra), coefficient resolution (nx$\times$ny$\times$nz, or horizontal $\times$ vertical), and the total simulation run time in freefall units $t_{\text{simulation}}$ and in cpu-hours.
 	Output quantities are the Nusselt (Nu), P\'{e}clet (Pe), and Rossby (Ro) numbers.
-	Reported values of Nu, Re, and Ro are the sample mean over the last 500 freefall time units.
+	Reported values of Nu, Re, and Ro are the sample mean over the last 500 freefall time units \ea{for all rotating cases and all 2D cases except the Ra$_{\partial_z T} = 9.51\times10^{11}$ TT-to-FT case, where samples were taken over 200 evolved freefall time units; samples were taken over 350 freefall time units for 3D nonrotating cases}.
 	Reported uncertainties are the standard deviation of the sample mean; when the uncertainty is not reported, it is smaller than the number of reported digits.
 	The ``Nu comp'' values are comparison Nu values reported in ref.~\cite{zhu&all2018}.
 	Resolutions marked by a $*$ show the initial, highest resolution utilized in the simulation.
@@ -794,40 +805,44 @@ The codes used to run these simulations can be found online in the repository of
 \label{table:simulations}
 \begin{center}
 \resizebox{\textwidth}{!}{
-\begin{tabular}{c c c c c c c c c}
+\begin{tabular}{c c c c c c c c c c}
 \hline																	
-BCs	&	Ra	&	nx$\times$ny$\times$nz	& $t_{\text{simulation}}$	&	cpu-hours 	&	Nu	&	Nu comp	&	Pe  & Ro \\
+BCs	&	ICs	&	Ra	&	nx$\times$ny$\times$nz	& $t_{\text{simulation}}$	&	cpu-hours 	&	Nu	&	Nu comp	&	Pe  & Ro \\
 \hline \hline \multicolumn{6}{c}{\vspace{-0.2cm}}\\
-\multicolumn{7}{c}{\vspace{0.1cm}2D Runs ($\Gamma = 2$, no-slip)} \\
+\multicolumn{7}{c}{\vspace{0.1cm}Non-rotating Runs ($\Gamma = 2$, no-slip, Ek$\,=\,\infty$)} \\
 \hline
-TT			&	$1.00 \times 10^8$		&	1024x512	&	1023		&	$5.57 \times 10^3$	&	$25.4 \pm 0.1$	&	26.1	&	$3.18 \times 10^3$ & --- \\
-FT			&	$2.61 \times 10^9$		&	2048x1024	&	9410		&	$1.21 \times 10^5$	&	$25.3 \pm 0.2$	&	26.1	&	$3.31 \times 10^3$ & --- \\
-TT-to-FT	&	$2.61 \times 10^9$		&	1024x512	&	1000		&	$1.88 \times 10^3$	&	$26.1 \pm 0.1$	&	26.1	&	$3.22 \times 10^3$ & --- \\
-TT			&	$2.15 \times 10^8$		&	1024x512	&	1023		&	$5.73 \times 10^3$	&	$31.3 \pm 0.2$	&	31.2	&	$5.17 \times 10^3$ & --- \\
-TT			&	$4.64 \times 10^8$		&	2048x1024	&	1024		&	$4.66 \times 10^4$	&	$38.4 \pm 0.3$	&	38.9	&	$8.60 \times 10^3$ & --- \\
-TT			&	$1.00 \times 10^9$		&	2048x1024	&	1023		&	$5.58 \times 10^4$	&	$48.0 \pm 0.4$	&	48.3	&	$1.33 \times 10^4$ & --- \\
-FT			&	$4.83 \times 10^{10}$	&	4096x2048*	&	16230		&	$5.36 \times 10^5$	&	$48.7 \pm 0.4$	&	48.3	&	$1.41 \times 10^4$ & --- \\
-TT-to-FT	&	$4.83 \times 10^{10}$	&	2048x1024	&	1000		&	$1.11 \times 10^4$	&	$48.7 \pm 0.3$	&	48.3	&	$1.36 \times 10^4$ & --- \\
-TT			&	$2.15 \times 10^9$		&	2048x1024	&	1029		&	$6.38 \times 10^4$	&	$60.4 \pm 0.5$	&	61.1	&	$1.99 \times 10^4$ & --- \\
-TT			&	$4.64 \times 10^9$		&	3072x1536	&	1024		&	$3.29 \times 10^5$	&	$75.2 \pm 0.6$	&	76.3	&	$2.94 \times 10^4$ & --- \\
-TT			&	$1.00 \times 10^{10}$	&	4096x2048	&	1039		&	$7.79 \times 10^5$	&	$95.3 \pm 0.7$	&	95.1	&	$4.30 \times 10^4$ & --- \\
-TT-to-FT	&	$9.51 \times 10^{11}$	&	4096x2048	&	1000		&	$7.91 \times 10^4$	& 	$93.2 \pm 0.8$ 	&	95.1	&	$4.11 \times 10^4$ & --- \\
+TT			&	Classic		&	$1.00 \times 10^8$		&	384$^2$x256	&	482			&	$1.95 \times 10^5$	&	$31.4$			&	---		&	$1.78 \times 10^3$ & --- \\
+FT			&	TT-to-FT	&	$3.10 \times 10^9$		&	384$^2$x256	&	2221		&	$1.95 \times 10^5$	&	$31.9$			&	---		&	$1.78 \times 10^3$ & --- \\
+TT			&	Classic		&	$1.00 \times 10^8$		&	1024x512	&	1023		&	$5.57 \times 10^3$	&	$25.4 \pm 0.1$	&	26.1	&	$3.18 \times 10^3$ & --- \\
+FT			&	Classic		&	$2.61 \times 10^9$		&	2048x1024	&	9410		&	$1.21 \times 10^5$	&	$25.3 \pm 0.2$	&	26.1	&	$3.31 \times 10^3$ & --- \\
+FT			&	TT-to-FT	&	$2.61 \times 10^9$		&	1024x512	&	5040		&	$3.21 \times 10^3$	&	$26.0 \pm 0.1$	&	26.1	&	$3.17 \times 10^3$ & --- \\
+TT			&	Classic		&	$2.15 \times 10^8$		&	1024x512	&	1023		&	$5.73 \times 10^3$	&	$31.3 \pm 0.2$	&	31.2	&	$5.17 \times 10^3$ & --- \\
+TT			&	Classic		&	$4.64 \times 10^8$		&	2048x1024	&	1024		&	$4.66 \times 10^4$	&	$38.4 \pm 0.3$	&	38.9	&	$8.60 \times 10^3$ & --- \\
+TT			&	Classic		&	$1.00 \times 10^9$		&	2048x1024	&	1023		&	$5.58 \times 10^4$	&	$48.0 \pm 0.4$	&	48.3	&	$1.33 \times 10^4$ & --- \\
+FT			&	Classic		&	$4.83 \times 10^{10}$	&	4096x2048*	&	19702		&	$5.56 \times 10^5$	&	$48.8 \pm 0.4$	&	48.3	&	$1.36 \times 10^4$ & --- \\
+FT			&	TT-to-FT	&	$4.83 \times 10^{10}$	&	2048x1024	&	6136		&	$3.64 \times 10^4$	&	$49.0 \pm 0.4$	&	48.3	&	$1.32 \times 10^4$ & --- \\
+FT			&	Nu-based	&	$4.83 \times 10^{10}$	&	2048x1024	&	6877		&	$3.64 \times 10^4$	&	$49.0 \pm 0.4$	&	48.3	&	$1.34 \times 10^4$ & --- \\
+TT			&	Classic		&	$2.15 \times 10^9$		&	2048x1024	&	1029		&	$6.38 \times 10^4$	&	$60.4 \pm 0.5$	&	61.1	&	$1.99 \times 10^4$ & --- \\
+TT			&	Classic		&	$4.64 \times 10^9$		&	3072x1536	&	1024		&	$3.29 \times 10^5$	&	$75.2 \pm 0.6$	&	76.3	&	$2.94 \times 10^4$ & --- \\
+TT			&	Classic		&	$1.00 \times 10^{10}$	&	4096x2048	&	1039		&	$7.79 \times 10^5$	&	$95.3 \pm 0.7$	&	95.1	&	$4.30 \times 10^4$ & --- \\
+FT			&	TT-to-FT	&	$9.51 \times 10^{11}$	&	4096x2048	&	2142		&	$1.22 \times 10^5$	& 	$95.3 \pm 1.0$ 	&	95.1	&	$4.29 \times 10^4$ & --- \\
 \hline																	
-\multicolumn{7}{c}{\vspace{0.1cm}3D Rotating Runs (Ek = $10^{-6}$, $\Gamma = 0.481$, stress-free)} \\
+\multicolumn{7}{c}{\vspace{0.1cm}Rotating Runs ($\Gamma = 0.481$, stress-free, Ek = $10^{-6}$)} \\
 \hline																	
-TT	&	$1.38 \times 10^9$		&	64$^2\times$128 	&	2565		&	$2.98 \times 10^3$	&	$2.17$			&	---		&	$2.84 \times 10^2$  & $(3.38 \pm 0.17) \times 10^{-2}$ \\
-TT	&	$1.83 \times 10^9$		&	64$^2\times$128 	&	2545		&	$3.54 \times 10^3$	&	$3.56$			&	---		&	$5.28 \times 10^2$  & $(5.67 \pm 0.33) \times 10^{-2}$ \\
-TT	&	$2.29 \times 10^9$		&	128$^3$				&	2537		&	$1.08 \times 10^4$	&	$5.61$			&	---		&	$8.91 \times 10^2$  & $(8.56 \pm 0.44) \times 10^{-2}$ \\
-TT	&	$2.75 \times 10^9$		&	128$^3$				&	5035		&	$2.6 \times 10^4$	&	$8.04 \pm 0.01$	&	---		&	$1.71 \times 10^3$  & $(1.17 \pm 0.06) \times 10^{-1}$ \\
-FT	&	$2.1 \times 10^{10}$	&	384$^2\times$512*	&	13950		&	$2.3 \times 10^6$	&	$7.86 \pm 0.01$	&	---		&	$1.76 \times 10^3$  & $(1.14 \pm 0.06) \times 10^{-1}$ \\
-TT	&	$3.67 \times 10^9$		&	128$^3$				&	2532		&	$1.55 \times 10^4$	&	$12.5$			&	---		&	$3.39 \times 10^3$  & $(1.74 \pm 0.08) \times 10^{-1}$ \\
-TT	&	$4.58 \times 10^9$		&	128$^3$				&	2530		&	$1.69 \times 10^4$	&	$17.6$			&	---		&	$4.77 \times 10^3$  & $(2.35 \pm 0.08) \times 10^{-1}$ \\
-TT	&	$5.50 \times 10^9$		&	192$^3$				&	2402		&	$7.35 \times 10^4$	&	$22.8$			&	---		&	$6.38 \times 10^3$  & $(2.96 \pm 0.11) \times 10^{-1}$ \\
-TT	&	$6.42 \times 10^9$		&	192$^3$				&	2226		&	$7.35 \times 10^4$	&	$29.5$			&	---		&	$7.86 \times 10^3$  & $(3.65 \pm 0.16) \times 10^{-1}$ \\
-TT	&	$7.33 \times 10^9$		&	256$^3$				&	1147		&	$1.47 \times 10^5$	&	$36.2$			&	---		&	$9.52 \times 10^3$  & $(4.33 \pm 0.17) \times 10^{-1}$ \\
-TT	&	$8.25 \times 10^9$		&	256$^3$				&	1079		&	$1.47 \times 10^5$	&	$43.0$			&	---		&	$1.10 \times 10^4$  & $(5.01 \pm 0.20) \times 10^{-1}$ \\
-TT	&	$9.17 \times 10^9$		&	256$^3$				&	1030		&	$1.47 \times 10^5$	&	$48.9$			&	---		&	$1.24 \times 10^4$  & $(5.63 \pm 0.26) \times 10^{-1}$ \\
-TT	&	$1.834 \times 10^{10}$	&	256$^3$				&	971.9		&	$1.84 \times 10^5$	&	$111$			&	---		&	$2.21 \times 10^4$  & $1.18 \pm 0.09$ \\
+TT	&	Classic		&	$1.38 \times 10^9$		&	64$^2\times$128 	&	2565		&	$2.98 \times 10^3$	&	$2.17$			&	---		&	$2.84 \times 10^2$  & $(3.38 \pm 0.17) \times 10^{-2}$ \\
+TT	&	Classic		&	$1.83 \times 10^9$		&	64$^2\times$128 	&	2545		&	$3.54 \times 10^3$	&	$3.56$			&	---		&	$5.28 \times 10^2$  & $(5.67 \pm 0.33) \times 10^{-2}$ \\
+TT	&	Classic		&	$2.29 \times 10^9$		&	128$^3$				&	2537		&	$1.08 \times 10^4$	&	$5.61$			&	---		&	$8.91 \times 10^2$  & $(8.56 \pm 0.44) \times 10^{-2}$ \\
+TT	&	Classic		&	$2.75 \times 10^9$		&	128$^3$				&	5035		&	$2.6 \times 10^4$	&	$8.04 \pm 0.01$	&	---		&	$1.71 \times 10^3$  & $(1.17 \pm 0.06) \times 10^{-1}$ \\
+FT	&	Classic		&	$2.1 \times 10^{10}$	&	384$^2\times$512*	&	13950		&	$2.3 \times 10^6$	&	$7.90 \pm 0.01$	&	---		&	$1.70 \times 10^3$  & $(1.15 \pm 0.06) \times 10^{-1}$ \\
+FT	&	TT-to-FT	&	$2.1 \times 10^{10}$	&	128$^3$				&	2775		&	$4.34 \times 10^4$	&	$7.83 \pm 0.01$	&	---		&	$1.65 \times 10^3$  & $(1.14 \pm 0.05) \times 10^{-1}$ \\
+TT	&	Classic		&	$3.67 \times 10^9$		&	128$^3$				&	2532		&	$1.55 \times 10^4$	&	$12.5$			&	---		&	$3.39 \times 10^3$  & $(1.74 \pm 0.08) \times 10^{-1}$ \\
+TT	&	Classic		&	$4.58 \times 10^9$		&	128$^3$				&	2530		&	$1.69 \times 10^4$	&	$17.6$			&	---		&	$4.77 \times 10^3$  & $(2.35 \pm 0.08) \times 10^{-1}$ \\
+TT	&	Classic		&	$5.50 \times 10^9$		&	192$^3$				&	2402		&	$7.35 \times 10^4$	&	$22.8$			&	---		&	$6.38 \times 10^3$  & $(2.96 \pm 0.11) \times 10^{-1}$ \\
+TT	&	Classic		&	$6.42 \times 10^9$		&	192$^3$				&	2226		&	$7.35 \times 10^4$	&	$29.5$			&	---		&	$7.86 \times 10^3$  & $(3.65 \pm 0.16) \times 10^{-1}$ \\
+TT	&	Classic		&	$7.33 \times 10^9$		&	256$^3$				&	1147		&	$1.47 \times 10^5$	&	$36.2$			&	---		&	$9.52 \times 10^3$  & $(4.33 \pm 0.17) \times 10^{-1}$ \\
+TT	&	Classic		&	$8.25 \times 10^9$		&	256$^3$				&	1079		&	$1.47 \times 10^5$	&	$43.0$			&	---		&	$1.10 \times 10^4$  & $(5.01 \pm 0.20) \times 10^{-1}$ \\
+TT	&	Classic		&	$9.17 \times 10^9$		&	256$^3$				&	1030		&	$1.47 \times 10^5$	&	$48.9$			&	---		&	$1.24 \times 10^4$  & $(5.63 \pm 0.26) \times 10^{-1}$ \\
+TT	&	Classic		&	$1.834 \times 10^{10}$	&	256$^3$				&	971.9		&	$1.84 \times 10^5$	&	$111$			&	---		&	$2.21 \times 10^4$  & $1.18 \pm 0.09$ \\
 \hline																	
 \end{tabular}
 }

@@ -126,8 +126,8 @@ ax.fill_between(fx, 1e-16, fp, color=fColor, alpha=0.5)
 
 minv = np.min((np.min(mp[mp > 0]*dT), np.min(fp[fp > 0])))
 maxv = np.max((np.max(mp[mp > 0]*dT), np.max(fp[fp > 0])))
-ax.set_ylim(minv, maxv)
-ax.set_xlim(0, np.max(mx/dT))
+ax.set_ylim(3e-5, maxv)
+ax.set_xlim(0, 1.55)#np.max(mx/dT))
 
 
 # Panel 2, Dynamics
@@ -199,7 +199,7 @@ bar = plt.colorbar(c, cax=cax, orientation='horizontal')#, rasterized=True)
 cax.set_xticklabels(())
 bar.set_ticks(())
 cax.text(0.5, -0.55, r'$\pm\Delta T / 3$', transform=ax.transAxes, ha='center')
-cax.text(0.5, -0.21, r'$T - \bar{T}$', transform=ax.transAxes, ha='center')
+cax.text(0.5, -0.21, r'$T - \overline{T}$', transform=ax.transAxes, ha='center')
 #cax.annotate(r'$-|S| \times 10^{-5}$', fontsize=8,  xy=(-0.37, 0.5), va='center', annotation_clip=False)
 #cax.annotate(r'$|S| \times 10^{-5}$', fontsize=8,  xy=(1.02, 0.5),  va='center',  annotation_clip=False)
 
