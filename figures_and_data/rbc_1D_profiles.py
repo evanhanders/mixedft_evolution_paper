@@ -163,7 +163,31 @@ axins_r = []
 
 
 bounds_out = 0.5
-bounds_in  = 0.45
+
+#find true BL width
+k = 'kappa_flux'
+m_flux = mixed_profs[mk][k][0,:]/dT**(3/2)/flux_scale
+f_flux = fixed_profs[fk][k][0,:]/flux_scale
+
+m_bl_bot = mz[(m_flux > 0.05)*(mz < 0)][-1]
+f_bl_bot = fz[(f_flux > 0.05)*(fz < 0)][-1]
+m_bl_top = mz[(m_flux > 0.05)*(mz > 0)][0]
+f_bl_top = fz[(f_flux > 0.05)*(fz > 0)][0]
+
+print('boundary layers (mixed): {:.3g} / {:.3g}'.format(m_bl_bot, m_bl_top))
+print('boundary layers (fixed): {:.3g} / {:.3g}'.format(f_bl_bot, f_bl_top))
+
+avg_bl = np.mean((0.5+m_bl_bot, 0.5+f_bl_bot, 0.5-m_bl_top, 0.5-f_bl_top))
+
+bounds_in = bounds_out - 3*avg_bl #show 3 * bl width
+
+#plt.figure()
+#interior = (mz >= -0.5+avg_bl)*(mz <= 0.5-avg_bl)
+#plt.plot(mz[interior], (f_flux - m_flux)[interior])
+#plt.xlim(-0.5+avg_bl, 0.5-avg_bl)
+#plt.show()
+
+                               
 
 #Row 1 - Temp
 k = 'T'
@@ -172,7 +196,7 @@ for ax in [axf, axl, axr]:
     ax.plot(fz, fixed_profs[fk][k][0,:],    c=fColor, label='TT', lw=2)
     ax.plot(mz, mixed_profs[mk][k][0,:]/dT, c=mColor, label='FT')
 #ax1.legend(loc='lower left', frameon=False, fontsize=7)
-axf.set_ylabel(r'$\bar{T}/\Delta T$')
+axf.set_ylabel(r'$\overline{T}/\Delta T$')
 axf.legend(loc='lower center', ncol=2, frameon=False, fontsize=8)
 
 axf.set_ylim(0, 1)
@@ -203,8 +227,10 @@ for ax, loc in [(axl, 'upper right'), (axr, 'lower left')]:
 #        axins.set_yticks((0, 0.25, 0.5))
     elif ax is axr: 
         axins_r.append(axins)
-        axins.set_ylim(0, 2)
-        axins.set_yticks((0, 1, 2))
+        axins.set_ylim(0, 3)#this_err.min()/2, this_err.max()*2)
+        axins.set_yticks((0, 1.5, 3))
+#        axins.set_ylim(0, 2)
+#        axins.set_yticks((0, 1, 2))
 
     axins.xaxis.set_ticklabels([])
 
@@ -223,7 +249,7 @@ for ax in [axf, axl, axr]:
     ax.plot(mz, mixed_asymms[mk][k2]/dT, c=mColor, ls='--', lw=2)
     ax.plot(fz, fixed_asymms[fk][k1], c=fColor, lw=1, label='Upflows')
     ax.plot(fz, fixed_asymms[fk][k2], c=fColor, ls='--', lw=1, label='Downflows')
-axf.set_ylabel(r'$\bar{T}/\Delta T$')
+axf.set_ylabel(r'$\overline{T}/\Delta T$')
 axf.legend(loc='lower center', frameon=False, fontsize=8, ncol=2)
 
 axf.set_ylim(0, 1)
@@ -259,8 +285,10 @@ for ax, loc in [(axl, 'upper right'), (axr, 'lower left')]:
             axins.set_ylim(0, 3)#this_err.min()/2, this_err.max()*2)
             axins.set_yticks((0, 1.5, 3))
         else:
-            axins.set_ylim(0, 2)#this_err.min()/2, this_err.max()*2)
-            axins.set_yticks((0, 1, 2))
+            axins.set_ylim(0, 3)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 1.5, 3))
+#            axins.set_ylim(0, 2)#this_err.min()/2, this_err.max()*2)
+#            axins.set_yticks((0, 1, 2))
 
         axins.xaxis.set_ticklabels([])
 
@@ -294,7 +322,7 @@ for ax, loc in [(axl, 'center right'), (axr, 'center left')]:
     elif ax is axr: 
         axins_r.append(axins)
 
-    for k, ls in [(k1, '-')]:
+    for k, ls in [(k1, '-')]:#, (k2, '--')]:
         p_mixed.set_scales(len(mixed_profs[mk][k][0,:])/max_nz)
         p_fixed.set_scales(len(fixed_profs[fk][k][0,:])/max_nz)
         p_mixed['g'] = mixed_profs[mk][k][0,:]/dT**(3/2)/flux_scale
@@ -304,19 +332,19 @@ for ax, loc in [(axl, 'center right'), (axr, 'center left')]:
 
         this_z = z
         err = 100*np.abs((p_fixed['g'] - p_mixed['g'])/p_fixed['g'])
-#        print(np.max(np.abs(p_fixed['g'][(this_z <= 0.45)*(this_z >= -0.45)])))
         z_bounds = (this_z <= xlim[-1])*(this_z >= xlim[0])
         good = (p_fixed['g'][z_bounds] >  0.1)
+
 
         axins.plot(this_z[z_bounds][good], err[z_bounds][good], c='k', ls=ls)
         this_err = err[z_bounds]
         bounds = this_err.min()/2, this_err.max()*2
         if ax is axl:
-            axins.set_ylim(0, 2)#this_err.min()/2, this_err.max()*2)
-            axins.set_yticks((0, 1, 2))
+            axins.set_ylim(0, 3)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 1.5, 3))
         else:
-            axins.set_ylim(0, 1)#this_err.min()/2, this_err.max()*2)
-            axins.set_yticks((0, 0.5, 1))
+            axins.set_ylim(0, 3)#this_err.min()/2, this_err.max()*2)
+            axins.set_yticks((0, 1.5, 3))
 #        axins.set_yscale('log')
 #        axins.set_yticks((1e-1, 1e0, 10))
 
@@ -339,7 +367,7 @@ for ax in axins_l:
     ax.set_xlim(-bounds_out, -bounds_in)
     ax.set_xticks((-bounds_out, -bounds_out + (bounds_out-bounds_in)/3, -bounds_out + 2*(bounds_out-bounds_in)/3))
 for ax in axins_r:
-    ax.set_xlim(-bounds_out, -bounds_in)
+    ax.set_xlim(bounds_in, bounds_out)#-bounds_out, -bounds_in)
     ax.set_xticks((bounds_out - 2*(bounds_out-bounds_in)/3, bounds_out - (bounds_out-bounds_in)/3, bounds_out))
 
 for i in [0, 1, 2]:
@@ -350,15 +378,16 @@ for i in [0, 1, 2]:
 for i in [3, 4, 5]:
     axs[i].set_xlim(-bounds_out, -bounds_in)
     axs[i].set_xticks((-bounds_out, -bounds_out + (bounds_out-bounds_in)/3, -bounds_out + 2*(bounds_out-bounds_in)/3))
-    axs[i].get_xaxis().set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.2f'))#matplotlib.ticker.ScalarFormatter())
+    axs[i].get_xaxis().set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.3f'))#matplotlib.ticker.ScalarFormatter())
 
     if i != 5: axs[i].set_xticklabels(())
+#    axs[i].axvline(f_bl_bot, c='k', lw=0.3)
 
 for i in [6, 7, 8]:
     axs[i].set_xlim(bounds_in, bounds_out)
     axs[i].yaxis.tick_right()
     axs[i].set_xticks((bounds_out - 2*(bounds_out-bounds_in)/3, bounds_out - (bounds_out-bounds_in)/3, bounds_out))
-    axs[i].get_xaxis().set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.2f'))#matplotlib.ticker.ScalarFormatter())
+    axs[i].get_xaxis().set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.3f'))#matplotlib.ticker.ScalarFormatter())
     if i != 8: axs[i].set_xticklabels(())
 
 for i in [0, 1]:
@@ -367,6 +396,7 @@ for i in [0, 1]:
 
 for i in [2, 5, 8]:
     axs[i].set_ylim(-0.05, 1.05)
+
 
 
 
