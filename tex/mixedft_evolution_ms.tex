@@ -165,6 +165,7 @@ u = \ea{v =}\, w = 0 \, \, \text{at}\,\,z = \{-0.5, 0.5\}.
 For this choice of \ea{aspect ratio and} boundary conditions, the critical value of the Rayleigh number is Ra$_{\partial_z T} = 1296$ for FT boundaries and Ra$_{\Delta T} = 1708$ for TT boundaries \cite{goluskin2016}.
 Due to this difference in onset, it is reasonable to expect important differences between FT and TT solutions at low supercriticalities.
 However, for the supercriticalities of O($10^{5+}$) studied in Sec.~\ref{sec:results_timescales}, we do not expect this difference in linear stability to be very important.
+%TODO: Mention that our finite aspect ratio has a minimum wavenumber $\geq \pi$, so the critical values of Ra at those things is ___
 \ea{Many of these simulations are restricted to} two-dimensional (2D) convection \ea{by setting} $\partial_y = v = 0$.
 
 The rotating cases in section \ref{sec:results_rotating} employ stress-free, impenetrable boundaries,
@@ -229,6 +230,9 @@ where $|\bm{A}|$ represents the magnitude of the vector $\bm{A}$.
 
 \ea{
 \subsection{Initial Conditions}
+
+\subsubsection{Temperature Initial Conditions}
+
 The time evolution of FT simulations is sensitive to the initial conditions due to the fact that the evolved, nonlinear convective dynamics determine the magnitude of the temperature jump across the domain.
 For this reason, we will study FT simulations which employ three different initial states.
 
@@ -276,7 +280,7 @@ In this work, we use the best-fit law of ref.~\cite{johnston&doering2009} with $
 
 
 
-\paragraph{Additional ICs}
+\subsubsection{Additional Initial Conditions}
 In all cases, we modify the initial temperature profile by specifying the value of $T_1$, rather than through modifications to the linearly unstable reference profile, $T_0$.
 We furthermore assume that the initial temperature profile is in hydrostatic equilibrium, and solve for $\varpi$ accordingly.
 We assume zero velocity in the initial state, except in the case of TT-to-FT simulations, where velocities are taken directly from the TT simulation and scaled according to Eqn.~\ref{eqn:ra_relation}.
@@ -289,7 +293,7 @@ We filter this noise spectrum in coefficient space, such that only the lower 25\
 \subsection{Timescales}
 \label{sec:timescales}
 }
-\paragraph{Dynamical Timescales}
+\subsubsection{Dynamical Timescales}
 One \ea{result of the mapping in Eqn.~\ref{eqn:ra_relation}} is that the nondimensional dynamical freefall timescale is a poor description of the \emph{evolved} freefall timescale.
 The velocities in an FT simulation are smaller than the velocities in a TT simulation by a factor of $\sqrt{\text{Nu}}$.
 As a result, every nondimensional simulation freefall time unit in a TT simulation samples a factor of $\sqrt{\text{Nu}}$ more dynamics than a time unit in an FT simulation.
@@ -297,7 +301,7 @@ As a result, every nondimensional simulation freefall time unit in a TT simulati
 To ensure accurate comparisons, we will measure flow statistics over multiples of $\tau_{\text{ff, ev}}$ rather than over multiples of the nondimensional time units.}
 
 \ea{
-\paragraph{Evolutionary Timescales}
+\subsubsection{Evolutionary Timescales}
 The thermal energy reservoir of our 3D Cartesian systems, and the rate of change of this reservoir due to conduction at the boundaries, is
 \begin{equation}
 E = \iiint T\,dx\,dy\,dz = \Gamma^2 \int T\,dz,
@@ -321,7 +325,8 @@ The thermal relaxation timescale is therefore
 \end{equation}
 Where the final expression is for the large Ra case where Nu$^{-1} \rightarrow 0$.
 The magnitude of the temperature derivative achieved at the top boundary is initially very large ($|\partial_z T(z=0.5)|_{\text{early}} > \text{Nu}(t=\infty)$; see e.g., Fig.~1b in \cite{anders&all2018}), but decreases in magnitude throughout the evolution of a simulation, making it difficult to estimate the true thermal relaxation time.
-However, it is reasonable to assume that the evolutionary timescale lies within the window $\sqrt{\text{Ra Pr}} \,\text{Nu}^{-1} < \tau_{\text{th, FT-classic}} < \sqrt{\text{Ra Pr}}$.
+However, it is reasonable to assume that the evolutionary timescale lies within the window $\sqrt{\text{Ra Pr}} \,\text{Nu}^{-1} \lesssim \tau_{\text{th, FT-classic}} \lesssim \sqrt{\text{Ra Pr}}$.
+In practice, we find that our non-rotating simulations equilibrate in $\sim 2.5\sqrt{\text{Ra}\,\text{Pr}}/\text{Nu}$ nondimensional time units(see section \ref{sec:time_evolution_classic_ICs}), and our rotating simulation equilibrates in $\sim 2.5\sqrt{\text{Ra}\,\text{Pr}}/\text{Nu}$ (see section \ref{sec:results_rotating}).
 
 
 
@@ -400,6 +405,7 @@ These heightened values of Nu and Pe suggest that the dynamics do not immediatel
 Achieving thermal relaxation in \ea{classic} FT simulations is computationally costly for two reasons: (1) the turbulent dynamics at the large initial Ra$_{\Delta T}$ require more spectral modes to resolve than the equilibrated state (compare the left and right dynamics in Fig.~\ref{fig:rbc_evolution_dynamics}), and (2) thousands of freefall times must pass during relaxation (see Fig.~\ref{fig:rbc_scalar_comparisons}).
 For example, for the cases displayed in the left panels of Fig.~\ref{fig:rbc_scalar_comparisons} with a modest Ra$_{\Delta T} = 10^9$, the shown evolution of $10^4$ time units of the FT simulation cost $\sim 4.5 \times 10^5$ cpu-hours, while the TT equivalent case cost only $5.6 \times 10^4$ cpu-hours -- nearly an order of magnitude difference.
 FT simulation dynamics evolve slowly during thermal relaxation, and these images, PDFs, and traces demonstrate the importance of waiting for thermal relaxation to be achieved when conducting an FT simulation.
+\ea{In practice, in this work, we find that the thermal relaxation of FT simulations with classic ICs takes $\sim 2.5\sqrt{\text{Ra}_{\partial_z T} \text{Pr}}\,\text{Nu}^{-1}$ simulation freefall time units.}
 
 \begin{figure}[t!]
 \includegraphics[width=\textwidth]{./figs/rbc_scalar_comparisons.pdf}
@@ -531,7 +537,6 @@ The successful degree with which this mechanism reproduces the evolved dynamics 
 The thermal energy reservoir of TT simulations does not change between the initial and final state.
 The rapid relaxation of TT simulations\ea{, as well as FT simulations with Nu-based and TT-to-FT ICs}, therefore suggests that experimental restratification occurs rapidly in RBC. 
 The long rundown of \ea{classic} FT experiments on display in Fig.~\ref{fig:rbc_scalar_comparisons} is entirely due to the energy reservoir (the temperature jump across the domain) drifting over time.
-\ea{In practice, in this work, we find that the thermal relaxation of FT simulations with classic ICs takes $\sim 2.5\sqrt{\text{Ra}_{\partial_z T} \text{Pr}}\,\text{Nu}^{-1}$ simulation freefall time units.}
 
 \ea{
 As a final note, we find that measures of the velocity field (e.g., the kinetic energy and Pe) take a few hundred freefall timescales to relax to their final value in TT and FT (Nu-based IC) simulations in 2D at high values of Ra$_{\Delta T}\,\gtrsim 10^{8.67}$ .
@@ -731,8 +736,9 @@ Through studying this relaxation and the relaxed states of both simulations, we 
 \item Thermal relaxation in RBC has two components: (a) changes in the energy reservoir and (b) changes in the stratification.
 We find that the long relaxation of FT simulations is due to changes in the energy reservoir; this reservoir is roughly constant in TT simulations due to the lack of evolution of the average domain temperature.
 The rapid evolution of our TT simulations suggests that RBC restratifies itself instantaneously.
-\item Dynamical measurements taken during the thermal relaxation of an FT simulation may be misleading.
+\item Dynamical measurements taken during thermal relaxation may be misleading.
 Dynamics during the relaxation are more turbulent than in the evolved state, and exhibit evolving flow balances in the equation of motion (as quantified by e.g., the Rossby number).
+\ea{This is principly a concern in systems like FT which can have very long relaxational times compared to dynamical times.}
 \item The thermal relaxation process of an FT simulation performs a sweep through Ra$_{\Delta T}$ parameter space.
 We find that convective heat transport (the Nusselt number) and turbulent velocities (the P\'{e}clet number) are elevated above classic scaling laws along these parameter space sweeps.
 \item Great computational expense achieving thermal relaxation in an FT simulation can be avoided by using the evolved state of a TT simulation as a ``better'' set of initial conditions for an FT simulation.

@@ -55,7 +55,7 @@ Evan H. Anders, Geoffrey M. Vasil, Benjamin P. Brown, and Lydia Korre
 
 \newpage
 \noindent
-\Large{\textbf{Response to first referee:}}\newline$\,$\newline\indent
+\Large{\textbf{Response to first report:}}\newline$\,$\newline\indent
 
 \begin{myquotation}
 This is an interesting paper presenting numerical simulations of convection (Rayleigh-B\'{e}nard and rotating Rayleigh-B\'{e}nard) with specific boundary conditions relevant for astrophysical fluid dynamics. 
@@ -74,17 +74,17 @@ Questions
 All the discussions about the time necessary to reach statistical equilibrium obviously depend on the chose initial conditions: that should be made crystal clear each time (see e.g. in conclusion, bottom of page 10… see also introduction p.1 : ``the evolved mean temperature of a simulation with FT boundaries differs from the initial mean temperature'').
 \end{myquotation}
 This is an excellent point, and we have restructured the paper to try to make this abundantly clear.
-Section 2 (``Simulation Details'') now contains a subsection dedicated to initial conditions, and throughout the paper we have tried to clarify that thermal relaxation timescales depend on initial conditions.
+Section II (``Simulation Details'') now contains a subsection dedicated to initial conditions (II.C), and throughout the paper we have tried to clarify that thermal relaxation timescales depend on initial conditions.
 
 \begin{myquotation}
 Your chosen initial conditions are a linear temperature from 1 at the bottom to 0 at the top, and I guess, zero velocity everywhere and matching hydrostatic pressure (that should be mentioned in the text). 
 \end{myquotation}
-This has now been clarified in section II.C (see the ``Additional ICs'' paragraph).
+This has now been clarified in section II.D see the ``Additional ICs'' paragraph).
 The linear temperature profile is now also referred to as ``Classical ICs''.
 
 \begin{myquotation}
 Those initial conditions are obviously wrong for the FT simulations whose overall temperature contrast is much smaller than 1. 
-This FT equilibrium temperature contrast can be estimated using your results showing that FT final state is comparable to TT final state, hence using classical scaling law for Nusselt (I like Nu=(Ra/Rac)$^(1/3)$, but what follows can be easily adapted to your favorite one):
+This FT equilibrium temperature contrast can be estimated using your results showing that FT final state is comparable to TT final state, hence using classical scaling law for Nusselt (I like Nu=(Ra/Rac)$^{1/3}$, but what follows can be easily adapted to your favorite one):
 \begin{itemize}
 \item One can define an effective Rayleigh number Ra$_e$, based on the real temperature contrast deltaT rather than the initial (wrong) DeltaT: then Ra$_e$ = Ra * deltaT/DeltaT.
 \item The final heat flux follows the classical scaling law for Nu, considering Ra$_e$ and the non-dimensionalisation by deltaT. 
@@ -98,17 +98,22 @@ Hence the final, dimensional, heat flux is F=(Ra$_e$/Rac)$^{1/3}$*k*deltaT/Lz.
 \end{itemize}
 \end{itemize}
 \end{myquotation}
-There are two questions here, and we'll respond to each bullet in order:
-\begin{enumerate}
-\item We agree with the logic of the math here, and that if you have a given law, Nu $\propto$ Ra$_e^{\alpha}$, you can retrieve a law for deltaT$\propto Ra^{-\alpha/(1+\alpha)}$ (where this exponent is 1/4 for $\alpha = 1/3$).
+We agree with the logic of the math here, and that if you have a given law, Nu $\propto$ Ra$_e^{\alpha}$, you can retrieve a law for deltaT$\propto Ra^{-\alpha/(1+\alpha)}$ (where this exponent is 1/4 for $\alpha = 1/3$).
 This is now shown in the paper (see eqn 15).
 We have presented this in its general form so that people can chose their favorite or best-fit scaling law.
-Due to its excellent agreement with the simulations we ran, we have chosen to stick with the $\alpha = 0.285$ law that we have used previously in this work.
-This means that a Ra$^{-0.22}$ law is a better fit for our data than Ra$^{-1/4}$, but those are pretty hard to distinguish between; so -- yes, this scaling roughly holds in our simulations.
-\item For the specific case of classical RBC, the initial conditions that you describe here are probably simpler to use than our TT-to-FT initial conditions.
-See section II.C for a description of these ``Nu-based'' initial conditions, and section III.B for a brief description of evolution in these systems.
+Now we will respond to each of the two posed questions in order.
+\begin{enumerate}
+\item 
+Yes, this scaling does seem to hold in our simulations.
+For us, the scaling law is closer to $\alpha = 0.285$ rather than $\alpha = 1/3$.
+This means that a Ra$^{-0.22}$ law is a better fit for our data than Ra$^{-1/4}$, but those are pretty hard to distinguish between.
+\item 
+We now conduct a series of test with what we call ``Nu-based'' initial conditions, using our $\alpha = 0.285$ (see sections II.C and III.C (TODO)).
+\vspace{0.5cm}
+\\
 One difficulty of using Nu-based initial conditions is that they are sensitive to the Nu vs.~Ra law that is used.
 For more complex simulations (e.g., rotationally- or magnetically- constrained RBC) where the Nu vs.~Ra laws are more contentious and less universally agreed-upon in the community, Nu-based ICs which presume the answer may be less reliable than TT-to-FT simulations.
+We highlight this in section V. (TODO)
 \end{enumerate}
 
 
@@ -118,10 +123,10 @@ This must be evacuated by the top/bottom flux F=kDeltaT/Lz.
 Hence the ratio gives us a typical timescale for reaching equilibrium: t$_{eq}$ = E/F = 0.5*Lz$^2$/Kappa*(1-deltaT/DeltaT), i.e. a diffusive time…
 Does this scaling law hold? It seems not completely crazy according to your figure 2 left.
 \end{myquotation}
-Deriving the equilibration time is a bit trickier than this estimate because the difference between the flux leaving through the top of the domain constantly evolves over time.
+Deriving the equilibration time is a bit tricky, because the flux leaving through the top of the domain constantly evolves over time.
 We've added a derivation of this timescale and a discussion of this subtlety to a new section II.D.
-In practice, we find that this definition of an equilibration time far \emph{over}estimates the relaxational timescale.
-We find that the relaxational time is $(\text{a few})\cdot(\sqrt{\text{Ra Pr}}/\text{Nu})$, and have said so at the end of section III.C.
+In practice, we find that this definition of an equilibration time \emph{over}estimates the relaxational timescale.
+We find that the relaxational time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so at the end of section III.C.
 
 \begin{myquotation}
 Comments:
@@ -130,6 +135,7 @@ Comments:
 For instance, you do no clearly define the meaning of FT. 
 Also, you mention astrophysical simulations, meaning for me (and others I guess) compressible convection: you should mention that your work is in the Boussinesq framework.
 \end{myquotation}
+Thank you.
 We have rewritten the abstract in an attempt to make it self-consistent and to make it more clearly speak to our results.
 \begin{myquotation}
 -       P.3, lettering and numbering: it is strange to suddenly have a subsection A at the end of section II, while all the beginning was not labelled.
@@ -158,7 +164,9 @@ Section III has been split into a few sections (one each for the different IC ch
 -       P.10: you don’t prove the validity of your results in 3D in the non-rotating case. 
 I don’t see any reason why it would be different from 2D, but is it impossible to run one case to show it?
 \end{myquotation}
-We have added section III.D and Fig.~4 to show that 3D results are in line with 2D results.
+Thank you.
+We have now run a non-rotating 3D case.
+We have added section III.D and Fig.~4, and have confirmed that the 3D results are in line with 2D results.
 
 \begin{myquotation}
 Typo:
@@ -166,69 +174,80 @@ p.3: The codeS used to run simulations and to create the figures...
 Caption of figure 2:``Re vs. Ra is compensated…'' $\rightarrow$ Pe vs. Ra
 \end{myquotation}
 These typos have been fixed.
+\\
+
+\vspace{0.5cm}
+We would again like to thank the referee for the care with which they read our manuscript, and for their excellent constructive criticism.
+We feel that these comments have measurably improved our understanding of the problem being studied and have vastly improved the quality of the science being presented in our paper.
 
 \newpage
 \noindent
-\Large{\textbf{Response to second referee:}}\newline$\,$\newline\indent
+\Large{\textbf{Response to second report:}}\newline$\,$\newline\indent
 \begin{myquotation}
 In this manuscript the authors focus on the different equilibration times required by simulations of Rayleigh-B\'{e}nard flows with fixed temperature boundaries (referred to as T-T) or with one fixed temperature and one fixed heat flux wall (F-T). 
 They investigate mostly 2D cases although they consider also 3D configurations but in a rotating environment and with free slip boundaries. 
 \end{myquotation}
-We have now verified our results in a 3D case with no-slip boundaries, analagous to our 2D setup, in section III.D.
-The introduction to the rotating case now provides more context to show that rotating RBC is a good testing bed for our TT-to-FT method.
+We thank the referee for their report.
+We agree that it was confusing to have a rotating 3D case with different boundary conditions.
+We have now conducted a non-rotating 3D case with no-slip boundaries, analagous to our 2D setup.
+The results of this are presented in section III.D and confirm the prior 2D results.
+In section V, for the rotating case, we provide more context to show that rotating RBC is a testbed for the TT-to-FT method.
 
 \begin{myquotation}
 The claims of the paper are well known among people studying these problems and I do not see any novelty in the results of this paper. 
 \end{myquotation}
 We disagree.
-Through discussions with numerous colleagues and a deeper literature review, we are convinced that our results are novel.
-We have rewritten the abstract of the paper, restructured the Simulation Details and Results sections, and added a few references throughout the manuscript.
-These changes have aimed to improve the clarity and logical flow of our paper, and also have tried to better place our results in the context of the literature.
-
-If these results are truly well-known in the community, provide us with references.
+Through further discussions with numerous colleagues and a deeper literature review, we remain convinced that our results are novel.
+We have made various revisions to the structure of the paper, and have included further references to better place our results in the context of the literature.
+After doing so, we remain convinced that our results are novel.
+If we are incorrect, we would welcome references.
 
 \begin{myquotation}
 In a flow with imposed boundary conditions (T-T) the mean temperature is known a-priori and, if the initial condition has that average temperature, the flow needs only to equilibrate through the boundary layer that, being much thinner that the boundary distance, take much less time.
 
 On the other hand, when the heat flux is assigned, the mean temperature is unknown and equilibrating the bulk takes a time $\sim\sqrt{Ra/Pr}/Nu$. 
 \end{myquotation}
-Section II.C and II.D now discusses how initial conditions affect thermal relaxation timescales.
+Thank you.
+We find that the relaxational time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so in section II.D.
+Sections II.C and II.D now discusses how initial conditions affect thermal relaxation timescales.
 
 \begin{myquotation}
 Also, imposing a boundary temperature entails the flow to develop any temperature gradient, while imposing the gradient at the wall limits the peaks. 
-What the authors call "energy reservoir" is nothing but the heat capacity of the fluid volume that, of course, takes more time to thermally equilibrate than the thin boundary layers.
+What the authors call ``energy reservoir'' is nothing but the heat capacity of the fluid volume that, of course, takes more time to thermally equilibrate than the thin boundary layers.
 \end{myquotation}
-TODO: I don't even know how to respond to this.
+Yes.
+But it turns out that the timescale of equilibration is complicated by the fact that the flux through one of the walls is constantly evolving and changing, and that has made this an interesting problem.
+We discuss this in section II.D.
 
 \begin{myquotation}
 The analysis of the rotating Rayleigh-B\'{e}nard cases is very qualitative and it overlooks most of the relevant literature.
 \end{myquotation}
-Our goal is not to robustly examine rotating RBC.
-Our goal is to show that:
-\begin{enumerate}
-\item Timescale lessons in non-rotating convection apply to rotating convection (unsurprising), and therefore
-\item our TT-to-FT initial conditions can save a great deal of time in the rotating case where Nu vs.~Ra powerlaws are less well agreed-upon by the community, and the evolved Delta T is truly unknown.
-\end{enumerate}
-We have also added additional references to the literature.
+Our narrow goal in including the rotating example is to show that timescale lessons in non-rotating convection apply to rotating convection.
+Therefore, our TT-to-FT initial conditions can save a great deal of time in the rotating case where Nu vs.~Ra powerlaws are less well agreed-upon by the community, and the evolved Delta T is truly unknown.
+We have expanded our references to the rotating RBC literature.
 
 \begin{myquotation}
 The paper, finally, does not read well, with many imprecise, naive or bold statements: I report in the following a couple of examples. 
-"For this choice of boundary conditions, the critical value of the Rayleigh number is Ra∂z T = 1296 for FT boundaries and Ra∆T = 1708 for TT boundaries" is true only for horizontally infinite domains but not for finite aspect-ratio boxes.
+``For this choice of boundary conditions, the critical value of the Rayleigh number is Ra∂z T = 1296 for FT boundaries and Ra∆T = 1708 for TT boundaries'' is true only for horizontally infinite domains but not for finite aspect-ratio boxes.
 \end{myquotation}
-The unstable band of wavenumbers for FT and TT boundaries near the critical values reported is narrow and is captured by our numerical domains.
-We have added the clarification ``For this choice of \emph{aspect ratio and} boundary conditions...".
-
-FT boundaries do not have the same instability properties as FF boundaries in which the $k = 0$ mode is unstable.
+Thank you.
+We have computed the convective onset, and the critical wavenumber at Ra$_{\partial_z T} = 1296$ is $k \approx 2.5$, whereas the smallest $k$ that fits in our aspect ratio 2 domain is $\pi$.
+At $k = \pi$, the critical value is slightly higher, it is TODO, which is a small difference.
+It is true that in FF boundary conditions, there is a long and broad minimum extending to $k = 0$, and there is a band instability.
+But, for these FT and TT boundary conditions, the critical curve has a well-defined minimum, and wavelength associated with that minimum is close to the minimum wavelength obtainable in our finite aspect ratio boxes.
+We have made this caveat in the paper.
 
 \begin{myquotation}
-"Dynamical measurements taken during the thermal relaxation of an FT simulation may be misleading." is not clear at all; if one investigates a transient phase studying the thermal relaxation phase is perfectly fine while, if one is interested in the statistical steady state, considering the thermal relaxation phase is wrong (not misleading). 
+``Dynamical measurements taken during the thermal relaxation of an FT simulation may be misleading.'' is not clear at all; if one investigates a transient phase studying the thermal relaxation phase is perfectly fine while, if one is interested in the statistical steady state, considering the thermal relaxation phase is wrong (not misleading). 
 \end{myquotation}
-We agree that there may be cases in which studying transient phases can be interesting.
-In fact, we made this caveat and grounded it in a physical example in the following paragraph of the discussion section in our original manuscript.
+We don't disagree.
 
 \begin{myquotation}
 I do not recommend the publication of this paper.
 \end{myquotation}
+We thank the referee for their report.
+We think that our revised version has significantly clarified the results and narrative.
+We remain convinced that this work is novel.
 
 
 \end{singlespace}
