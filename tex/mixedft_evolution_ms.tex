@@ -162,10 +162,10 @@ For comparison with the literature, we specify $\Gamma = 2$ and these simulation
 u = \ea{v =}\, w = 0 \, \, \text{at}\,\,z = \{-0.5, 0.5\}.
 \label{eqn:vel_bcs}
 \end{equation}
-For this choice of \ea{aspect ratio and} boundary conditions, the critical value of the Rayleigh number is Ra$_{\partial_z T} = 1296$ for FT boundaries and Ra$_{\Delta T} = 1708$ for TT boundaries \cite{goluskin2016}.
+For this choice of boundary conditions, the critical values of the Rayleigh number \ea{and wavenumber are (Ra$_{\partial_z T}, k) = (1295.78, 2.5519)$} for FT boundaries and \ea{(Ra$_{\Delta T}, k) = (1707.76, 3.1163)$} for TT boundaries \cite{goluskin2016}.
+\ea{In our $\Gamma = 2$ box, the smallest wavenumber permitted is $k = \pi$, and at that wavenumber the critical values of are Ra$_{\partial_z T} = 1357.57$ for FT boundaries and Ra$_{\Delta T} = 1707.94$ for TT boundaries, which are slightly larger than the classical onset values}.
 Due to this difference in onset, it is reasonable to expect important differences between FT and TT solutions at low supercriticalities.
 However, for the supercriticalities of O($10^{5+}$) studied in Sec.~\ref{sec:results_timescales}, we do not expect this difference in linear stability to be very important.
-%TODO: Mention that our finite aspect ratio has a minimum wavenumber $\geq \pi$, so the critical values of Ra at those things is ___
 \ea{Many of these simulations are restricted to} two-dimensional (2D) convection \ea{by setting} $\partial_y = v = 0$.
 
 The rotating cases in section \ref{sec:results_rotating} employ stress-free, impenetrable boundaries,
@@ -559,7 +559,13 @@ We find that the kinetic energy increases by less than a factor of two from its 
 
 \ea{
 \subsection{3D verification of 2D results}
-We note briefly that our results from 2D hold in 3D: classic ICs exhibit a prohibitively long thermal rundown, but equilibrated FT and TT simulations are analogous in a volume-averaged sense.
+Timestepping through the thermal relaxation of a classic FT simulation is prohibatively expensive in 3D, even for our least turbulent Ra$_{\partial_z T} = 2.61 \times 10^9$ case.
+In order to timestep through the intense, early convective transient, we anticipate that such a simulation would require a coefficient resolution of $\gtrsim 512^3$, a factor of 64 times more coefficients than our comparable 2D case at 2048x1024.
+This classic FT 2D case took $1.21 \times 10^5$ cpu-hours, so we estimate that a classic FT case in 3D at this value of Ra$_{\partial_z T}$ would take O(10 million) cpu-hours.
+We found previously \cite{anders&all2018} at lower Ra$_{\partial_z T}$ that 3D classic FT cases exhibited the same thermal rundown as 2D cases.
+As a result, we will focus here on comparisons of FT and TT simulations in the evolved state through the use of TT-to-FT initial conditions.
+
+We find that equilibrated FT and TT simulations are analogous in a volume-averaged sense: measurements of Nu (31.4 for TT, 31.9 for FT) and Pe ($1.78 \times 10^3$ for both) are nearly indistinguishable.
 In Fig.~\ref{fig:rbc_3D_panels}, we show dynamical slices from 3D TT and TT-to-FT simulations.
 As in 2D, we find that the two simulations are nearly identical aside from their temperature fields, and so have focused on the temperature fields in this figure.
 Near the top boundary and in the interior, the TT and FT dynamics are quite similar.
