@@ -116,6 +116,8 @@ for k in fixed_trace.keys():
         restarted_trace[k] = np.concatenate((fixed/Nu_approx**(3./2), partial_restarted_trace[k][1:])) 
     elif 'T' in k:
         restarted_trace[k] = np.concatenate((fixed, partial_restarted_trace[k][1:]*Nu_approx)) 
+    elif 'sim_time' in k:
+        restarted_trace[k] = np.concatenate((fixed, fixed[-1] + (partial_restarted_trace[k][1:] - partial_restarted_trace[k][1])/np.sqrt(Nu_approx))) 
     else:
         restarted_trace[k] = np.concatenate((fixed, partial_restarted_trace[k][1:])) 
 
@@ -135,14 +137,14 @@ gs = gridspec.GridSpec(1000, 1000)
 subplots = [( (50 , 0  ),       300,    330),
             ( (350, 0  ),       300,    330),
             ( (650, 0  ),       300,    330),
-            ( (50 , 400),       450,    300),
-            ( (50 , 700),       450,    300),
-            ( (500 , 400),       450,    300),
-            ( (500 , 700),       450,    300),
+            ( (50 , 450),       450,    275),
+            ( (50 , 725),       450,    275),
+            ( (500, 450),       450,    275),
+            ( (500, 725),       450,    275),
             ]
 axs = [plt.subplot(gs.new_subplotspec(*args)) for args in subplots]
 for i in [0, 1, 2]:
-    axs[i].fill_between([restarted_trace['sim_time'][-1]-500, restarted_trace['sim_time'][-1]], 1e-2, 10, alpha=0.2, color='grey')
+#    axs[i].fill_between([restarted_trace['sim_time'][-1]-500, restarted_trace['sim_time'][-1]], 1e-2, 10, alpha=0.2, color='grey')
     axs[i].axvline(partial_restarted_trace['sim_time'][0], c='k', lw=0.5)
 
 
@@ -209,7 +211,7 @@ for i, field in enumerate(keys):
     factor = 1
     ax.fill_between(mx, 1e-16, factor*mp, color='olivedrab', alpha=0.5)
     ax.fill_between(rx, 1e-16, factor*rp, color='black', alpha=0.5)
-    ax.plot(mx, factor*mp, label='FT', color='olivedrab')
+    ax.plot(mx, factor*mp, label='Classic FT', color='olivedrab')
     ax.plot(rx, factor*rp, label='TT-to-FT', color='black')
     ax.set_yscale('log')
     ax.set_xlabel(labels[i])
@@ -241,6 +243,11 @@ for i in [3, 4]:
 for i in [4, 6]:
     axs[i].yaxis.set_ticks_position('right')
     axs[i].yaxis.set_label_position('right')
+
+axs[3].set_ylabel('P($T$)')
+axs[4].set_ylabel('P($\omega^2$)', rotation=-90, labelpad=15)
+axs[5].set_ylabel('P($wT$)')
+axs[6].set_ylabel('P($w$)', rotation=-90, labelpad=15)
 
 #Get rid of bad tick labels, etc.
 for i in [0, 1]:
