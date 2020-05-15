@@ -651,6 +651,14 @@ We study a TT case at Ra$_{\Delta T} = 2.75\times 10^9$, and an FT case at $\tex
 \footnote{\ea{At these parameters, we would be in the cellular convection regime of \citet{stellmach&all2014}, but our dynamics are different due to our choice of stress free boundary conditions.
 }}.
 These simulations employ stress free boundary conditions which allow for the generation of mean flows such as large scale vortices (LSV) \ea{\citep{stellmach&all2014, rubio&all2014, guervilly&all2014, guervilly&hughes2017, favier&all2014, favier&all2019, couston&all2019}}.
+\ea{
+Rotating convection is an excellent testbed for our TT-to-FT method.
+In rotating convection, at a fixed value of Ek, as Ra increases, flows transition from the rotationally constrained to the rotationally unconstrained regime.
+The scaling of Nu~vs.~Ra changes drastically between these two regimes, and is some blend of the two in the intermediary, marginally constrained regime.
+Furthermore, the precise scaling law attained in the rotationally constrained regime differs as Ek changes, and these scaling laws are less straightforward and well-understood than their non-rotationally-constrained counterparts \cite{king&all2009, schmitz&tilgner2009, zhong&ahlers2010, julien&all2012, stevens&all2013, ecke2015, grooms2015, grooms&whitehead2015,  plumley&julien2019}.
+As a result, the powerlaw used for Nu-based ICs would have to be a complex function of Ek, Ra, and boundary conditions for rotating RBC.
+However, TT-to-FT should work generally for all parameters, so long as a TT simulation can be performed.
+}
 
 In the left three panels of Fig.~\ref{fig:rotating_panels}, we compare the time evolution of the FT and TT cases.
 The top left panel shows the evolution of Ra$_{\partial_z T}$ and Ra$_{\Delta T}$.
@@ -686,10 +694,19 @@ At early times, the initially large value of Ra$_{\Delta T}$ in the FT case driv
 This powerful driving injects energy into the LSV, causing Pe to grow.
 As Ra$_{\Delta T}$ and convective driving decrease over time, the LSV saturates and then starts to wind down, leading to the ``bump'' in the Pe trace.
 
+\ea{
+We performed a TT-to-FT simulation starting from the evolved state of the TT simulation, and its time evolution matched that see in Fig.~\ref{fig:rbc_restart_description}.
+There was no long thermal evolutionary timescale.
+In the equilibrated classic FT simulation, we measured Nu$=7.90 \pm 0.01$, Pe$=1.70 \times 10^3$, and Ro$=0.115 \pm 0.006$.
+In the TT-to-FT simulation, we measured Nu$=7.83 \pm 0.01$, Pe$=1.65 \times 10^3$, and Ro=$0.114 \pm 0.005$.
+These Ro measurements are indistinguishable, Nu measurements are within 1\% of each other, and Pe measurements are within 3\% of each other, representing excellent agreement.
+}
+
 We once again find it important to briefly note the difference in computational cost between the FT and TT simulations conducted here.
 The TT simulation shown in the left panels of Fig.~\ref{fig:rotating_panels} only cost $2.6 \times 10^4$ cpu-hours.
-By comparison, the cost of the FT simulation shown in the same panels was \emph{two orders of magnitude larger}---$2.3 \times 10^6$ cpu-hours.
-The TT simulation's coefficient resolution was $128^3$.
+\ea{The TT-to-FT simulation cost an additional $4.34 \times 10^4$ cpu-hours.}
+By comparison, the cost of the FT simulation shown in the same panels was \emph{nearly two orders of magnitude larger}---$2.3 \times 10^6$ cpu-hours.
+The TT \ea{and TT-to-FT} simulations \ea{had a} coefficient resolution \ea{of} $128^3$.
 The FT simulation's initial resolution required to resolve the convective transient was $512\times384^2$ coefficients.
 We reduced the resolution to $256\times384^2$ after 100 freefall times, and then later to $128\times384^2$ after $\sim3.3 \times 10^3$ freefall times.
 At each of these times, we found that lowering the \emph{horizontal} coefficient resolution of the simulation did not reproduce the simulation solution with fidelity.
