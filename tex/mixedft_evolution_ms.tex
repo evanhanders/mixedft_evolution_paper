@@ -444,7 +444,7 @@ FT simulation dynamics evolve slowly during thermal relaxation, and these images
 \vspace{-0.25cm}
 \end{figure}
 
-\ea{\paragraph{TT-to-FT} Figs.~\ref{fig:rbc_evolution_dynamics} \& \ref{fig:rbc_scalar_comparisons} demonstrate that the statistically-stationary states of FT and TT simulations are similar in a qualitative sense and in their volume-averaged flow statistics.}
+\ea{\subsubsection{TT-to-FT} Figs.~\ref{fig:rbc_evolution_dynamics} \& \ref{fig:rbc_scalar_comparisons} demonstrate that the statistically-stationary states of FT and TT simulations are similar in a qualitative sense and in their volume-averaged flow statistics.}
 It should therefore be possible to use results from a TT simulation to quickly reach the relaxed state of a comparable FT simulation, saving up to an order of magnitude in computational cost.
 We show \ea{the results of using our TT-to-FT initial conditions procedure} in practice in Fig.~\ref{fig:rbc_restart_description}.
 In the left three panels, we display the temporal behavior of (top) Ra, (middle) the flux at the bottom boundary, and (bottom) the temperature difference between the top and bottom boundaries.
@@ -468,7 +468,7 @@ where $A$ is a flow quantity, $P(A)$ is the PDF of $A$, $\mu$ is the mean, $\sig
 \ea{We specifically report the Excess Kurtosis = Kurtosis $- 3$, to show how the Kurtosis of our PDFs differs from the Kurtosis of Normal Distributions.
 The PDFs of all FT simulations agree well regardless of initial conditions, suggesting that all initial conditions do achieve a similar statistically stationary state.
 
-\paragraph{Statistical Comparison of BCs and ICs}
+\subsubsection{Statistical Comparison of BCs and ICs}
 From the moments of these PDFs, we conclude that the primary difference between FT and TT simulations is in the temperature field, and that the vertical velocities and nonlinear transport is the same regardless of boundary conditions.
 The temperature PDF of the TT simulation unsurprisingly has a mean of 0.5, a Skewness close to zero (no asymmetry between upflows and downflows), and an appreciable Excess Kurtosis (the tails, which primarily sample the plumes, are more important than they are in a Normal Distribution).
 The FT temperature PDF, on the other hand, has a small but noticeable skewness (suggesting asymmetries between the F and T plates), and more Excess Kurtosis.
@@ -516,7 +516,7 @@ $w/(\Delta T)^{1/2}$ 	&	TT	& Classic	&	$-3.11 \times 10^{-5}$	&	$3.25 \times 10^
 
 
 \ea{
-\paragraph{Nu-based ICs}
+\subsubsection{Nu-based ICs}
 The time evolution of Nu-based ICs is similar to the time evolution of TT simulations with classic ICs, with a few caveats.
 The interior temperature gradient ($\grad_{\text{interior}}$ in Eqn.~\ref{eqn:nu_based_gradT}) is slightly positive at high Ra, which means that the interior is marginally thermally stable while the boundary layers are thermally unstable.
 During the convective transient, plumes from the boundaries eat away at this interior stratification over a few tens of freefall timescales, after which time the interior is well mixed and a classic roll solution is achieved.
