@@ -108,12 +108,12 @@ Yes, this scaling does seem to hold in our simulations.
 For us, the scaling law is closer to $\alpha = 0.285$ rather than $\alpha = 1/3$.
 This means that a Ra$^{-0.22}$ law is a better fit for our data than Ra$^{-1/4}$, but those are pretty hard to distinguish between.
 \item 
-We now conduct a series of test with what we call ``Nu-based'' initial conditions, using our $\alpha = 0.285$ (see sections II.C and III.C (TODO)).
+We now conduct a series of test with what we call ``Nu-based'' initial conditions, using our $\alpha = 0.285$ (see sections II.C and III.B).
 \vspace{0.5cm}
 \\
 One difficulty of using Nu-based initial conditions is that they are sensitive to the Nu vs.~Ra law that is used.
 For more complex simulations (e.g., rotationally- or magnetically- constrained RBC) where the Nu vs.~Ra laws are more contentious and less universally agreed-upon in the community, Nu-based ICs which presume the answer may be less reliable than TT-to-FT simulations.
-We highlight this in section V. (TODO)
+We highlight this in section V.
 \end{enumerate}
 
 
@@ -231,11 +231,11 @@ The paper, finally, does not read well, with many imprecise, naive or bold state
 ``For this choice of boundary conditions, the critical value of the Rayleigh number is Ra∂z T = 1296 for FT boundaries and Ra∆T = 1708 for TT boundaries'' is true only for horizontally infinite domains but not for finite aspect-ratio boxes.
 \end{myquotation}
 Thank you.
-We have computed the convective onset, and the critical wavenumber at Ra$_{\partial_z T} = 1296$ is $k \approx 2.5$, whereas the smallest $k$ that fits in our aspect ratio 2 domain is $\pi$.
-At $k = \pi$, the critical value is slightly higher, it is TODO, which is a small difference.
+We have computed the convective onset, and the FT critical wavenumber at Ra$_{\partial_z T} = 1295.78$ is $k = 2.5519$, the TT critical wavenumber is Ra$_{\Delta T} = 1707.76$ at $k = 3.1163$, but the smallest $k$ that fits in our aspect ratio 2 domain is $k = \pi$.
+At $k = \pi$, the critical value is slightly higher, Ra$_{\partial_z T} = 1357.57$ for FT boundaries and Ra$_{\Delta T} = 1707.94$ for TT boundaries, which is a small difference.
+We have made this caveat in the text.
 It is true that in FF boundary conditions, there is a long and broad minimum extending to $k = 0$, and there is a band instability.
 But, for these FT and TT boundary conditions, the critical curve has a well-defined minimum, and wavelength associated with that minimum is close to the minimum wavelength obtainable in our finite aspect ratio boxes.
-We have made this caveat in the paper.
 
 \begin{myquotation}
 ``Dynamical measurements taken during the thermal relaxation of an FT simulation may be misleading.'' is not clear at all; if one investigates a transient phase studying the thermal relaxation phase is perfectly fine while, if one is interested in the statistical steady state, considering the thermal relaxation phase is wrong (not misleading). 
