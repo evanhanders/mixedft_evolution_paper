@@ -42,10 +42,10 @@ The text of the ``changing timescales'' section, previously in the results, has 
 \item The ``Results'' section has been broken up into two major sections.
 Section III focuses on the time evolution of FT simulations which employ different initial conditions, and it compares their equilibrated states to TT simulations.
 Section IV focuses on asymmetries in the flows introduced by the boundary conditions.
-\item We have computed a 3D, non rotating case.
+\item We have computed a 3D, non-rotating case.
 Its results are presented in section III.D, along with a new figure, Fig.~4.
 \end{enumerate}
-Aside from these major changes and reorganizations, we have cleaned up the text throughout the paper for clarity, including in the abstract.
+Aside from these major changes and reorganizations, we have cleaned up the text throughout the paper for clarity, including the abstract.
 We have included a ``redlined'' version of the manuscript in this resubmission which highlights the changes we have made to the text of the manuscript.
 
 We feel that the clarity and scientific content of the paper have been greatly improved by the referee process. 
@@ -114,7 +114,7 @@ Yes, this scaling does seem to hold in our simulations.
 For us, the scaling law is closer to $\alpha = 0.285$ rather than $\alpha = 1/3$.
 This means that a Ra$^{-0.22}$ law is a better fit for our data than Ra$^{-1/4}$, but those are pretty hard to distinguish between.
 \item 
-We now conduct a series of test with what we call ``Nu-based'' initial conditions, using our $\alpha = 0.285$ (see sections II.C and III.B).
+We now conduct a series of tests with what we call ``Nu-based'' initial conditions, using our $\alpha = 0.285$ (see sections II.C and III.B).
 \vspace{0.5cm}
 \\
 One difficulty of using Nu-based initial conditions is that they are sensitive to the Nu vs.~Ra law that is used.
@@ -131,8 +131,8 @@ Does this scaling law hold? It seems not completely crazy according to your figu
 \end{myquotation}
 Deriving the equilibration time is a bit tricky, because the flux leaving through the top of the domain constantly evolves over time.
 We've added a derivation of this timescale and a discussion of this subtlety to a new section II.D.
-In practice, we find that this definition of an equilibration time \emph{over}estimates the relaxational timescale.
-We find that the relaxational time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so at the end of section III.C.
+In practice, we find that this definition of an equilibration time \emph{over}estimates the thermal relaxation timescale.
+We find that the thermal relaxation time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so at the end of section III.C.
 
 \begin{myquotation}
 Comments:
@@ -163,8 +163,8 @@ We have specified this in the text.
 -       P.9, lettering and numbering: it is strange to suddenly have a subsubsection “1. Changing Timescales” at the very end of this subsection C.
 \end{myquotation}
 Agreed.
-The info in this subsection has been relocated to the section II.D.
-Section III has been split into a few sections (one each for the different IC choices, and one for 3D).
+The information in this subsection has been relocated to the section II.D.
+Section III has been split into a few sections: classic-ICs, ``fast'' ICs (Nu-based and TT-to-FT), discussion of 2D results, and a brief exploration of 3D non-rotating results.
 
 \begin{myquotation}
 -       P.10: you don’t prove the validity of your results in 3D in the non-rotating case. 
@@ -196,7 +196,7 @@ They investigate mostly 2D cases although they consider also 3D configurations b
 We thank the referee for their report.
 We agree that it was confusing to have a rotating 3D case with different boundary conditions.
 We have now conducted a non-rotating 3D case with no-slip boundaries, analagous to our 2D setup.
-The results of this are presented in section III.D and confirm the prior 2D results.
+The results of this non-rotating 3D case are presented in section III.D and confirm the prior 2D results.
 In section V, for the rotating case, we provide more context to show that rotating RBC is a testbed for the TT-to-FT method.
 
 \begin{myquotation}
@@ -214,7 +214,7 @@ In a flow with imposed boundary conditions (T-T) the mean temperature is known a
 On the other hand, when the heat flux is assigned, the mean temperature is unknown and equilibrating the bulk takes a time $\sim\sqrt{Ra/Pr}/Nu$. 
 \end{myquotation}
 Thank you.
-We find that the relaxational time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so in section II.D.
+We find that the thermal relaxation time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so in section II.D.
 Sections II.C and II.D now discusses how initial conditions affect thermal relaxation timescales.
 
 \begin{myquotation}
@@ -229,7 +229,7 @@ We discuss this in section II.D.
 The analysis of the rotating Rayleigh-B\'{e}nard cases is very qualitative and it overlooks most of the relevant literature.
 \end{myquotation}
 Our narrow goal in including the rotating example is to show that timescale lessons in non-rotating convection apply to rotating convection.
-Therefore, our TT-to-FT initial conditions can save a great deal of time in the rotating case where Nu vs.~Ra powerlaws are less well agreed-upon by the community, and the evolved Delta T is truly unknown.
+Therefore, our TT-to-FT initial conditions can save a great deal of time in the rotating case where Nu vs.~Ra power laws are less well agreed-upon by the community, and the evolved Delta T is truly unknown.
 We have expanded our references to the rotating RBC literature.
 
 \begin{myquotation}
@@ -237,11 +237,12 @@ The paper, finally, does not read well, with many imprecise, naive or bold state
 ``For this choice of boundary conditions, the critical value of the Rayleigh number is Ra∂z T = 1296 for FT boundaries and Ra∆T = 1708 for TT boundaries'' is true only for horizontally infinite domains but not for finite aspect-ratio boxes.
 \end{myquotation}
 Thank you.
-We have computed the convective onset, and the FT critical wavenumber at Ra$_{\partial_z T} = 1295.78$ is $k = 2.5519$, the TT critical wavenumber is Ra$_{\Delta T} = 1707.76$ at $k = 3.1163$, but the smallest $k$ that fits in our aspect ratio 2 domain is $k = \pi$.
-At $k = \pi$, the critical value is slightly higher, Ra$_{\partial_z T} = 1357.57$ for FT boundaries and Ra$_{\Delta T} = 1707.94$ for TT boundaries, which is a small difference.
+We have computed the convective onset, and the FT critical wavenumber at Ra$_{\partial_z T} = 1295.78$ is $k = 2.5519$, while the TT critical wavenumber at Ra$_{\Delta T} = 1707.76$ is $k = 3.1163$.
+But the smallest $k$ that fits in our aspect ratio 2 domain is $k = \pi$.
+At $k = \pi$, the critical Rayleigh is slightly higher, Ra$_{\partial_z T} = 1357.57$ for FT boundaries and Ra$_{\Delta T} = 1707.94$ for TT boundaries, which is a small difference.
 We have made this caveat in the text.
 It is true that in FF boundary conditions, there is a long and broad minimum extending to $k = 0$, and there is a band instability.
-But, for these FT and TT boundary conditions, the critical curve has a well-defined minimum, and wavelength associated with that minimum is close to the minimum wavelength obtainable in our finite aspect ratio boxes.
+But, for these FT and TT boundary conditions, the critical curve has a well-defined minimum, and the wavelength associated with that minimum is close to the minimum wavelength obtainable in our finite aspect ratio boxes.
 
 \begin{myquotation}
 ``Dynamical measurements taken during the thermal relaxation of an FT simulation may be misleading.'' is not clear at all; if one investigates a transient phase studying the thermal relaxation phase is perfectly fine while, if one is interested in the statistical steady state, considering the thermal relaxation phase is wrong (not misleading). 
