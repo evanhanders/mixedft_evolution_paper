@@ -418,7 +418,7 @@ FT simulation dynamics evolve slowly during thermal relaxation, and these images
 	Nu vs.~Ra is compensated by $(0.138 \text{Ra}_{\Delta T}^{0.285})$, the best-fit reported by ref.~\cite{johnston&doering2009}.
 	Pe vs.~Ra is compensated by a Ra$_{\Delta T}^{1/2}$ law, the anticipated scaling of Pe \cite{ahlers&all2009}.
 	The orange trace is the time evolution of the FT case from the left panels with the arrows showing the sense of time.
-	The yellow trace shows the evolution of an FT case with Ra$_{\Delta T} = 10^8$.
+	The yellow trace shows the evolution of an FT case with Ra$_{\partial_z T} = 2.61 \times 10^9$.
 	Purple circles are the measured values of Nu and Pe in our TT simulations (reported in appendix \ref{app:table}); error bars show the standard deviation of the sample mean and are smaller than the marker in all cases.
 	The purple circles filled in with yellow and orange are the TT comparisons for the evolved states of the two FT cases.
 	Black crosses show comparison TT simulations as reported by ref.~\cite{zhu&all2018}.
@@ -627,7 +627,7 @@ However, these differences do vanish in the interior and do not seem to affect t
 \begin{figure}
 \includegraphics[width=\textwidth]{./figs/rbc_dynamics_asymmetries.pdf}
 \caption{ 
-	(Left panel) PDFs of temperature measurements of a TT-to-FT (orange) and TT (purple) case with Ra$_{\Delta T} = 10^{10}$ are displayed.
+	(Left panel) PDFs of temperature measurements of a TT-to-FT (orange, Ra$_{\partial_z T} = 9.51 \times 10^{11}$) and TT (purple, Ra$_{\Delta T} = 10^{10}$) simulation are displayed.
 	The right tail of the distribution (near the hot fixed-flux boundary for the FT case) shows that fixed flux boundaries achieve more extreme temperature events than fixed temperature boundaries.
 	(Middle panel) A snapshot of the temperature anomaly in the FT simulation.
 	Zoomed in views of the regions outlined in black boxes are shown in the right two panels.
@@ -686,9 +686,9 @@ After achieving this peak value, Pe monotonically decreases toward its relaxed s
 \begin{figure}[t!]
 \includegraphics[width=\textwidth]{./figs/rotating_panels.pdf}
 \caption{ 
-	(Left three panels) Time traces of scalar quantities in a \ea{classic-IC} FT (orange) and TT (purple) simulation are shown.
+	(Left three panels) Time traces of scalar quantities in a \ea{classic-IC} FT (orange, $\text{Ra}_{\partial_z T} = 2.1 \times 10^{10}$) and TT (purple, Ra$_{\Delta T} = 2.75\times 10^9$) simulation are shown.
 	All traces have been averaged over a rolling window of 50 freefall time units to increase the clarity of the evolutionary trend.
-	(Top panel) Ra, normalized by the input Ra$_{\Delta T}$ = 2.75$\,\times 10^9$ of the TT simulation.
+	(Top panel) Ra, normalized by the input Ra$_{\Delta T}$ of the TT simulation.
 	(Middle panel) Ro evolution of both simulations; the bulk flow of the FT simulation transitions from a marginally rotationally unconstrained state to a constrained state, while the TT simulation is always rotationally constrained.
 	(Bottom panel) Pe evolution of the simulations is shown, normalized by the mean value measured over the last 500 freefall times of the TT simulation.
 	(Upper right panel) Parameter space of Nu vs.~Ra$_{\Delta T}$ in rotating convection.
