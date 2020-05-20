@@ -1,0 +1,31 @@
+#PBS -S /bin/bash
+#PBS -N RB_TT_ra1.00e8_3D_bro
+#PBS -l select=74:ncpus=28:mpiprocs=28:model=bro_ele
+#PBS -l walltime=96:00:00
+#PBS -j oe
+#PBS -q long
+
+
+
+cd $PBS_O_WORKDIR
+
+RA=1.00e8
+NZ=256
+NX=384
+
+
+date
+mpiexec_mpt -np 2048 ~/.python3 rayleigh_benard.py \
+        --Rayleigh=$RA  \
+        --nz=$NZ        \
+        --nx=$NX        \
+        --ny=$NX        \
+        --run_time_wall=95 \
+        --run_time_buoy=1000 \
+        --TT \
+        --safety=0.4 \
+        --mesh=32,64 \
+        --3D \
+        --label=bro \
+         > out.TT_3D.ra$RA.$PBS_JOBID
+date

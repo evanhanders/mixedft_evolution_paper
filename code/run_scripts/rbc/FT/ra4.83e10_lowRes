@@ -23,7 +23,7 @@ mpiexec_mpt -np 512 ~/.python3 rayleigh_benard.py \
         --run_time_buoy=20000 \
         --safety=0.7 \
         --RK443 \
-        --label=lowRes \
+        --label=lowRes3 \
         --restart=./mixedFT_paper_runs/rayleigh_benard_2D_mixedFT_noSlip_Ra4.83e10_Pr1_a2_lowRes2/final_checkpoint/final_checkpoint_s1.h5 \
          > out.mixed_ft.lowRes.ra$RA.$PBS_JOBID
 date

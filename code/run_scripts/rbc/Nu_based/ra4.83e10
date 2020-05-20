@@ -1,7 +1,7 @@
 #PBS -S /bin/bash
-#PBS -N RB_fixed_ra1.00e9
+#PBS -N RB_FT_smart_ra4.83e10
 #PBS -l select=19:ncpus=28:mpiprocs=28:model=bro_ele
-#PBS -l walltime=120:00:00
+#PBS -l walltime=72:00:00
 #PBS -j oe
 #PBS -q long
 
@@ -9,7 +9,7 @@
 
 cd $PBS_O_WORKDIR
 
-RA=1.00e9
+RA=4.83e10
 NZ=1024
 NX=2048
 
@@ -19,10 +19,10 @@ mpiexec_mpt -np 512 ~/.python3 rayleigh_benard.py \
         --Rayleigh=$RA  \
         --nz=$NZ        \
         --nx=$NX        \
-        --run_time_wall=119 \
+        --run_time_wall=71 \
         --run_time_buoy=1000 \
-        --TT \
         --safety=0.7 \
         --RK443 \
-         > out.TT.ra$RA.$PBS_JOBID
+        --smart_ICs \
+         > out.FT_smart.ra$RA.$PBS_JOBID
 date

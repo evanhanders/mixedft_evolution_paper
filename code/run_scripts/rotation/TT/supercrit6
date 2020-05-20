@@ -28,7 +28,7 @@ mpiexec_mpt -np 256 ~/.python3 rotating_rayleigh_benard.py \
         --aspect=$AR \
         --safety=0.4 \
         --root_dir=$OUT_DIR \
-        --fixed_t \
+        --TT \
         --label=supercrit6 \
         --restart=rotating_outputs/rotating_rayleigh_benard_fixedT_stressFree_Ek1e-6_Ra5.50e9_Pr1_a4.81e-1_supercrit6/final_checkpoint/final_checkpoint_s1.h5 \
          > $OUT_DIR\/out.fixedT.supercrit6.ra$RA.ek$EK.$PBS_JOBID

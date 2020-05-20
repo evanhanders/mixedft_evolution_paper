@@ -1,7 +1,7 @@
 #PBS -S /bin/bash
-#PBS -N RB_fixed_ra1.00e10
+#PBS -N RB_TT-to-FT_ra9.51e11
 #PBS -l select=37:ncpus=28:mpiprocs=28:model=bro_ele
-#PBS -l walltime=48:00:00
+#PBS -l walltime=120:00:00
 #PBS -j oe
 #PBS -q long
 
@@ -9,7 +9,7 @@
 
 cd $PBS_O_WORKDIR
 
-RA=1.00e10
+RA=9.51e11
 NZ=2048
 NX=4096
 
@@ -19,10 +19,11 @@ mpiexec_mpt -np 1024 ~/.python3 rayleigh_benard.py \
         --Rayleigh=$RA  \
         --nz=$NZ        \
         --nx=$NX        \
-        --run_time_wall=47 \
+        --run_time_wall=119 \
         --run_time_buoy=1000 \
-        --TT \
         --safety=0.7 \
         --RK443 \
-         > out.TT.ra$RA.$PBS_JOBID
+        --TT_to_FT=./mixedFT_paper_runs/rayleigh_benard_2D_fixedT_noSlip_Ra1.00e10_Pr1_a2_restarted6/final_checkpoint/final_checkpoint_s1.h5 \
+        --TT_to_FT_Nu=95.1 \
+         > out.TT-to-FT.ra$RA.$PBS_JOBID
 date

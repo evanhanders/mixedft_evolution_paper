@@ -1,0 +1,32 @@
+#PBS -S /bin/bash
+#PBS -N RB_TT-to-FT_smart_ra3.1e9_3D_bro
+#PBS -l select=74:ncpus=28:mpiprocs=28:model=bro_ele
+#PBS -l walltime=96:00:00
+#PBS -j oe
+#PBS -q long
+
+
+
+cd $PBS_O_WORKDIR
+
+RA=3.1e9
+NZ=256
+NX=384
+
+
+date
+mpiexec_mpt -np 2048 ~/.python3 rayleigh_benard.py \
+        --Rayleigh=$RA  \
+        --nz=$NZ        \
+        --nx=$NX        \
+        --ny=$NX        \
+        --run_time_wall=95 \
+        --run_time_buoy=450 \
+        --safety=0.4 \
+        --mesh=32,64 \
+        --3D \
+        --TT_to_FT=./rayleigh_benard_3D_TT_NS_Ra1.00e8_Pr1_a2_bro/final_checkpoint/final_checkpoint_s1.h5 \
+        --TT_to_FT_Nu=31 \
+        --label=bro \
+         > out.TT-to-FT_3D.ra$RA.$PBS_JOBID
+date
