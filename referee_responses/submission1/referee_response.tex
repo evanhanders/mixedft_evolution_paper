@@ -24,26 +24,27 @@ $\,$\newline
 \begin{singlespace}
 We return our revised manuscript, ``Convective dynamics with mixed temperature boundary conditions: why thermal relaxation matters and how to accelerate it.'' 
 We thank the referees for their time and effort in reviewing our work; we would like to particularly thank referee 1 for their careful and thoughtful comments.
-We have addressed the questions and concerns of the referees, and we rebut the claim of referee 2 that our results are not novel.
+We have addressed the questions and concerns of the reports, and we rebut the claim of report 2 that our results are not novel.
 
-This version of the manuscript has been substantially edited and logically reorganized compared to the previous version.
-However, the main results, conclusions, and figures are largely the same.
+In addressing the questions within the reports, we have edited, expanded, and reorganized portions of the manuscript.
+The main results and conclusions are the same.
 We would like to point out a few major changes in this version of the manuscript:
 \begin{enumerate}
-\item The abstract has been largely rewritten for clarity.
 \item The ``Simulation Details'' section has been broken up into subsections, and two new subsections have been added. These discuss:
 \begin{enumerate}
 \item The different initial conditions used in the simulations in this work.
 The description of our TT-to-FT procedure has been moved here and expanded.
-Per the advice of referee 1, we have also added and studied new ``Nu-based'' boundary conditions.
+Per the advice of report 1, we have also added and studied ``Nu-based'' initial conditions.
 \item Evolutionary and dynamical timescales.
 The text of the ``changing timescales'' section, previously in the results, has been moved here.
 \end{enumerate}
 \item The ``Results'' section has been broken up into two major sections.
 Section III focuses on the time evolution of FT simulations which employ different initial conditions, and it compares their equilibrated states to TT simulations.
 Section IV focuses on asymmetries in the flows introduced by the boundary conditions.
-\item We have computed a 3D, non-rotating case.
+\item While reading the reports, we realized it was confusing to have a 3D case in which many things (rotation, boundary conditions) were different from the 2D non-rotating simulations.
+We have computed a 3D, non-rotating case which has the same boundary conditions as the 2D work, making this a direct comparison to the main body of the work.
 Its results are presented in section III.D, along with a new figure, Fig.~4.
+We continue to include the rotating case in section V, as the rotating system is an interesting use case for the TT-to-FT technique.
 \end{enumerate}
 Aside from these major changes and reorganizations, we have cleaned up the text throughout the paper for clarity, including the abstract.
 We have included a ``redlined'' version of the manuscript in this resubmission which highlights the changes we have made to the text of the manuscript.
@@ -85,8 +86,8 @@ Section II (``Simulation Details'') now contains a subsection dedicated to initi
 \begin{myquotation}
 Your chosen initial conditions are a linear temperature from 1 at the bottom to 0 at the top, and I guess, zero velocity everywhere and matching hydrostatic pressure (that should be mentioned in the text). 
 \end{myquotation}
-This has now been clarified in section II.D see the ``Additional ICs'' paragraph).
-The linear temperature profile is now also referred to as ``Classical ICs''.
+This has now been clarified in section II.D; temperature initial conditions are in II.D.1, and the additional initial conditions are in II.D.2.
+The linear temperature profile is now also referred to as ``Classic ICs''.
 
 \begin{myquotation}
 Those initial conditions are obviously wrong for the FT simulations whose overall temperature contrast is much smaller than 1. 
@@ -114,7 +115,7 @@ Yes, this scaling does seem to hold in our simulations.
 For us, the scaling law is closer to $\alpha = 0.285$ rather than $\alpha = 1/3$.
 This means that a Ra$^{-0.22}$ law is a better fit for our data than Ra$^{-1/4}$, but those are pretty hard to distinguish between.
 \item 
-We now conduct a series of tests with what we call ``Nu-based'' initial conditions, using our $\alpha = 0.285$ (see sections II.C and III.B).
+We now conduct select simulations with what we call ``Nu-based'' initial conditions, using our $\alpha = 0.285$ (see sections II.C and III.B).
 \vspace{0.5cm}
 \\
 One difficulty of using Nu-based initial conditions is that they are sensitive to the Nu vs.~Ra law that is used.
@@ -132,7 +133,7 @@ Does this scaling law hold? It seems not completely crazy according to your figu
 Deriving the equilibration time is a bit tricky, because the flux leaving through the top of the domain constantly evolves over time.
 We've added a derivation of this timescale and a discussion of this subtlety to a new section II.D.
 In practice, we find that this definition of an equilibration time \emph{over}estimates the thermal relaxation timescale.
-We find that the thermal relaxation time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so at the end of section III.C.
+We find that the thermal relaxation time is $C (\sqrt{\text{Ra Pr}}/\text{Nu})$, where $C$ is a constant of order 1, and have said so at the end of section II.D.
 
 \begin{myquotation}
 Comments:
@@ -163,7 +164,7 @@ We have specified this in the text.
 -       P.9, lettering and numbering: it is strange to suddenly have a subsubsection “1. Changing Timescales” at the very end of this subsection C.
 \end{myquotation}
 Agreed.
-The information in this subsection has been relocated to the section II.D.
+The information in this subsection has been relocated to section II.D.
 Section III has been split into a few sections: classic-ICs, ``fast'' ICs (Nu-based and TT-to-FT), discussion of 2D results, and a brief exploration of 3D non-rotating results.
 
 \begin{myquotation}
