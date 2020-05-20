@@ -463,13 +463,14 @@ where $A$ is a flow quantity, $P(A)$ is the PDF of $A$, $\mu$ is the mean, $\sig
 We specifically report the Excess Kurtosis = Kurtosis $- 3$, to show how the Kurtosis of our PDFs differs from the Kurtosis of Normal Distributions.
 The PDFs of all FT simulations agree well regardless of initial conditions, suggesting that all initial conditions do achieve a similar statistically stationary state.
 
+\vspace{-0.5cm}
 \subsubsection{Statistical Comparison of BCs and ICs}
 From the moments of the PDFs presented in table \ref{table:pdf_values}, we conclude that FT and TT simulations are indistinguishable outside of their temperature fields.
 The temperature PDF of the TT simulation unsurprisingly has a mean of 0.5, a Skewness close to zero (no asymmetry between upflows and downflows), and an appreciable Excess Kurtosis (the tails, which primarily sample the plumes, are more important than they are in a Normal Distribution).
 The FT temperature PDF, on the other hand, has a mean slightly larger than 0.5, a small but noticeable skewness (suggesting asymmetries between the F and T plates), and more Excess Kurtosis (implying more extreme plumes).
 It is also interesting that, in all cases, the vertical velocity, $w$, and the vertical heat transport, $wT$, demonstrate PDFs whose tails are well-described by normal distributions.
 
-\begin{table}[b!]
+\begin{table}[t!]
 \vspace{-0.5cm}
 \caption{ 
 	The first four moments, as defined in Eqn.~\ref{eqn:pdf_moments}, of each of the PDFs shown in Fig.~\ref{fig:rbc_restart_description} are displayed below for the TT case with Ra$_{\Delta T} = 10^9$ and all FT cases with Ra$_{\partial_z T} = 4.83\times 10^{10}$.
@@ -716,7 +717,7 @@ As Ra$_{\Delta T}$ and convective driving decrease over time, the LSV saturates 
 
 We performed a TT-to-FT simulation starting from the evolved state of the TT simulation, and its time evolution matched that seen in Fig.~\ref{fig:rbc_restart_description}.
 There was no long thermal evolutionary timescale.
-In the equilibrated classic FT simulation, we measured Nu$=7.90 \pm 0.01$, Pe$=1.70 \times 10^3$, and Ro$=0.115 \pm 0.006$.
+In the equilibrated classic-IC FT simulation, we measured Nu$=7.90 \pm 0.01$, Pe$=1.70 \times 10^3$, and Ro$=0.115 \pm 0.006$.
 In the TT-to-FT simulation, we measured Nu$=7.83 \pm 0.01$, Pe$=1.65 \times 10^3$, and Ro=$0.114 \pm 0.005$.
 These Ro measurements are indistinguishable, Nu measurements are within 1\% of each other, and Pe measurements are within 3\% of each other, representing excellent agreement.
 
@@ -867,7 +868,7 @@ TT	&	Classic		&	$1.834 \times 10^{10}$	&	256$^3$				&	971.9		&	$1.84 \times 10^5
 \end{center}
 \end{table}
 
-
+\newpage
 \begin{thebibliography}{51}%
 \makeatletter
 \providecommand \@ifxundefined [1]{%
