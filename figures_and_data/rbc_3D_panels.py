@@ -178,17 +178,17 @@ for i, c in zip((0, 3, 7, 1, 4, 8, 2, 5, 9), (*[top_border_color]*3, *[middle_bo
 
 #PDF plots
 for i, bc in enumerate(data.keys()):
-    axs[6].plot(        data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i], label=bc)
-    axs[6].fill_between(data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
+    axs[6].plot(        data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i], label=bc, zorder=1-i)
+    axs[6].fill_between(data[bc]['pdf_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True, zorder=1-i)
 
-    axs[7].plot(        data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[7].fill_between(data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
+    axs[7].plot(        data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         c=colors[i], zorder=1-i)
+    axs[7].fill_between(data[bc]['pdf_xy_T near top_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near top_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True, zorder=1-i)
 
-    axs[8].plot(        data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[8].fill_between(data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
+    axs[8].plot(        data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         c=colors[i], zorder=1-i)
+    axs[8].fill_between(data[bc]['pdf_xz_T_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xz_T_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True, zorder=1-i)
 
-    axs[9].plot(        data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         c=colors[i])
-    axs[9].fill_between(data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True)
+    axs[9].plot(        data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],               data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         c=colors[i], zorder=1-i)
+    axs[9].fill_between(data[bc]['pdf_xy_T near bot 1_xs'] /data[bc]['delta_T_mean'],        1e-16, data[bc]['pdf_xy_T near bot 1_pdf']*data[bc]['delta_T_mean'],         color=colors[i], alpha=0.5, rasterized=True, zorder=1-i)
 
 
 axs[6].legend(loc='best', fontsize=8)
