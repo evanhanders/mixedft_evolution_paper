@@ -1,0 +1,99 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[aps, 11pt, singlecolumn]{revtex4-1} % Set the font size (10pt, 11pt and 12pt) and paper size (letterpaper, a4paper, etc)
+\usepackage{natbib}
+\bibliographystyle{apsrev}
+\usepackage{setspace}
+
+\begin{document}
+\newenvironment{myquotation}{
+\begin{quotation}
+\itshape
+}{ 
+\end{quotation}
+}
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT
+%----------------------------------------------------------------------------------------
+\noindent
+Dear Emmanuel,
+$\,$\newline
+
+\begin{singlespace}
+
+We return our revised manuscript, ``Convective dynamics with mixed temperature boundary conditions: why thermal relaxation matters and how to accelerate it.'' 
+We thank the referee(s) for their time and effort in reviewing our work.
+We have addressed the comments in the report, making changes that we describe inline in our response to the report.
+We have additionally carefully read through the manuscript and made very small corrections (fixing typos, etc.) throughout the work.
+No major changes have been made; all figures, tables, and simulation data are identical to the previous version of the manuscript.
+
+We hope that the small clarifications which have been made in this round of the refereeing process are satisfactory, and we feel that they once again improve the quality and clarity of the manuscript.
+Below we include our response to the referee report; the original text of the reports is included in italics, and our response follows inline in unitalicized blocks.
+
+$\,$\newline
+\noindent
+Sincerely,
+
+Evan H. Anders, Geoffrey M. Vasil, Benjamin P. Brown, and Lydia Korre
+
+
+
+\newpage
+\noindent
+\Large{\textbf{Response to first report:}}\newline$\,$\newline\indent
+
+\begin{myquotation}
+The authors have satisfyingly answered all the questions raised in my first report. 
+As I already wrote, I think the results presented in this paper are new, interesting, and useful. 
+I recommend its publication, with only a few additional comments below.
+\end{myquotation}
+We would again like to thank the referee for their attention to detail and constructive criticism throughout this whole refereeing process.
+We hope that the small changes to the manuscript, described inline to the comments below, sufficiently clear up any confusion and concerns.
+
+\begin{myquotation}
+- page 4: the choice of the letter ``w(z)" for the windowing function is not the best option, since w(z) is already the vertical velocity page 3.
+\end{myquotation}
+Thank you.
+We have changed $w$ to $\xi$, which should not be used elsewhere in the manuscript.
+
+\begin{myquotation}
+- figure 3, and more generally: how do you define the ``FT final state" or ``evolved state"? 
+Would the PDF and statistics in table I even better agree if the simulations were performed for longer computing times?
+\end{myquotation}
+We define the evolved or final state as the state in which a rolling time-average of $\Delta T$ (over a couple hundred freefall times) is within 1\% of its final value.
+We generally evolve our classic-IC FT simulations at least a thousand evolved freefall times past this point, so that we can be certain that we are in an evolved or relaxed state.
+We have added this definition to the text in section III.B.1.
+
+Given a very long sampling window (thousands of freefall times), we would expect all FT simulations at the same input parameters to have identical output probability distributions, at least for our choices of $\Gamma = 2$ and no-slip boundaries.
+While these are not often practical amounts of time to run simulations for, we have made a note of this in the text in section III.B.2.
+We would also expect the PDF of e.g., the vertical heat transport of FT and TT simulations to be identical, but this will only be the case if the Ra$_{\partial_z T}$ of the FT simulation is properly chosen so that it exactly matches the infinite time-average of Ra$_{\partial_z T}$ in the corresponding TT simulation (at a given Ra$_{\Delta T}$).
+
+\begin{myquotation}
+- page 12: I am not sure to agree with your ``unsurprisingly"... With your periodic horizontal boundary conditions, I would expect to find the same PDF for the vertical slice at y=0 as for the whole volume. 
+It might show that statistics are not fully converged for the vertical slice, no?
+\end{myquotation}
+Thank you.
+Upon further examination, we agree with you that in a fully statistically converged sample which includes the full range of dynamics available to the simulation, a PDF from the slice at $y = 0$ should be identical to the PDF over the full volume.
+Indeed, our FT PDFs for $y = 0$ and over the full volume are essentially identical.
+The TT PDF at $y = 0$ shows excess probability in the tails, because we happened to capture a range of time in the simulation during which plume launching sites are clustered near $y = 0$, thus skewing our distribution.
+We have explained this in the text as a reason to be cautious when gathering statistics from 2D slices of a full 3D domain.
+
+\begin{myquotation}
+- caption of figure 5: ``the right panels examines the top boundary layers" $\rightarrow$ examine
+\end{myquotation}
+Thank you.
+We have fixed the singular/plural problem and changed ``examine'' to ``displays'' in this sentence.
+
+\begin{myquotation}
+- page 16: it might worth defining the ``Kelvin-Helmholtz timescale" for PRF readers.
+\end{myquotation}
+Thank you, good point.
+We have now done so.
+
+
+
+\end{singlespace}
+\bibliography{../../biblio.bib}
+\end{document}

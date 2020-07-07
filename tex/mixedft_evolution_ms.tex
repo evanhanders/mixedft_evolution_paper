@@ -265,15 +265,17 @@ and use this law along with Eqn.~\ref{eqn:evolved_nu} to predict the evolved tem
 Our ``Nusselt-based'' initial conditions construct an initial temperature profile which is consistent with the bottom fixed-flux boundary condition but whose initial $\Delta T$ is determined by a specific Nu~vs.~Ra scaling law.
 The vertical temperature derivative is,
 \begin{equation}
-\frac{\partial T_N}{\partial z} = (\grad T)_{\text{interior}} + w(z)[-1 - (\grad T)_{\text{interior}}].
+\frac{\partial T_N}{\partial z} = (\grad T)_{\text{interior}} + \ea{\xi}(z)[-1 - (\grad T)_{\text{interior}}].
 \label{eqn:nu_based_gradT}
 \end{equation}
 We set the initial temperature field by integrating Eqn.~\ref{eqn:nu_based_gradT} according to the top (fixed-temperature) boundary condition.
-Discontinuous profiles are unstable in our spectral methods, so we utilize a smooth windowing function, $w(z)$, to set the temperature gradient to $-1$ near the boundaries,
+Discontinuous profiles are unstable in our spectral methods, so we utilize a smooth windowing function, $\ea{\xi}(z)$, to set the temperature gradient to $-1$ near the boundaries,
 $$
-w(z) = 1 + \frac{1}{2}\left(\text{erf}\left[\frac{z - (0.5 - 2\delta_w)}{0.5\delta_w}\right] - \text{erf}\left[\frac{z - (-0.5 + 2\delta_w)}{0.5\delta_w}\right]\right).
+\ea{
+\xi(z) = 1 + \frac{1}{2}\left(\text{erf}\left[\frac{z - (0.5 - 2\delta_\xi)}{0.5\delta_\xi}\right] - \text{erf}\left[\frac{z - (-0.5 + 2\delta_\xi)}{0.5\delta_\xi}\right]\right).
+}
 $$
-Here, $\delta_w = -\Delta T / 2$ is an estimate of the boundary layer width and the temperature gradient in the interior of the domain, $(\grad T)_{\text{interior}}$, is determined by setting $\int \partial_z T_N dz = \Delta T$.
+Here, $\ea{\delta_\xi} = -\Delta T / 2$ is an estimate of the boundary layer width and the temperature gradient in the interior of the domain, $(\grad T)_{\text{interior}}$, is determined by setting $\int \partial_z T_N dz = \Delta T$.
 In this work, we use the best-fit law of ref.~\cite{johnston&doering2009} with $A = 0.138$ and $\alpha = 0.285$ when constructing Nu-based ICs.
 
 
@@ -462,14 +464,23 @@ In Table~\ref{table:pdf_values}, we display the first four moments of each of th
 where $A$ is a flow quantity, $P(A)$ is the PDF of $A$, $\mu$ is the mean, $\sigma$ is the standard deviation, $\Delta A$ is the spacing between the discrete PDF bins, and $i$ is the index of the bin.
 We specifically report the Excess Kurtosis = Kurtosis $- 3$, to show how the Kurtosis of our PDFs differs from the Kurtosis of Normal Distributions.
 The PDFs of all FT simulations agree well regardless of initial conditions, suggesting that all initial conditions do achieve a similar statistically stationary state.
+\ea{
+We consider the classic-IC FT simulation to be in its evolved, relaxed state once a rolling temporal average of $\Delta T$ over a couple hundred of freefall time units converges to within 1\% of its final value.
+We run our classic-IC FT simulations for at least a thousand $\tau_{\text{ff, ev}}$ past this point to ensure that the simulations are converged, and we gather statistics from the latest, most-converged simulation times that are available.
+TT-to-FT and Nu-based IC FT simulations are only evolved for 1000 $\tau_{\text{ff, ev}}$, and we gather statistics from the second half of these simulation.
+}
 
 \subsubsection{Statistical Comparison of BCs and ICs}
 From the moments of the PDFs presented in table \ref{table:pdf_values}, we conclude that FT and TT simulations are indistinguishable outside of their temperature fields.
 The temperature PDF of the TT simulation unsurprisingly has a mean of 0.5, a Skewness close to zero (no asymmetry between upflows and downflows), and an appreciable Excess Kurtosis (the tails, which primarily sample the plumes, are more important than they are in a Normal Distribution).
 The FT temperature PDF, on the other hand, has a mean slightly larger than 0.5, a small but noticeable skewness (suggesting asymmetries between the F and T plates), and more Excess Kurtosis (implying more extreme plumes).
 It is also interesting that, in all cases, the vertical velocity, $w$, and the vertical heat transport, $wT$, demonstrate PDFs whose tails are well-described by normal distributions.
+\ea{
+If we were to run each of these simulations for multiple thermal diffusion times, and gather PDF statistics over thousands of freefall times, we would expect to find near-perfect agreement between the PDFs of the different simulations (except were boundary conditions cause differences between FT and TT simulations).
+However, the good agreement between the PDFs of each of these simulations over our modest sampling windows suggests that the dynamics in each of these distinct simulations are being drawn from the same parent statistical distribution.
+}
 
-\begin{table}[b!]
+\begin{table}[t!]
 \vspace{-0.5cm}
 \caption{ 
 	The first four moments, as defined in Eqn.~\ref{eqn:pdf_moments}, of each of the PDFs shown in Fig.~\ref{fig:rbc_restart_description} are displayed below for the TT case with Ra$_{\Delta T} = 10^9$ and all FT cases with Ra$_{\partial_z T} = 4.83\times 10^{10}$.
@@ -565,7 +576,11 @@ At the bottom of Fig.~\ref{fig:rbc_3D_panels}, we compare PDFs of the full tempe
 The PDF of the temperature field over the full volume of these simulations shows the same features as in 2D (see Fig.~\ref{fig:rbc_evolution_dynamics}).
 Interestingly, we find that within the upper boundary layer, the two cases have indistinguishable temperature fields, with temperature events ranging from the fixed boundary temperature ($T = 0$) to the temperature achieved in the interior ($T = 0.5\Delta T$) occuring with equal probability.
 However, near the bottom boundary, the FT case instead exhibits a slightly larger number of neutral events ($T = 0.5\Delta T$) in addition to extreme temperature events ($T \geq \Delta T$).
-Unsurprisingly, we find that the PDF of the temperature field of a vertical slice through the domain at $y = 0$ is similar, but not identical, to the PDFs of the temperature field of the full volume, suggesting that this one slice does not capture the full range of possible dynamics which occur in the domain over our sampling window.
+\ea{
+We find that the PDF of the temperature field of a vertical slice through the domain at $y = 0$ is nearly identical to the PDF of the full-domain dynamics for the FT simulation, but that there are noticeable differences between these two PDFs for the TT simulation.
+The differences between the full-volume and $y = 0$ PDFs in the TT case are due to the fact that our sampling window occurs while plume-launching sites are clustered around $y = 0$ more frequently than one would expect from a random distribution of plume-launching sites.
+Over an infinite amount of time, these two PDFs should converge, but this demonstrates that it is important to be cautious when taking statistics from a 2D slice of a 3D simulation.
+}
 
 \FloatBarrier
 
@@ -581,7 +596,7 @@ Unsurprisingly, we find that the PDF of the temperature field of a vertical slic
 	(Left three panels) We compare time- and horizontally-averaged profiles from an FT (orange) and TT (purple) simulation at Ra$_{\Delta T} = 10^{9}$.
 	Shown are the (top) temperature, (middle) temperature in upflows (solid) and downflows (dashed), and (bottom) enthalpy (solid) and conductive (dashed) fluxes.
 	The boundary layer regions are separated from the bulk by thin vertical lines and are examined in more detail in the right six panels.
-	(Right six panels) The three panels on the left examine the bottom boundary layers and the right panels examines the top boundary layers.
+	(Right six panels) The three panels on the left \ea{display} the bottom boundary layers while the right panels \ea{display} the top boundary layers.
 	The insets show the \% difference between the FT and TT solutions.
 	There are slight (a few \%) differences between the two cases near the bottom boundary, but otherwise the two cases are nearly the same to within $\sim 1$\%.
 \label{fig:rbc_1D_profiles} }
@@ -716,7 +731,7 @@ As Ra$_{\Delta T}$ and convective driving decrease over time, the LSV saturates 
 
 We performed a TT-to-FT simulation starting from the evolved state of the TT simulation, and its time evolution matched that seen in Fig.~\ref{fig:rbc_restart_description}.
 There was no long thermal evolutionary timescale.
-In the equilibrated classic FT simulation, we measured Nu$=7.90 \pm 0.01$, Pe$=1.70 \times 10^3$, and Ro$=0.115 \pm 0.006$.
+In the equilibrated classic-IC FT simulation, we measured Nu$=7.90 \pm 0.01$, Pe$=1.70 \times 10^3$, and Ro$=0.115 \pm 0.006$.
 In the TT-to-FT simulation, we measured Nu$=7.83 \pm 0.01$, Pe$=1.65 \times 10^3$, and Ro=$0.114 \pm 0.005$.
 These Ro measurements are indistinguishable, Nu measurements are within 1\% of each other, and Pe measurements are within 3\% of each other, representing excellent agreement.
 
@@ -764,7 +779,7 @@ Throughout this work, we have made the assumption that convection is only ``inte
 In nature, convection is not always in an equilibrium state.
 For example, in the late stages of the lifetimes of stars, some core burning regions have sufficiently short lifetimes that they likely do not come into thermal relaxation \citep{clarkson&all2018, andrassy&all2020}.
 The use of classic-ICs with FT boundaries that we have here considered to be a ``bad'' choice may help in understanding these transient lifetime stages.
-However, for most convective studies where the lifetime of the natural convective system is much larger than its Kelvin-Helmholtz timescale, it is essential to study relaxed convection, and our results point towards the importance of either choosing good initial conditions (TT or TT-to-FT simulations) or running simulations to thermal relaxation.
+However, for most convective studies where the lifetime of the natural convective system is much larger than its Kelvin-Helmholtz timescale (\ea{the time it would take for an astrophysical body to radiate its full gravitational potential energy given its current luminosity \cite{carroll&ostlie}}), it is essential to study relaxed convection, and our results point towards the importance of either choosing good initial conditions (TT or TT-to-FT simulations) or running simulations to thermal relaxation.
 
 One question which our study of RBC is not able to address is: how long does it take for a complex convective system to restratify?
 Our fully convective domains restratified instantaneously, but it is likely that mixed convective-and-stably-stratified domains \citep{brummell&all2002, kapyla&all2019, pratt&all2017, korre&all2019} should have regions that are not turbulently mixed by convection which could also have long relaxation timescales.
@@ -867,7 +882,6 @@ TT	&	Classic		&	$1.834 \times 10^{10}$	&	256$^3$				&	971.9		&	$1.84 \times 10^5
 \end{center}
 \end{table}
 
-\newline
 \bibliography{biblio.bib}
 
 \end{document}
