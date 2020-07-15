@@ -143,7 +143,7 @@ In non-rotating RBC (sections \ref{sec:results_timescales} \& \ref{sec:results_d
 
 The extent of our numerical domain vertically is $z = [-0.5, 0.5]$ and horizontally is $x, y = [-\Gamma/2, \Gamma/2]$, where $\Gamma$ is the aspect ratio.
 The background temperature profile, $T_0(z) = 0.5 - z$, is unstable and linearly decreases from a value of 1 to 0 across the domain. 
-The temperature scale, $\Delta$, is set by either the temperature jump across the domain ($\Delta = \Delta T_0 =  T_0(z=0.5)-T_0(z=-0.5)$) for TT boundaries or by the temperature gradient length scale ($\Delta = L_z \partial_z T_0$) for FT boundaries.
+The temperature scale, $\Delta$, is set by either the temperature jump across the domain ($\Delta = \Delta T_0 =  T_0(z=0.5)-T_0(z=-0.5)$) for TT boundaries or by the temperature gradient lengthscale ($\Delta = L_z \partial_z T_0$) for FT boundaries.
 We respectively define a temperature (Ra$_{\Delta T}$) and a flux (Ra$_{\partial_z T}$) Rayleigh number for these cases,
 \begin{equation}
 \text{Ra}_{\Delta T} = \frac{g \alpha L_z^3 \Delta T_0}{\nu\kappa}, \qquad 
@@ -190,7 +190,7 @@ We define and measure Nu instantaneously as
 \text{Nu} \equiv \angles{\frac{w T - \Peff^{-1} \partial_z T}{-\Peff^{-1} \angles{\partial_z T}}}
 = 1 + \Peff\frac{\angles{w T}}{-\Delta T},
 \end{equation}
-where $\angles{}$ represent a volume average ($\angles{A} \equiv \iint A\,dx\,dz / \Gamma$ in 2D and $\angles{A} \equiv \iiint A\,dx\,dy\,dz / \Gamma^2$ in 3D for some quantity $A$), and $\Delta T = \angles{\partial_z T}$ is the (negative) temperature difference between the top and bottom plate.
+where $\angles{}$ represent a volume average ($\angles{\ea{s}} \equiv \iint \ea{s}\,dx\,dz / \Gamma$ in 2D and $\angles{\ea{s}} \equiv \iiint \ea{s}\,dx\,dy\,dz / \Gamma^2$ in 3D for some \ea{scalar} quantity \ea{$s$}), and $\Delta T = \angles{\partial_z T}$ is the (negative) temperature difference between the top and bottom plate.
 In a thermally relaxed, statistically stationary state \cite{calkins&all2015}, 
 \begin{equation}
 \text{Nu} = \frac{\beta L_z}{\Delta T}, \,\,\text{where}\,\,
@@ -224,7 +224,7 @@ These nondimensional quantities are defined as
 \begin{equation}
 \text{Pe} = \angles{|\bm{u}|}\Peff,\qquad \text{Ro} = \angles{|\bm{\omega}|}\text{Ek }\Reff,
 \end{equation}
-where $|\bm{A}|$ represents the magnitude of the vector $\bm{A}$.
+where $|\bm{\ea{q}}|$ represents the magnitude of the vector \ea{quantity $\bm{q}$}.
 
 
 \subsection{Initial Conditions}
@@ -284,7 +284,7 @@ In this work, we use the best-fit law of ref.~\cite{johnston&doering2009} with $
 \subsubsection{Additional Initial Conditions}
 In all cases, we modify the initial temperature profile by specifying the value of $T_1$, rather than through modifications to the linearly unstable reference profile, $T_0$.
 We furthermore assume that the initial temperature profile is in hydrostatic equilibrium, and solve for $\varpi$ accordingly.
-We assume zero velocity in the initial state, except in the case of TT-to-FT simulations, where velocities are taken directly from the TT simulation and scaled according to Eqn.~\ref{eqn:ra_relation}.
+We assume zero velocity in the initial state, except in the case of TT-to-FT simulations, where velocities are taken directly from the \ea{corresponding} TT simulation and scaled according to Eqn.~\ref{eqn:ra_relation}.
 For classic and Nu-based ICs,
 we fill $T_1$ with random white noise whose magnitude is $10^{-6}/\Peff$, and which is vertically tapered to zero at the boundaries.
 We filter this noise spectrum in coefficient space, such that only the lower 25\% of the coefficients have power; this low-pass filter is used to avoid populating the highest wavenumbers with noise in order to improve the stability of our spectral timestepping methods.
@@ -296,14 +296,14 @@ One result of the mapping in Eqn.~\ref{eqn:ra_relation} is that the nondimension
 The velocities in an FT simulation are smaller than the velocities in a TT simulation by a factor of $\sqrt{\text{Nu}}$.
 As a result, every nondimensional simulation freefall time unit in a TT simulation samples a factor of $\sqrt{\text{Nu}}$ more dynamics than a time unit in an FT simulation.
 We therefore define the \emph{evolved} freefall time, $\tau_{\text{ff, ev}} = \sqrt{\text{Nu}}$ (for FT simulations) or $\tau_{\text{ff, ev}} = 1$ (for TT simulations).
-To ensure accurate comparisons, we will measure flow statistics over multiples of $\tau_{\text{ff, ev}}$ rather than over multiples of the nondimensional time units.
+To ensure accurate comparisons, we measure flow statistics over multiples of $\tau_{\text{ff, ev}}$ rather than over multiples of the nondimensional time units.
 
 
-The thermal energy reservoir of our 3D Cartesian systems, and the rate of change of this reservoir due to conduction at the boundaries, is
+The thermal energy reservoir of our 3D Cartesian systems and the rate of change of this reservoir due to conduction at the boundaries \ea{are derived from volume-integrals of the temperature and vertical fluxes,}
 \begin{equation}
-E = \iiint T\,dx\,dy\,dz = \Gamma^2 \int T\,dz,
+E = \ea{\iiint_V} T\,dx\,dy\,dz = \Gamma^2 \ea{\int_{z=-0.5}^{z=0.5}} T\,dz,
 \qquad
-\frac{dE}{dt} = -\iiint \grad\cdot \bm{F}_{\text{cond}}\,dx\,dy\,dz = -\Gamma^2 F_{\text{cond,z}}\bigg|_{z=-0.5}^{z=0.5}
+\frac{dE}{dt} = -\ea{\iiint_V} \grad\cdot \bm{F}_{\text{cond}}\,dx\,dy\,dz = -\Gamma^2 F_{\text{cond,z}}\bigg|_{z=-0.5}^{z=0.5}
 \end{equation}
 where $\bm{F}_{\text{cond}} = -\Peff^{-1}\grad T$ is the conductive flux whose z-component is $F_{\text{cond,z}}$, and where $\int T dz = \Delta T / 2$ in RBC.
 The thermal relaxation time of an RBC experiment is therefore
@@ -345,7 +345,7 @@ In Fig.~\ref{fig:rbc_evolution_dynamics}, we compare the time evolution of the t
 As shown in the top four panels, we see the expected convective roll solution in both TT simulations (top row) and at early and late times in the FT simulation (bottom row).
 Interestingly, we find highly asymmetrical dynamics at early times in the FT simulation (bottom left), in which the temperature anomaly in the cold plume is much greater than in the warm plume.
 This excess cold material slowly fills the domain and mixes, reducing the temperature difference between the top and bottom plates from $\Delta T = -1$ to $\Delta T = -\text{Nu}^{-1}$ in the relaxed state.
-In this relaxed state, the supply of warm fluid from the bottom plume and cold fluid from the top plume come into balance, and the FT dynamics (bottom right) are indistinguishable from TT dynamics (top right).
+In this relaxed state, the supply of warm fluid from the bottom plume and cold fluid from the top plume come into balance, and the FT dynamics (bottom right) are indistinguishable from \ea{the} TT dynamics (top right).
 
 \begin{figure}[p!]
 \includegraphics[width=\textwidth]{./figs/rbc_evolution_dynamics.pdf}
@@ -475,7 +475,7 @@ TT-to-FT and Nu-based IC FT simulations are only evolved for $1000\tau_{\text{ff
 \subsubsection{Statistical Comparison of BCs and ICs}
 From the moments of the PDFs presented in table \ref{table:pdf_values}, we conclude that FT and TT simulations are indistinguishable outside of their temperature fields.
 The temperature PDF of the TT simulation unsurprisingly has a mean of 0.5, a Skewness close to zero (no asymmetry between upflows and downflows), and an appreciable Excess Kurtosis (the tails, which primarily sample the plumes, are more important than they are in a Normal Distribution).
-The FT temperature PDF, on the other hand, has a mean slightly larger than 0.5, a small but noticeable skewness (suggesting asymmetries between the F and T plates), and more Excess Kurtosis (implying more extreme plumes).
+The FT temperature PDF, on the other hand, has a mean slightly larger than 0.5, a small but noticeable Skewness (suggesting asymmetries between the F and T plates), and more Excess Kurtosis (implying more extreme plumes).
 It is also interesting that, in all cases, the vertical velocity, $w$, and the vertical heat transport, $wT$, demonstrate PDFs whose tails are well-described by normal distributions.
 
 \ea{
@@ -524,12 +524,12 @@ $w/(\Delta T)^{1/2}$ 	&	TT	& Classic	&	$-3.11 \times 10^{-5}$	&	$3.25 \times 10^
 
 
 \subsubsection{Nu-based ICs}
-The time evolution of FT simulations with Nu-based ICs is similar to the time evolution of TT simulations with classic ICs, with a few caveats.
+The time evolution of FT simulations with Nu-based ICs is similar to the time evolution of TT simulations with classic ICs, with a few \ea{small differences}.
 The interior temperature gradient ($\grad_{\text{interior}}$ in Eqn.~\ref{eqn:nu_based_gradT}) is slightly positive at high Ra, which means that the interior is marginally thermally stable while the boundary layers are thermally unstable.
 During the convective transient, plumes from the boundaries eat away at this interior stratification over a few tens of freefall timescales, after which the interior is well mixed and a classic roll solution is achieved.
 This behavior is quite different from classic ICs, in which the full domain is initially unstable and a roll solution is obtained immediately after the onset of nonlinear convection.
 Regardless, the time required for the temperature field to reach statistical equilibrium is a few tens of freefall times rather than a few thousands of freefall times for classic ICs.
-Per table \ref{table:pdf_values}, the evolved state of FT simulations with Nu-based ICs and classic ICs are very similar.
+Per table \ref{table:pdf_values}, the evolved states of FT simulations with Nu-based ICs and classic ICs are very similar.
 
 
 \subsection{Discussion of 2D results} 
@@ -641,7 +641,7 @@ However, these differences do vanish in the interior and do not seem to affect t
 
 We now study in more detail the asymmetries introduced into a solution by FT boundaries.
 We run a TT and TT-to-FT simulation at Ra$_{\Delta T} = 10^{10}$ and Ra$_{\partial_z T} = 9.51 \times 10^{11}$, respectively.
-In Fig.~\ref{fig:rbc_dynamics_asymmetries}, we examine the dynamical nature of the asymmetries which FT boundaries introduce into the simulation near the fixed-flux boundary.
+In Fig.~\ref{fig:rbc_dynamics_asymmetries}, we examine the dynamical nature of the asymmetries that the FT boundaries introduce into the simulation near the fixed-flux boundary.
 In the left panel, we plot PDFs of the temperature fields of the two cases.
 These PDFs agree remarkably well near the mean and for cold temperatures (near the fixed temperature boundary), but diverge in the tail of the PDF for hot temperatures where $T/\Delta T \gtrsim 0.8$, where the boundary conditions differ.
 Interestingly, there are no temperature fluctuations which exceed the specified boundary values in the convective domain for TT simulations.
@@ -651,7 +651,7 @@ We have outlined a portion of a cold plume near the upper (fixed-temperature) bo
 The fixed-temperature upper boundary suppresses temperature anomaly at the upper boundary and regulates the temperature minima which can be achieved.
 The fixed-flux lower boundary does no such suppression and allows for extreme temperature values to be achieved in the plume-launching area, thus allowing for the asymmetry in the tails of the temperature PDF.
 
-We note briefly that these asymmetries do not seem to affect mean or volume-averaged quantities in these simulations appreciably (see the agreement between FT and TT in Figs.~\ref{fig:rbc_scalar_comparisons}\&\ref{fig:rbc_1D_profiles}).
+We note briefly that these asymmetries do not seem to affect mean or volume-averaged quantities in these simulations appreciably (see the agreement between FT and TT in Figs.~\ref{fig:rbc_scalar_comparisons} \& \ref{fig:rbc_1D_profiles}).
 However, the fact that fixed-flux boundaries produce a wider temperature distribution with more extreme values may be important in some astrophysical studies.
 We explore this further in the discussion in section \ref{sec:discussion}.
 
@@ -671,7 +671,7 @@ However, TT-to-FT should work generally for all parameters, so long as a TT simu
 Here we explore the parameter space that the classic-IC FT simulation explores as it thermally relaxes and demonstrate that the TT-to-FT approach leads to rapid convergence for a rotating simulation.
 
 We now study 3D rotating RBC with Ek$ \,= 10^{-6}$.
-These simulations employ stress free boundary conditions which allow for the generation of mean flows such as large scale vortices (LSV) \citep{stellmach&all2014, rubio&all2014, guervilly&all2014, guervilly&hughes2017, favier&all2014, favier&all2019, couston&all2020}.
+These simulations employ stress free boundary conditions which allow for the generation of mean flows such as large-scale vortices (LSV) \citep{stellmach&all2014, rubio&all2014, guervilly&all2014, guervilly&hughes2017, favier&all2014, favier&all2019, couston&all2020}.
 We study a TT case at Ra$_{\Delta T} = 2.75\times 10^9$, and a classic-IC FT case at $\text{Ra}_{\partial_z T} = 2.1 \times 10^{10}$ (the supercriticality of the TT case is $\sim 3$).
 We then take the TT case, do a TT-to-FT simulation, and compare the results of the TT-to-FT simulation to the classic-IC FT case.
 
@@ -699,7 +699,7 @@ We find that the thermal relaxation of this case takes $\sim (2/3)\sqrt{\text{Ra
 	Data from our Ek$\,=\,10^{-6}$ FT experiment are shown as a thick orange line with a cyan interior, where the black arrows give the direction of time.
 	Some TT simulations are shown as purple circles with a cyan interior, and the TT case which corresponds to the relaxed state of the FT simulation is shown as a star.
 	(Bottom right panels) Snapshots of the vertically integrated z-component of the vorticity from the FT simulation.
-	At early times (left panel), a powerful large scale vortex with positive vorticity develops.
+	At early times (left panel), a powerful large-scale vortex with positive vorticity develops.
 	This vortex slowly decays and becomes a vortex pair (middle panel), as seen in ref.~\cite{stellmach&all2014}.
 	In the converged state, we see oscillatory behavior between this vortex pair behavior and jets (right panel).
 	The TT case exhibits the oscillatory behavior between vortex pairs and jets throughout its whole evolution.
@@ -777,8 +777,8 @@ We find that convective heat transport (the Nusselt number) and turbulent veloci
 \item Great computational expense achieving thermal relaxation in an FT simulation can be avoided by using the evolved state of a TT simulation as a ``better'' set of initial conditions for an FT simulation, or by constructing an initial state which is characterized by a temperature difference similar to the evolved one.
 \item Despite minor asymmetries near the boundaries, we find no meaningful difference between the mean state of FT and TT simulations.
 \end{enumerate}
-We now describe some lessons that should be applied from this work to astrophysical convection, and comment on some open areas of research.
 
+We now describe some lessons that should be applied from this work to astrophysical convection, and comment on some open areas of research.
 Throughout this work, we have made the assumption that convection is only ``interesting'' in its final, fully equilibrated state.
 In nature, convection is not always in an equilibrium state.
 For example, in the late stages of the lifetimes of stars, some core burning regions have sufficiently short lifetimes that they likely do not come into thermal relaxation \citep{clarkson&all2018, andrassy&all2020}.
